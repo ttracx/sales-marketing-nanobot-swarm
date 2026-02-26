@@ -7,6 +7,9 @@
 <meta name="description" content="Sales & Marketing Nanobot Swarm - AI-Powered Autonomous Marketing Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/neuralquantum-icon.png">
 <title>Sales &amp; Marketing Nanobot Swarm</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -37,11 +40,14 @@ input,textarea,select{font-family:inherit}
 ::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
 
 /* TOPBAR */
-#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100}
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100;overflow:hidden}
 #logo-wrap{display:flex;align-items:center;gap:12px;flex-shrink:0}
 #logo-wrap svg{width:38px;height:38px}
+#nq-icon{width:34px;height:34px;object-fit:contain;flex-shrink:0}
+#nq-horizontal{height:28px;width:auto;object-fit:contain}
+#vc-logo{height:22px;width:auto;object-fit:contain;opacity:0.85}
 #brand-text{display:flex;flex-direction:column}
-#brand-name{font-size:15px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#brand-name{font-size:15px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #brand-sub{font-size:10px;color:var(--text-secondary);white-space:nowrap}
 #nav-desktop{display:flex;gap:4px;margin-left:20px;flex:1}
 .nav-btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
@@ -230,21 +236,147 @@ input,textarea,select{font-family:inherit}
 
 /* RESPONSIVE */
 @media(max-width:768px){
+  /* Navigation */
   #nav-desktop{display:none}
   #hamburger{display:flex}
-  #main{padding:16px}
-  .metrics-grid{grid-template-columns:1fr 1fr}
+  #topbar{padding:0 12px;gap:8px}
+  #logo-wrap{gap:8px;min-width:0}
+  #logo-wrap svg{width:30px;height:30px;flex-shrink:0}
+  #brand-name{font-size:13px}
+  #brand-sub{display:none}
+  #topbar-right{gap:6px}
+  #status-label{display:none}
+  .pro-badge{font-size:10px;padding:3px 8px}
+
+  /* Mobile nav touch targets */
+  .mobile-nav-btn{min-height:48px;display:flex;align-items:center;padding:12px 16px}
+
+  /* Main layout */
+  #main{padding:12px;margin-top:60px}
+  .page-header h1{font-size:20px}
+  .page-header p{font-size:13px}
+
+  /* Metric grid: 2 columns on tablet */
+  .metrics-grid{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .metric-value{font-size:22px}
+  .metric-card{padding:14px}
+
+  /* Quick actions: wrap and full-ish width */
+  .quick-actions{gap:8px}
+  .action-btn{min-height:44px;padding:8px 14px;font-size:12px}
+
+  /* Teams grid: single column */
   .teams-grid{grid-template-columns:1fr}
+  .team-card{padding:16px}
+
+  /* Two-col grids collapse */
   .build-area{grid-template-columns:1fr}
   .analytics-grid{grid-template-columns:1fr}
   .grid-2{grid-template-columns:1fr}
-  #console-config{flex-direction:column}
-  .config-select{min-width:100%}
+
+  /* Swarm Console */
+  #console-config{flex-direction:column;gap:10px;padding:12px}
+  .config-select{min-width:100%;width:100%;font-size:16px}
+  #goal-group{min-width:100%;width:100%}
+  #goal-input{min-height:80px;font-size:16px;width:100%}
+  #launch-btn{width:100%;min-height:52px;font-size:15px;text-align:center}
+  #console-output{min-height:200px;max-height:50vh;font-size:12px}
+  #console-controls{gap:4px}
+  .console-ctrl{padding:4px 8px;font-size:10px}
+  #console-title{font-size:11px}
+  #console-status{flex-wrap:wrap;gap:6px;font-size:10px}
+
+  /* Builder */
+  .build-input{font-size:16px;min-height:160px}
+  .build-btn{width:100%;min-height:48px}
+  .builder-tabs{width:100%;overflow-x:auto}
+  .builder-tab{padding:8px 14px;font-size:12px;white-space:nowrap}
+
+  /* Campaigns header: stack vertically */
+  .campaigns-header{flex-direction:column;align-items:stretch}
+  .campaigns-header .flex{flex-wrap:wrap;gap:8px}
+  .campaigns-header .config-select{font-size:16px}
+
+  /* Analytics funnel label shrink */
+  .funnel-label{width:70px;font-size:11px}
+  .funnel-count{font-size:12px;width:50px}
+
+  /* Builder card templates grid */
+  .card [style*="grid-template-columns:repeat(auto-fill,minmax(220px"]{grid-template-columns:1fr 1fr!important}
+  .card [style*="grid-template-columns:repeat(auto-fill,minmax(260px"]{grid-template-columns:1fr!important}
+
+  /* Modal */
+  #modal-box{width:92%;padding:20px}
+  #modal-box h2{font-size:18px}
+
+  /* Footer */
+  .footer-links{gap:10px}
+  .footer-links a{font-size:12px}
 }
+
+/* Tablet: teams in 2-col grid */
+@media(min-width:480px) and (max-width:768px){
+  .teams-grid{grid-template-columns:1fr 1fr}
+}
+
 @media(max-width:480px){
+  /* Topbar */
+  #topbar{padding:0 10px}
+  #brand-name{font-size:12px}
+  #logo-wrap svg{width:26px;height:26px}
+  .pro-badge{display:none}
+
+  /* Layout */
+  #main{padding:10px}
+
+  /* Metrics: single column on small phones */
   .metrics-grid{grid-template-columns:1fr}
-  #brand-sub{display:none}
-  .metric-value{font-size:22px}
+  .metric-value{font-size:20px}
+  .metric-change{font-size:11px}
+
+  /* Page headers */
+  .page-header h1{font-size:18px}
+
+  /* Teams: single column with reduced padding */
+  .team-card{padding:14px}
+  .team-name{font-size:14px}
+  .team-desc{font-size:12px}
+
+  /* Console output compact */
+  #console-output{font-size:11px;max-height:45vh}
+  #console-titlebar{padding:8px 10px}
+  #console-title{font-size:10px}
+  .traffic-lights{gap:5px}
+  .tl{width:10px;height:10px}
+
+  /* Cards */
+  .card{padding:14px}
+
+  /* Quick actions: full width each */
+  .quick-actions{flex-direction:column}
+  .action-btn{width:100%;justify-content:center}
+
+  /* Builder tabs scroll */
+  .builder-tabs{gap:2px}
+  .builder-tab{padding:7px 10px;font-size:11px}
+
+  /* Campaign table hint */
+  .campaign-table th,.campaign-table td{padding:8px 10px;font-size:12px}
+
+  /* Analytics KPI cards */
+  .metrics-grid.mt-4{grid-template-columns:1fr 1fr}
+
+  /* Funnel compact */
+  .funnel-label{width:60px;font-size:10px}
+  .funnel-bar{font-size:10px;padding-left:6px}
+
+  /* Modal full width */
+  #modal-box{width:95%;padding:16px;border-radius:12px}
+  #modal-box h2{font-size:16px}
+  #modal-box p{font-size:13px}
+
+  /* Footer */
+  .footer-badge{font-size:10px}
 }
 </style>
 </head>
