@@ -39,8 +39,9 @@ input{font-family:inherit}
 
 /* TOPBAR */
 #topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:100}
-.logo-icon-small{width:32px;height:32px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
-#nq-icon-top{width:32px;height:32px;object-fit:contain;border-radius:8px;flex-shrink:0}
+.logo-icon-small{display:none}
+#nq-icon-top{display:none}
+#topbar svg{width:34px;height:34px;flex-shrink:0}
 #topbar-brand{font-size:14px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
 #topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto}
 .topbar-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
@@ -166,8 +167,37 @@ input{font-family:inherit}
 
 <!-- TOPBAR -->
 <div id="topbar">
-  <img id="nq-icon-top" src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-  <div class="logo-icon-small" style="display:none">NQ</div>
+  <svg id="brand-svg-profile" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:34px;height:34px;flex-shrink:0">
+    <defs>
+      <linearGradient id="lg1pr" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#6366f1"/>
+        <stop offset="50%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#ec4899"/>
+      </linearGradient>
+      <linearGradient id="lg2pr" x1="38" y1="0" x2="0" y2="38" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#6366f1"/>
+      </linearGradient>
+    </defs>
+    <circle cx="19" cy="19" r="18" fill="url(#lg1pr)" opacity="0.12"/>
+    <circle cx="19" cy="19" r="4.5" fill="url(#lg1pr)"/>
+    <circle cx="8" cy="12" r="3" fill="#6366f1" opacity="0.9"/>
+    <circle cx="30" cy="12" r="3" fill="#ec4899" opacity="0.9"/>
+    <circle cx="8" cy="26" r="3" fill="#8b5cf6" opacity="0.9"/>
+    <circle cx="30" cy="26" r="3" fill="#6366f1" opacity="0.9"/>
+    <circle cx="19" cy="5" r="2.5" fill="#ec4899" opacity="0.8"/>
+    <circle cx="19" cy="33" r="2.5" fill="#8b5cf6" opacity="0.8"/>
+    <line x1="8" y1="12" x2="19" y2="19" stroke="url(#lg1pr)" stroke-width="1.2" opacity="0.7"/>
+    <line x1="30" y1="12" x2="19" y2="19" stroke="url(#lg2pr)" stroke-width="1.2" opacity="0.7"/>
+    <line x1="8" y1="26" x2="19" y2="19" stroke="url(#lg1pr)" stroke-width="1.2" opacity="0.7"/>
+    <line x1="30" y1="26" x2="19" y2="19" stroke="url(#lg2pr)" stroke-width="1.2" opacity="0.7"/>
+    <line x1="19" y1="5" x2="19" y2="19" stroke="url(#lg1pr)" stroke-width="1.2" opacity="0.7"/>
+    <line x1="19" y1="33" x2="19" y2="19" stroke="url(#lg1pr)" stroke-width="1.2" opacity="0.7"/>
+    <line x1="8" y1="12" x2="8" y2="26" stroke="#6366f1" stroke-width="0.8" opacity="0.35"/>
+    <line x1="30" y1="12" x2="30" y2="26" stroke="#ec4899" stroke-width="0.8" opacity="0.35"/>
+    <line x1="8" y1="12" x2="30" y2="26" stroke="#8b5cf6" stroke-width="0.6" opacity="0.2"/>
+    <line x1="30" y1="12" x2="8" y2="26" stroke="#8b5cf6" stroke-width="0.6" opacity="0.2"/>
+  </svg>
   <span id="topbar-brand">Sales &amp; Marketing Nanobot Swarm</span>
   <div id="topbar-right">
     <a href="/" class="topbar-link">&#8592; Dashboard</a>

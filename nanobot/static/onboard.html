@@ -44,7 +44,8 @@ input,textarea,select{font-family:inherit}
   display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200;
 }
 #logo-wrap{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-#nq-icon{width:32px;height:32px;object-fit:contain;flex-shrink:0}
+#nq-icon{display:none}
+#logo-wrap svg{width:34px;height:34px;flex-shrink:0}
 #brand-name{
   font-size:15px;font-weight:700;
   background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
@@ -374,7 +375,37 @@ select.text-input option{background:#1a1a2e}
 <!-- ═══════════ TOPBAR ═══════════ -->
 <div id="topbar">
   <div id="logo-wrap">
-    <img id="nq-icon" src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none'">
+    <svg id="brand-svg-onboard" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:34px;height:34px;flex-shrink:0">
+      <defs>
+        <linearGradient id="lg1ob" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="50%" stop-color="#8b5cf6"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+        <linearGradient id="lg2ob" x1="38" y1="0" x2="0" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ec4899"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <circle cx="19" cy="19" r="18" fill="url(#lg1ob)" opacity="0.12"/>
+      <circle cx="19" cy="19" r="4.5" fill="url(#lg1ob)"/>
+      <circle cx="8" cy="12" r="3" fill="#6366f1" opacity="0.9"/>
+      <circle cx="30" cy="12" r="3" fill="#ec4899" opacity="0.9"/>
+      <circle cx="8" cy="26" r="3" fill="#8b5cf6" opacity="0.9"/>
+      <circle cx="30" cy="26" r="3" fill="#6366f1" opacity="0.9"/>
+      <circle cx="19" cy="5" r="2.5" fill="#ec4899" opacity="0.8"/>
+      <circle cx="19" cy="33" r="2.5" fill="#8b5cf6" opacity="0.8"/>
+      <line x1="8" y1="12" x2="19" y2="19" stroke="url(#lg1ob)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="30" y1="12" x2="19" y2="19" stroke="url(#lg2ob)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="8" y1="26" x2="19" y2="19" stroke="url(#lg1ob)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="30" y1="26" x2="19" y2="19" stroke="url(#lg2ob)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="19" y1="5" x2="19" y2="19" stroke="url(#lg1ob)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="19" y1="33" x2="19" y2="19" stroke="url(#lg1ob)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="8" y1="12" x2="8" y2="26" stroke="#6366f1" stroke-width="0.8" opacity="0.35"/>
+      <line x1="30" y1="12" x2="30" y2="26" stroke="#ec4899" stroke-width="0.8" opacity="0.35"/>
+      <line x1="8" y1="12" x2="30" y2="26" stroke="#8b5cf6" stroke-width="0.6" opacity="0.2"/>
+      <line x1="30" y1="12" x2="8" y2="26" stroke="#8b5cf6" stroke-width="0.6" opacity="0.2"/>
+    </svg>
     <span id="brand-name">Sales &amp; Marketing Nanobot Swarm</span>
   </div>
   <a href="/" class="skip-link">Skip to Dashboard →</a>
