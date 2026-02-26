@@ -16,6 +16,7 @@ import hashlib
 import secrets
 from datetime import datetime, timedelta
 import httpx
+import stripe
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -29,6 +30,29 @@ from typing import Optional, Any
 OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY", "").strip()
 NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY", "").strip()
 GATEWAY_API_KEY = os.getenv("GATEWAY_API_KEY", "").strip()
+
+STRIPE_SECRET_KEY      = os.getenv("STRIPE_SECRET_KEY", "").strip()
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "").strip()
+STRIPE_WEBHOOK_SECRET  = os.getenv("STRIPE_WEBHOOK_SECRET", "").strip()
+
+# Configure stripe SDK
+if STRIPE_SECRET_KEY:
+    stripe.api_key = STRIPE_SECRET_KEY
+
+# ── Price → Plan mapping ──────────────────────────────────────────────────────
+STRIPE_PRICES = {
+    "campaign": "price_1T58e3EHBwvjwYhUHWI8JCq5",   # $29 one-time
+    "weekly":   "price_1T58e4EHBwvjwYhUCTI42sTz",   # $19/week
+    "growth":   "price_1T58e5EHBwvjwYhU1a6C6l1g",   # $69/month
+    "agency":   "price_1T58e6EHBwvjwYhUjkahyj61",   # $599/year
+}
+PLAN_NAMES = {
+    "campaign": "Campaign Pack",
+    "weekly":   "Starter Weekly",
+    "growth":   "Growth Monthly",
+    "agency":   "Agency Annual",
+}
+ONE_TIME_PLANS = {"campaign"}  # payment_mode = "payment", others = "subscription"
 
 OLLAMA_BASE = "https://ollama.com/v1"
 OLLAMA_MODEL = "ministral-3:8b"
@@ -639,6 +663,7 @@ async def health():
             "ollama": "configured" if OLLAMA_API_KEY else "not configured",
             "nvidia_nim": "configured" if NVIDIA_API_KEY else "not configured",
         },
+        "stripe": "configured" if STRIPE_SECRET_KEY else "not configured",
         "timestamp": time.time(),
     }
 
@@ -1138,6 +1163,12 @@ class ProfileUpdateRequest(BaseModel):
     email: str | None = None
 
 
+class CheckoutSessionRequest(BaseModel):
+    plan: str = Field(..., description="Plan key: campaign | weekly | growth | agency")
+    success_url: str = Field(default="https://sales-marketing-nanobot-swarm.vibecaas.app/checkout/success?session_id={CHECKOUT_SESSION_ID}")
+    cancel_url: str = Field(default="https://sales-marketing-nanobot-swarm.vibecaas.app/pricing")
+
+
 @app.post("/auth/register", tags=["Auth"])
 async def register(req: RegisterRequest):
     """Register a new user account."""
@@ -1202,6 +1233,209 @@ async def update_profile(
             safe = {k: v for k, v in user.items() if k != "password_hash"}
             return safe
     raise HTTPException(401, "Invalid token")
+
+
+# ---------------------------------------------------------------------------
+# Billing — Stripe Checkout, Webhooks, and Customer Portal
+# ---------------------------------------------------------------------------
+
+@app.post("/checkout/create-session", tags=["Billing"])
+async def create_checkout_session(
+    req: CheckoutSessionRequest,
+    authorization: str | None = Header(None),
+):
+    """Create a Stripe Checkout Session for the selected plan.
+
+    Optionally accepts a Bearer token to pre-fill the customer email.
+    Returns { session_id, url } — frontend should redirect to url.
+    """
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(503, "Stripe not configured")
+
+    plan = req.plan.lower()
+    price_id = STRIPE_PRICES.get(plan)
+    if not price_id:
+        raise HTTPException(400, f"Unknown plan '{plan}'. Valid: {list(STRIPE_PRICES)}")
+
+    # Try to get user email from token for pre-fill
+    customer_email = None
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.removeprefix("Bearer ").strip()
+        for user in _USERS.values():
+            if user.get("token") == token:
+                customer_email = user.get("email")
+                break
+
+    mode = "payment" if plan in ONE_TIME_PLANS else "subscription"
+
+    try:
+        session_params: dict = {
+            "line_items": [{"price": price_id, "quantity": 1}],
+            "mode": mode,
+            "success_url": req.success_url,
+            "cancel_url": req.cancel_url,
+            "metadata": {"plan": plan, "platform": "sm-nanobot-swarm"},
+            "allow_promotion_codes": True,
+        }
+        if customer_email:
+            session_params["customer_email"] = customer_email
+
+        session = stripe.checkout.Session.create(**session_params)
+        return {
+            "session_id": session.id,
+            "url": session.url,
+            "plan": plan,
+            "plan_name": PLAN_NAMES.get(plan, plan),
+            "mode": mode,
+        }
+    except stripe.StripeError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/checkout/success", tags=["Billing"])
+async def checkout_success(session_id: str):
+    """Verify a completed checkout session and return plan details."""
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(503, "Stripe not configured")
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        plan = session.metadata.get("plan", "unknown")
+        return {
+            "status": session.payment_status,
+            "plan": plan,
+            "plan_name": PLAN_NAMES.get(plan, plan),
+            "customer_email": session.customer_details.email if session.customer_details else None,
+            "session_id": session_id,
+            "amount_total": session.amount_total,
+            "currency": session.currency,
+        }
+    except stripe.StripeError as e:
+        raise HTTPException(400, str(e))
+
+
+from fastapi import Request
+
+@app.post("/webhooks/stripe", tags=["Billing"])
+async def stripe_webhook(request: Request):
+    """Stripe webhook endpoint — handles checkout, subscription, and payment events.
+
+    Verifies the Stripe-Signature header using STRIPE_WEBHOOK_SECRET.
+    Updates user plan in _USERS when payment is confirmed.
+    """
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature", "")
+
+    # Verify signature if webhook secret is configured
+    if STRIPE_WEBHOOK_SECRET and STRIPE_WEBHOOK_SECRET != "whsec_placeholder":
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, STRIPE_WEBHOOK_SECRET
+            )
+        except stripe.SignatureVerificationError:
+            raise HTTPException(400, "Invalid webhook signature")
+        except Exception as e:
+            raise HTTPException(400, f"Webhook error: {e}")
+    else:
+        # Dev/demo mode — parse without signature verification
+        try:
+            event = stripe.Event.construct_from(
+                _json.loads(payload), stripe.api_key
+            )
+        except Exception as e:
+            raise HTTPException(400, f"Webhook parse error: {e}")
+
+    event_type = event["type"]
+    event_data = event["data"]["object"]
+
+    # ── checkout.session.completed ────────────────────────────────────────────
+    if event_type == "checkout.session.completed":
+        plan = event_data.get("metadata", {}).get("plan", "")
+        customer_email = None
+        if event_data.get("customer_details"):
+            customer_email = event_data["customer_details"].get("email")
+        if customer_email and plan:
+            email_lower = customer_email.lower()
+            if email_lower in _USERS:
+                _USERS[email_lower]["plan"] = plan
+                _USERS[email_lower]["stripe_customer_id"] = event_data.get("customer", "")
+                _USERS[email_lower]["subscription_id"] = event_data.get("subscription", "")
+
+    # ── invoice.payment_succeeded ─────────────────────────────────────────────
+    elif event_type == "invoice.payment_succeeded":
+        customer_id = event_data.get("customer", "")
+        if customer_id:
+            for user in _USERS.values():
+                if user.get("stripe_customer_id") == customer_id:
+                    user["plan_status"] = "active"
+                    user["last_payment"] = datetime.utcnow().isoformat()
+                    break
+
+    # ── invoice.payment_failed ────────────────────────────────────────────────
+    elif event_type == "invoice.payment_failed":
+        customer_id = event_data.get("customer", "")
+        if customer_id:
+            for user in _USERS.values():
+                if user.get("stripe_customer_id") == customer_id:
+                    user["plan_status"] = "past_due"
+                    break
+
+    # ── customer.subscription.deleted ─────────────────────────────────────────
+    elif event_type == "customer.subscription.deleted":
+        customer_id = event_data.get("customer", "")
+        if customer_id:
+            for user in _USERS.values():
+                if user.get("stripe_customer_id") == customer_id:
+                    user["plan"] = "free"
+                    user["plan_status"] = "cancelled"
+                    user.pop("subscription_id", None)
+                    break
+
+    # ── customer.subscription.updated ─────────────────────────────────────────
+    elif event_type == "customer.subscription.updated":
+        customer_id = event_data.get("customer", "")
+        status = event_data.get("status", "")
+        if customer_id and status:
+            for user in _USERS.values():
+                if user.get("stripe_customer_id") == customer_id:
+                    user["plan_status"] = status
+                    break
+
+    return {"received": True, "event": event_type}
+
+
+@app.get("/billing/portal", tags=["Billing"])
+async def billing_portal(
+    return_url: str = "https://sales-marketing-nanobot-swarm.vibecaas.app/profile",
+    authorization: str | None = Header(None),
+):
+    """Create a Stripe Customer Portal session for managing subscriptions.
+
+    Requires authentication. Returns { url } — frontend should redirect to it.
+    """
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(503, "Stripe not configured")
+
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(401, "Not authenticated")
+
+    token = authorization.removeprefix("Bearer ").strip()
+    customer_id = None
+    for user in _USERS.values():
+        if user.get("token") == token:
+            customer_id = user.get("stripe_customer_id")
+            break
+
+    if not customer_id:
+        raise HTTPException(404, "No Stripe customer found for this account. Complete a purchase first.")
+
+    try:
+        portal = stripe.billing_portal.Session.create(
+            customer=customer_id,
+            return_url=return_url,
+        )
+        return {"url": portal.url}
+    except stripe.StripeError as e:
+        raise HTTPException(400, str(e))
 
 
 # ---------------------------------------------------------------------------

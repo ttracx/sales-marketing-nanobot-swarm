@@ -6,7 +6,8 @@
     }
   },
   "rewrites": [
-    { "source": "/", "destination": "/nanobot/static/index.html" },
+    { "source": "/", "destination": "/nanobot/static/landing.html" },
+    { "source": "/dashboard", "destination": "/nanobot/static/index.html" },
     { "source": "/faq", "destination": "/nanobot/static/faq.html" },
     { "source": "/docs-page", "destination": "/nanobot/static/docs-page.html" },
     { "source": "/onboard", "destination": "/nanobot/static/onboard.html" },
@@ -23,6 +24,12 @@
     { "source": "/auth", "destination": "/nanobot/static/auth.html" },
     { "source": "/profile", "destination": "/nanobot/static/profile.html" },
     { "source": "/auth/:path*", "destination": "/api/index.py" },
+    { "source": "/checkout/success", "destination": "/nanobot/static/checkout-success.html" },
+    { "source": "/checkout/cancel", "destination": "/nanobot/static/checkout-cancel.html" },
+    { "source": "/checkout/:path*", "destination": "/api/index.py" },
+    { "source": "/webhooks/:path*", "destination": "/api/index.py" },
+    { "source": "/billing/:path*", "destination": "/api/index.py" },
+    { "source": "/landing", "destination": "/nanobot/static/landing.html" },
     { "source": "/docs", "destination": "/api/index.py" },
     { "source": "/openapi.json", "destination": "/api/index.py" }
   ],

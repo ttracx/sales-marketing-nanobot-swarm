@@ -398,6 +398,40 @@ function setLoading(btnId, spinnerId, textId, loading) {
   txt.style.display = loading ? 'none' : '';
 }
 
+// ── Post-auth redirect (handles checkout flow) ─────────────────────────────
+function handlePostAuth(token) {
+  var checkoutPlan = sessionStorage.getItem('sm_checkout_plan') || sessionStorage.getItem('sm_auth_plan');
+  var nextUrl = sessionStorage.getItem('sm_auth_next');
+  var mode = new URLSearchParams(window.location.search).get('mode');
+
+  sessionStorage.removeItem('sm_auth_next');
+  sessionStorage.removeItem('sm_auth_plan');
+  sessionStorage.removeItem('sm_checkout_plan');
+
+  if (mode === 'checkout' && checkoutPlan) {
+    // Create checkout session with the new token
+    var base = window.location.origin;
+    fetch('/checkout/create-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        plan: checkoutPlan,
+        success_url: base + '/checkout/success?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url: base + '/checkout/cancel?plan=' + checkoutPlan
+      })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.url) { window.location.href = d.url; }
+      else { window.location.href = '/profile'; }
+    })
+    .catch(function() { window.location.href = '/profile'; });
+    return;
+  }
+
+  window.location.href = nextUrl || '/profile';
+}
+
 // ── Sign In ────────────────────────────────────────────────────────────────
 function submitSignIn() {
   clearErrors();
@@ -435,10 +469,7 @@ function submitSignIn() {
     if (r.status === 200) {
       localStorage.setItem('sm_auth_token', r.data.token);
       localStorage.setItem('sm_user', JSON.stringify(r.data.user));
-      var nextUrl = sessionStorage.getItem('sm_auth_next');
-      sessionStorage.removeItem('sm_auth_next');
-      sessionStorage.removeItem('sm_auth_plan');
-      window.location.href = nextUrl || '/profile';
+      handlePostAuth(r.data.token);
     } else {
       var msg = (r.data && r.data.detail) ? r.data.detail : 'Sign in failed. Please try again.';
       showError('signin', msg);
@@ -499,10 +530,7 @@ function submitSignUp() {
     if (r.status === 200) {
       localStorage.setItem('sm_auth_token', r.data.token);
       localStorage.setItem('sm_user', JSON.stringify(r.data.user));
-      var nextUrl = sessionStorage.getItem('sm_auth_next');
-      sessionStorage.removeItem('sm_auth_next');
-      sessionStorage.removeItem('sm_auth_plan');
-      window.location.href = nextUrl || '/profile';
+      handlePostAuth(r.data.token);
     } else {
       var msg = (r.data && r.data.detail) ? r.data.detail : 'Registration failed. Please try again.';
       showError('signup', msg);

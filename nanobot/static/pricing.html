@@ -191,7 +191,7 @@ footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px
     <span id="brand-name">Sales &amp; Marketing Nanobot Swarm</span>
   </div>
   <div id="topbar-right">
-    <a href="/" class="nav-link">&#8592; Dashboard</a>
+    <a href="/dashboard" class="nav-link">&#8592; Dashboard</a>
     <a href="/auth" class="nav-link">Sign In</a>
     <a href="/auth#signup" class="btn-primary">Start Free &#8594;</a>
   </div>
@@ -240,7 +240,7 @@ footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px
           <li><span class="feature-check">&#10003;</span><span>No subscription required</span></li>
           <li><span class="feature-check">&#10003;</span><span>30-day result history</span></li>
         </ul>
-        <a href="/auth?plan=campaign&next=https%3A%2F%2Fbuy.stripe.com%2FfZu7sL0jr3QteyN30O1sQ1h" class="cta-btn cta-outline">Get Campaign Pack &#8594;</a>
+        <a href="javascript:void(0)" onclick="handlePlanCTA('campaign')" class="cta-btn cta-outline">Get Campaign Pack &#8594;</a>
       </div>
 
       <!-- Card 2: Starter Weekly -->
@@ -262,7 +262,7 @@ footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px
           <li><span class="feature-check">&#10003;</span><span>Email support</span></li>
           <li><span class="feature-check">&#10003;</span><span>Cancel anytime</span></li>
         </ul>
-        <a href="/auth?plan=weekly&next=https%3A%2F%2Fbuy.stripe.com%2FaFafZhgip5YBbmBcBo1sQ1i" class="cta-btn cta-outline">Start Weekly &#8594;</a>
+        <a href="javascript:void(0)" onclick="handlePlanCTA('weekly')" class="cta-btn cta-outline">Start Weekly &#8594;</a>
       </div>
 
       <!-- Card 3: Growth Monthly (Featured) -->
@@ -286,7 +286,7 @@ footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px
           <li><span class="feature-check">&#10003;</span><span>Email + chat support</span></li>
           <li><span class="feature-check">&#10003;</span><span>5 team member seats</span></li>
         </ul>
-        <a href="/auth?plan=growth&next=https%3A%2F%2Fbuy.stripe.com%2FbJe7sL7LT5YB0HX6d01sQ1j" class="cta-btn cta-gradient" id="growth-cta">Start Growth &#8594;</a>
+        <a href="javascript:void(0)" onclick="handlePlanCTA('growth')" class="cta-btn cta-gradient" id="growth-cta">Start Growth &#8594;</a>
       </div>
 
       <!-- Card 4: Agency Annual -->
@@ -312,7 +312,7 @@ footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px
           <li><span class="feature-check">&#10003;</span><span>Custom team templates</span></li>
           <li><span class="feature-check">&#10003;</span><span>2 months free (vs monthly)</span></li>
         </ul>
-        <a href="/auth?plan=agency&next=https%3A%2F%2Fbuy.stripe.com%2FaFa28r4zH5YBgGVeJw1sQ1k" class="cta-btn cta-outline">Start Agency &#8594;</a>
+        <a href="javascript:void(0)" onclick="handlePlanCTA('agency')" class="cta-btn cta-outline">Start Agency &#8594;</a>
       </div>
 
     </div>
@@ -519,7 +519,54 @@ footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px
   </div>
 </footer>
 
+<div id="checkout-loading" style="display:none;position:fixed;inset:0;background:rgba(15,15,26,0.85);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+  <div style="width:48px;height:48px;border:3px solid rgba(99,102,241,0.2);border-top-color:#6366f1;border-radius:50%;animation:spin 0.8s linear infinite"></div>
+  <p style="color:#e2e8f0;font-size:16px">Creating secure checkout...</p>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <script>
+// ── Checkout CTA ───────────────────────────────────────────────────────────
+function handlePlanCTA(plan) {
+  var token = localStorage.getItem('sm_auth_token');
+  if (!token) {
+    // Not logged in — go to auth with plan in query string
+    sessionStorage.setItem('sm_auth_plan', plan);
+    sessionStorage.setItem('sm_checkout_plan', plan);
+    window.location.href = '/auth?plan=' + plan + '&mode=checkout';
+    return;
+  }
+  // Logged in — create checkout session
+  var overlay = document.getElementById('checkout-loading');
+  if (overlay) { overlay.style.display = 'flex'; }
+  var base = window.location.origin;
+  fetch('/checkout/create-session', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({
+      plan: plan,
+      success_url: base + '/checkout/success?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: base + '/checkout/cancel?plan=' + plan
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.url) {
+      window.location.href = d.url;
+    } else {
+      if (overlay) { overlay.style.display = 'none'; }
+      alert('Could not create checkout. Please try again.');
+    }
+  })
+  .catch(function() {
+    if (overlay) { overlay.style.display = 'none'; }
+    alert('Network error. Please try again.');
+  });
+}
+
 // ── Billing Toggle ─────────────────────────────────────────────────────────
 var billingMode = 'monthly';
 

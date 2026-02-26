@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Payment cancelled — Sales & Marketing Nanobot Swarm">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/neuralquantum-icon.png">
+<title>Payment Cancelled — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --card-bg2:#16213e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --grad-h:linear-gradient(135deg,#818cf8,#a78bfa,#f472b6);
+}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100}
+#logo-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+#logo-wrap svg{width:34px;height:34px;flex-shrink:0}
+#brand-name{font-size:15px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+
+/* PAGE */
+#page{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px 60px;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(99,102,241,0.06) 0%,transparent 70%)}
+
+/* CARD */
+.cancel-card{width:100%;max-width:480px;background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:40px 36px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0}
+
+/* ICON */
+.cancel-icon{position:relative;width:80px;height:80px;margin-bottom:24px;flex-shrink:0}
+.cancel-icon-bg{
+  position:absolute;inset:0;
+  border-radius:50%;
+  background:rgba(148,163,184,0.08);
+  border:2px solid rgba(148,163,184,0.18);
+}
+.cancel-icon svg{position:absolute;inset:0;width:100%;height:100%}
+
+.cancel-heading{font-size:24px;font-weight:800;color:var(--text-primary);margin-bottom:10px}
+.cancel-subtext{font-size:15px;color:var(--text-secondary);line-height:1.6;margin-bottom:22px;max-width:360px}
+
+/* PLAN INFO */
+.plan-info-block{width:100%;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:26px;text-align:left;display:none}
+.plan-info-block.show{display:block}
+.plan-info-label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+.plan-info-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.plan-info-name{font-size:15px;font-weight:700;color:var(--text-primary)}
+.plan-info-price{font-size:14px;color:var(--text-secondary);font-weight:500}
+
+/* BUTTONS */
+.action-btns{display:flex;flex-direction:column;gap:10px;width:100%}
+.btn-grad{display:block;text-align:center;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:700;background:var(--grad);color:#fff;transition:all .2s}
+.btn-grad:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+.btn-ghost{display:block;text-align:center;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;background:transparent;color:var(--text-secondary);border:1px solid rgba(148,163,184,0.2);transition:all .2s}
+.btn-ghost:hover{background:rgba(148,163,184,0.06);border-color:rgba(148,163,184,0.35);color:var(--text-primary)}
+
+/* FOOTER */
+footer{background:var(--card-bg);border-top:1px solid var(--border);padding:28px 24px;margin-top:auto}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-logo-icon{width:28px;height:28px;border-radius:6px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.footer-brand-name{font-size:13px;font-weight:600;color:var(--text-primary)}
+.footer-brand-sub{font-size:11px;color:var(--text-secondary)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--text-secondary);transition:color .2s}
+.footer-links a:hover{color:var(--text-primary)}
+.footer-copy{font-size:12px;color:var(--text-secondary);text-align:right}
+@media(max-width:600px){.footer-inner{flex-direction:column;align-items:flex-start}.footer-copy{text-align:left}.cancel-card{padding:28px 20px}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div id="logo-wrap">
+    <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1c" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="50%" stop-color="#8b5cf6"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+        <linearGradient id="lg2c" x1="38" y1="0" x2="0" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#ec4899"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <circle cx="19" cy="19" r="18" fill="url(#lg1c)" opacity="0.12"/>
+      <circle cx="19" cy="19" r="4.5" fill="url(#lg1c)"/>
+      <circle cx="8" cy="12" r="3" fill="#6366f1" opacity="0.9"/>
+      <circle cx="30" cy="12" r="3" fill="#ec4899" opacity="0.9"/>
+      <circle cx="8" cy="26" r="3" fill="#8b5cf6" opacity="0.9"/>
+      <circle cx="30" cy="26" r="3" fill="#6366f1" opacity="0.9"/>
+      <circle cx="19" cy="5" r="2.5" fill="#ec4899" opacity="0.8"/>
+      <circle cx="19" cy="33" r="2.5" fill="#8b5cf6" opacity="0.8"/>
+      <line x1="8" y1="12" x2="19" y2="19" stroke="url(#lg1c)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="30" y1="12" x2="19" y2="19" stroke="url(#lg2c)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="8" y1="26" x2="19" y2="19" stroke="url(#lg1c)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="30" y1="26" x2="19" y2="19" stroke="url(#lg2c)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="19" y1="5" x2="19" y2="19" stroke="url(#lg1c)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="19" y1="33" x2="19" y2="19" stroke="url(#lg1c)" stroke-width="1.2" opacity="0.7"/>
+      <line x1="8" y1="12" x2="8" y2="26" stroke="#6366f1" stroke-width="0.8" opacity="0.35"/>
+      <line x1="30" y1="12" x2="30" y2="26" stroke="#ec4899" stroke-width="0.8" opacity="0.35"/>
+      <line x1="8" y1="12" x2="30" y2="26" stroke="#8b5cf6" stroke-width="0.6" opacity="0.2"/>
+      <line x1="30" y1="12" x2="8" y2="26" stroke="#8b5cf6" stroke-width="0.6" opacity="0.2"/>
+    </svg>
+    <span id="brand-name">Sales &amp; Marketing Nanobot Swarm</span>
+  </div>
+  <div id="topbar-right">
+    <a href="/dashboard" class="nav-link">&#8592; Dashboard</a>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div id="page">
+  <div class="cancel-card">
+
+    <!-- NEUTRAL X ICON -->
+    <div class="cancel-icon">
+      <div class="cancel-icon-bg"></div>
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="26" y1="26" x2="54" y2="54" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+        <line x1="54" y1="26" x2="26" y2="54" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="cancel-heading">Payment cancelled</div>
+    <p class="cancel-subtext">No charges were made. You can try again whenever you&#8217;re ready.</p>
+
+    <!-- PLAN RECALL BLOCK (shown if plan param present) -->
+    <div class="plan-info-block" id="plan-info">
+      <div class="plan-info-label">You were looking at</div>
+      <div class="plan-info-row">
+        <span class="plan-info-name" id="plan-name-display">&#8212;</span>
+        <span class="plan-info-price" id="plan-price-display"></span>
+      </div>
+    </div>
+
+    <div class="action-btns">
+      <a href="/pricing" class="btn-grad" id="try-again-btn">&#8592; Try Again</a>
+      <a href="/dashboard" class="btn-ghost">Return to Dashboard</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-icon">NQ</div>
+      <div>
+        <div class="footer-brand-name">Sales &amp; Marketing Nanobot Swarm</div>
+        <div class="footer-brand-sub">Powered by VibeCaaS.com / NeuralQuantum.ai LLC</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="/">Dashboard</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/docs">Docs</a>
+      <a href="/faq">FAQ</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2025 NeuralQuantum.ai LLC &amp; VibeCaaS.com<br>
+      All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+var PLAN_LABELS = {
+  campaign: { name: 'Campaign Pack',  price: '$29 one-time' },
+  weekly:   { name: 'Starter Weekly', price: '$19/week'     },
+  growth:   { name: 'Growth Monthly', price: '$69/month'    },
+  agency:   { name: 'Agency Annual',  price: '$599/year'    }
+};
+
+(function init() {
+  var params = new URLSearchParams(window.location.search);
+  var planParam = params.get('plan');
+
+  // Also check sessionStorage as fallback (set by pricing page handlePlanCTA)
+  var planKey = planParam || sessionStorage.getItem('sm_checkout_plan') || sessionStorage.getItem('sm_auth_plan') || '';
+  planKey = planKey.toLowerCase();
+
+  if (planKey && PLAN_LABELS[planKey]) {
+    var info = PLAN_LABELS[planKey];
+    document.getElementById('plan-name-display').textContent = info.name;
+    document.getElementById('plan-price-display').textContent = info.price;
+    document.getElementById('plan-info').classList.add('show');
+
+    // Point "Try Again" link directly to pricing with plan anchor
+    document.getElementById('try-again-btn').href = '/pricing';
+  }
+})();
+</script>
+</body>
+</html>
