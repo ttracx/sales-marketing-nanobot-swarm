@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Sales & Marketing Nanobot Swarm - AI-Powered Autonomous Marketing Intelligence">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --card-bg2:#16213e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --grad-h:linear-gradient(135deg,#818cf8,#a78bfa,#f472b6);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+input,textarea,select{font-family:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100}
+#logo-wrap{display:flex;align-items:center;gap:12px;flex-shrink:0}
+#logo-wrap svg{width:38px;height:38px}
+#brand-text{display:flex;flex-direction:column}
+#brand-name{font-size:15px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#brand-sub{font-size:10px;color:var(--text-secondary);white-space:nowrap}
+#nav-desktop{display:flex;gap:4px;margin-left:20px;flex:1}
+.nav-btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
+.nav-btn:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+.nav-btn.active{color:var(--indigo);background:rgba(99,102,241,0.15)}
+#topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+#status-dot{width:8px;height:8px;border-radius:50%;background:#4b5563;flex-shrink:0;transition:background .3s}
+#status-dot.online{background:var(--emerald);box-shadow:0 0 8px var(--emerald)}
+#status-dot.error{background:var(--red);box-shadow:0 0 8px var(--red)}
+#status-label{font-size:12px;color:var(--text-secondary)}
+.pro-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--grad);color:#fff;cursor:pointer;white-space:nowrap}
+#hamburger{display:none;flex-direction:column;gap:5px;padding:8px;border-radius:8px;background:transparent;color:var(--text-primary)}
+#hamburger span{display:block;width:20px;height:2px;background:currentColor;border-radius:1px;transition:all .3s}
+
+/* MOBILE NAV */
+#mobile-nav{display:none;position:fixed;top:60px;left:0;right:0;background:rgba(15,15,26,0.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px;z-index:99;flex-direction:column;gap:4px}
+#mobile-nav.open{display:flex}
+.mobile-nav-btn{padding:12px 16px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text-secondary);background:transparent;text-align:left;transition:all .2s}
+.mobile-nav-btn:hover,.mobile-nav-btn.active{color:var(--text-primary);background:rgba(99,102,241,0.15)}
+
+/* MAIN CONTENT */
+#main{margin-top:60px;padding:24px;max-width:1400px;margin-left:auto;margin-right:auto}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:24px}
+.page-header h1{font-size:24px;font-weight:700;margin-bottom:4px}
+.page-header p{font-size:14px;color:var(--text-secondary)}
+
+/* CARDS */
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card-sm{padding:16px}
+
+/* METRIC GRID */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.metric-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.metric-card:hover{transform:translateY(-2px);border-color:rgba(99,102,241,0.4)}
+.metric-card::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity .3s}
+.metric-card:hover::before{opacity:0.03}
+.metric-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:18px}
+.metric-label{font-size:12px;color:var(--text-secondary);margin-bottom:6px;font-weight:500}
+.metric-value{font-size:28px;font-weight:700;line-height:1}
+.metric-change{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:4px}
+.metric-change.up{color:var(--emerald)}
+.metric-change.down{color:var(--red)}
+
+/* QUICK ACTIONS */
+.quick-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.action-btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:8px}
+.action-btn.primary{background:var(--grad);color:#fff}
+.action-btn.primary:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+.action-btn.secondary{background:rgba(99,102,241,0.1);color:var(--indigo);border:1px solid var(--border)}
+.action-btn.secondary:hover{background:rgba(99,102,241,0.2)}
+
+/* TEAMS GRID */
+.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.team-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s;cursor:pointer}
+.team-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.team-card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.team-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.team-name{font-size:15px;font-weight:600;line-height:1.2}
+.team-mode{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;margin-top:4px;display:inline-block}
+.team-desc{font-size:13px;color:var(--text-secondary);line-height:1.5;margin-bottom:14px}
+.team-footer{display:flex;align-items:center;justify-content:space-between}
+.launch-btn{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;background:var(--grad);color:#fff;transition:all .2s}
+.launch-btn:hover{opacity:0.9;transform:translateY(-1px)}
+.team-agents{font-size:11px;color:var(--text-secondary)}
+
+/* CONSOLE */
+#console-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+#console-wrap.fullscreen{position:fixed;inset:0;z-index:200;border-radius:0;margin:0}
+#console-titlebar{background:#1e1e2e;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.traffic-lights{display:flex;gap:6px}
+.tl{width:12px;height:12px;border-radius:50%;cursor:pointer;transition:opacity .2s}
+.tl:hover{opacity:0.8}
+.tl-red{background:#ff5f57}
+.tl-yellow{background:#febc2e}
+.tl-green{background:#28c840}
+#console-title{font-size:12px;color:var(--text-secondary);font-weight:500;flex:1;text-align:center}
+#console-controls{display:flex;gap:6px;margin-left:auto}
+.console-ctrl{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(99,102,241,0.15);color:var(--indigo);transition:all .2s}
+.console-ctrl:hover{background:rgba(99,102,241,0.3)}
+#console-body{display:flex;flex-direction:column;gap:0}
+#console-config{padding:16px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.config-group{display:flex;flex-direction:column;gap:6px}
+.config-group label{font-size:12px;color:var(--text-secondary);font-weight:500}
+.config-select{padding:8px 12px;border-radius:8px;background:#0f0f1a;border:1px solid var(--border);color:var(--text-primary);font-size:13px;min-width:200px}
+.config-select:focus{outline:none;border-color:var(--indigo)}
+#goal-group{flex:1;min-width:280px}
+#goal-input{width:100%;padding:10px 12px;border-radius:8px;background:#0f0f1a;border:1px solid var(--border);color:var(--text-primary);font-size:13px;resize:vertical;min-height:80px;line-height:1.5}
+#goal-input:focus{outline:none;border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,0.1)}
+#goal-input::placeholder{color:var(--text-secondary)}
+#launch-btn{padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700;background:var(--grad);color:#fff;transition:all .2s;white-space:nowrap;align-self:flex-end}
+#launch-btn:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+#launch-btn:disabled{opacity:0.5;transform:none;cursor:not-allowed}
+#console-output-wrap{position:relative}
+#console-output{min-height:320px;max-height:500px;overflow-y:auto;padding:16px;font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:13px;line-height:1.7;background:#0a0a14}
+#console-output.fullscreen-output{max-height:calc(100vh - 220px)}
+.out-line{margin-bottom:2px}
+.out-line.system{color:#64748b}
+.out-line.info{color:var(--cyan)}
+.out-line.success{color:var(--emerald)}
+.out-line.error{color:var(--red)}
+.out-line.agent{color:var(--purple)}
+.out-line.result{color:var(--text-primary)}
+.out-line.warn{color:var(--amber)}
+#cursor-blink{display:inline-block;width:8px;height:14px;background:var(--indigo);animation:blink 1s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+#console-status{padding:8px 16px;background:#0d0d1f;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-secondary)}
+#run-status{display:flex;align-items:center;gap:6px}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--emerald);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.4)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+
+/* CAMPAIGNS */
+.campaigns-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.campaign-table{width:100%;border-collapse:collapse}
+.campaign-table th{text-align:left;padding:10px 14px;font-size:12px;color:var(--text-secondary);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
+.campaign-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(99,102,241,0.08)}
+.campaign-table tr:hover td{background:rgba(99,102,241,0.05)}
+.status-pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.status-pill.active{background:rgba(16,185,129,0.15);color:var(--emerald)}
+.status-pill.paused{background:rgba(245,158,11,0.15);color:var(--amber)}
+.status-pill.draft{background:rgba(100,116,139,0.2);color:#94a3b8}
+.status-pill.ended{background:rgba(239,68,68,0.15);color:var(--red)}
+.progress-bar{height:6px;border-radius:3px;background:rgba(99,102,241,0.15);overflow:hidden;width:80px}
+.progress-fill{height:100%;border-radius:3px;background:var(--grad)}
+
+/* BUILDER */
+.builder-tabs{display:flex;gap:4px;margin-bottom:20px;background:rgba(0,0,0,0.3);border-radius:10px;padding:4px;width:fit-content}
+.builder-tab{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;color:var(--text-secondary);background:transparent;transition:all .2s}
+.builder-tab.active{background:var(--card-bg);color:var(--text-primary);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.builder-panel{display:none}
+.builder-panel.active{display:block}
+.build-area{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.build-input{width:100%;min-height:200px;padding:14px;border-radius:10px;background:#0a0a14;border:1px solid var(--border);color:var(--text-primary);font-size:13px;line-height:1.6;resize:vertical}
+.build-input:focus{outline:none;border-color:var(--indigo)}
+.build-output{background:#0a0a14;border:1px solid var(--border);border-radius:10px;padding:14px;min-height:200px;font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;color:var(--cyan);white-space:pre-wrap;overflow:auto}
+.build-btn{padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700;background:var(--grad);color:#fff;transition:all .2s;margin-top:12px}
+.build-btn:hover{background:var(--grad-h);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+.funnel-wrap{padding:20px}
+.funnel-stage{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.funnel-label{width:90px;font-size:12px;color:var(--text-secondary);text-align:right;flex-shrink:0}
+.funnel-bar-wrap{flex:1;height:32px;background:rgba(99,102,241,0.1);border-radius:6px;overflow:hidden;position:relative}
+.funnel-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:12px;font-size:12px;font-weight:600;transition:width .8s ease}
+.funnel-count{width:60px;text-align:right;font-size:13px;font-weight:600;flex-shrink:0}
+.channels-table{width:100%;border-collapse:collapse}
+.channels-table th{text-align:left;padding:8px 12px;font-size:11px;color:var(--text-secondary);font-weight:600;border-bottom:1px solid var(--border)}
+.channels-table td{padding:10px 12px;font-size:12px;border-bottom:1px solid rgba(99,102,241,0.06)}
+.channels-table tr:hover td{background:rgba(99,102,241,0.05)}
+.roas-bar{height:4px;border-radius:2px;background:var(--grad);min-width:4px}
+
+/* MODAL */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#modal-overlay.open{display:flex}
+#modal-box{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:480px;width:90%;text-align:center;animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+#modal-box h2{font-size:22px;font-weight:700;margin-bottom:8px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#modal-box p{font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:20px}
+.modal-close{padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;background:var(--grad);color:#fff}
+
+/* FOOTER */
+#footer{border-top:1px solid var(--border);padding:24px;text-align:center;margin-top:40px}
+.footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-bottom:12px}
+.footer-links a{font-size:13px;color:var(--text-secondary);transition:color .2s}
+.footer-links a:hover{color:var(--indigo)}
+.footer-copy{font-size:12px;color:#4b5563}
+.footer-badge{display:inline-block;margin-top:10px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(99,102,241,0.15);color:var(--indigo);border:1px solid var(--border)}
+
+/* UTILS */
+.flex{display:flex}.items-center{align-items:center}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
+.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-6{margin-top:24px}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+.text-sm{font-size:13px}.text-xs{font-size:11px}.text-secondary{color:var(--text-secondary)}
+.font-bold{font-weight:700}.font-semibold{font-weight:600}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.w-full{width:100%}
+.rounded{border-radius:8px}.rounded-full{border-radius:9999px}
+.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shimmer{background:linear-gradient(90deg,var(--card-bg) 25%,rgba(99,102,241,0.1) 50%,var(--card-bg) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  #nav-desktop{display:none}
+  #hamburger{display:flex}
+  #main{padding:16px}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .teams-grid{grid-template-columns:1fr}
+  .build-area{grid-template-columns:1fr}
+  .analytics-grid{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  #console-config{flex-direction:column}
+  .config-select{min-width:100%}
+}
+@media(max-width:480px){
+  .metrics-grid{grid-template-columns:1fr}
+  #brand-sub{display:none}
+  .metric-value{font-size:22px}
+}
+</style>
+</head>
+<body>
+<!-- TOPBAR -->
+<header id="topbar">
+  <div id="logo-wrap">
+    <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="50%" stop-color="#8b5cf6"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <circle cx="19" cy="19" r="18" fill="url(#lg1)" opacity="0.15"/>
+      <circle cx="19" cy="19" r="4" fill="url(#lg1)"/>
+      <circle cx="8" cy="12" r="2.5" fill="#6366f1"/>
+      <circle cx="30" cy="12" r="2.5" fill="#ec4899"/>
+      <circle cx="8" cy="26" r="2.5" fill="#8b5cf6"/>
+      <circle cx="30" cy="26" r="2.5" fill="#6366f1"/>
+      <circle cx="19" cy="6" r="2" fill="#ec4899"/>
+      <circle cx="19" cy="32" r="2" fill="#8b5cf6"/>
+      <line x1="8" y1="12" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="30" y1="12" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="8" y1="26" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="30" y1="26" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="19" y1="6" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="19" y1="32" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="8" y1="12" x2="8" y2="26" stroke="#6366f1" stroke-width="0.8" opacity="0.4"/>
+      <line x1="30" y1="12" x2="30" y2="26" stroke="#ec4899" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+    <div id="brand-text">
+      <div id="brand-name">Sales &amp; Marketing Nanobot Swarm</div>
+      <div id="brand-sub">AI-Powered Autonomous Marketing Intelligence</div>
+    </div>
+  </div>
+  <nav id="nav-desktop">
+    <button class="nav-btn active" onclick="showSection('dashboard',this)">Dashboard</button>
+    <button class="nav-btn" onclick="showSection('console',this)">Swarm Console</button>
+    <button class="nav-btn" onclick="showSection('teams',this)">Teams</button>
+    <button class="nav-btn" onclick="showSection('campaigns',this)">Campaigns</button>
+    <button class="nav-btn" onclick="showSection('builder',this)">Builder</button>
+    <button class="nav-btn" onclick="showSection('analytics',this)">Analytics</button>
+  </nav>
+  <div id="topbar-right">
+    <div id="status-dot"></div>
+    <span id="status-label">Connecting...</span>
+    <button class="pro-badge" onclick="showProModal()">Pro Coming Soon</button>
+    <button id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<nav id="mobile-nav">
+  <button class="mobile-nav-btn active" onclick="showSection('dashboard',this,true)">Dashboard</button>
+  <button class="mobile-nav-btn" onclick="showSection('console',this,true)">Swarm Console</button>
+  <button class="mobile-nav-btn" onclick="showSection('teams',this,true)">Teams</button>
+  <button class="mobile-nav-btn" onclick="showSection('campaigns',this,true)">Campaigns</button>
+  <button class="mobile-nav-btn" onclick="showSection('builder',this,true)">Builder</button>
+  <button class="mobile-nav-btn" onclick="showSection('analytics',this,true)">Analytics</button>
+</nav>
+
+<main id="main">
+
+<!-- ==================== DASHBOARD ==================== -->
+<section id="sec-dashboard" class="section active">
+  <div class="page-header">
+    <h1>Marketing Command Center</h1>
+    <p id="dash-date">Loading...</p>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(99,102,241,0.15);">📣</div>
+      <div class="metric-label">Active Campaigns</div>
+      <div class="metric-value" style="color:var(--indigo)">12</div>
+      <div class="metric-change up">▲ 3 from last month</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(6,182,212,0.15);">🎯</div>
+      <div class="metric-label">Leads Generated</div>
+      <div class="metric-value" style="color:var(--cyan)">4,872</div>
+      <div class="metric-change up">▲ 18.4% vs last month</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(139,92,246,0.15);">✍️</div>
+      <div class="metric-label">Content Pieces</div>
+      <div class="metric-value" style="color:var(--purple)">247</div>
+      <div class="metric-change up">▲ 31 this week</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(16,185,129,0.15);">💰</div>
+      <div class="metric-label">Avg ROAS</div>
+      <div class="metric-value" style="color:var(--emerald)">4.2x</div>
+      <div class="metric-change up">▲ 0.3x improvement</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(245,158,11,0.15);">🔄</div>
+      <div class="metric-label">MQL → SQL Rate</div>
+      <div class="metric-value" style="color:var(--amber)">23.7%</div>
+      <div class="metric-change up">▲ 2.1% vs benchmark</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(236,72,153,0.15);">📈</div>
+      <div class="metric-label">Pipeline Value</div>
+      <div class="metric-value" style="color:var(--pink)">$2.4M</div>
+      <div class="metric-change up">▲ $340K this quarter</div>
+    </div>
+  </div>
+
+  <div class="page-header mt-4">
+    <h1 style="font-size:18px">Quick Actions</h1>
+  </div>
+  <div class="quick-actions">
+    <button class="action-btn primary" onclick="quickAction('New Campaign')">
+      <span>📣</span> New Campaign
+    </button>
+    <button class="action-btn secondary" onclick="quickAction('Generate Content')">
+      <span>✍️</span> Generate Content
+    </button>
+    <button class="action-btn secondary" onclick="quickAction('Analyze Competitors')">
+      <span>🔍</span> Analyze Competitors
+    </button>
+    <button class="action-btn secondary" onclick="quickAction('Score Leads')">
+      <span>🎯</span> Score Leads
+    </button>
+    <button class="action-btn secondary" onclick="quickAction('ABM Campaign')">
+      <span>🏢</span> ABM Campaign
+    </button>
+    <button class="action-btn secondary" onclick="quickAction('A/B Test')">
+      <span>⚗️</span> A/B Test
+    </button>
+  </div>
+
+  <div class="grid-2 mt-4">
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Recent Swarm Activity</h3>
+      <div id="activity-feed" style="display:flex;flex-direction:column;gap:10px">
+        <div class="flex items-center gap-3">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--emerald);flex-shrink:0"></div>
+          <div>
+            <div class="text-sm">Lead Generation Engine completed prospecting run</div>
+            <div class="text-xs text-secondary">847 new leads scored · 2 min ago</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--cyan);flex-shrink:0"></div>
+          <div>
+            <div class="text-sm">Content Marketing Team published 5 blog posts</div>
+            <div class="text-xs text-secondary">SEO optimized · 14 min ago</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0"></div>
+          <div>
+            <div class="text-sm">Email Campaign Manager launched Q2 nurture sequence</div>
+            <div class="text-xs text-secondary">2,340 contacts enrolled · 1 hr ago</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0"></div>
+          <div>
+            <div class="text-sm">Competitive Intelligence report ready</div>
+            <div class="text-xs text-secondary">12 competitors analyzed · 3 hrs ago</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--pink);flex-shrink:0"></div>
+          <div>
+            <div class="text-sm">ABM Orchestrator identified 24 new target accounts</div>
+            <div class="text-xs text-secondary">Enterprise tier · 5 hrs ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Top Performing Teams</h3>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span style="font-size:16px">🎯</span>
+            <span class="text-sm font-semibold">Lead Generation Engine</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">94% efficiency</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span style="font-size:16px">✍️</span>
+            <span class="text-sm font-semibold">Content Marketing Team</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">88% efficiency</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span style="font-size:16px">📊</span>
+            <span class="text-sm font-semibold">Campaign Analytics Hub</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">82% efficiency</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span style="font-size:16px">🔍</span>
+            <span class="text-sm font-semibold">Competitive Intelligence</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">79% efficiency</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:79%"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span style="font-size:16px">🏢</span>
+            <span class="text-sm font-semibold">ABM Orchestrator</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">76% efficiency</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:76%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SWARM CONSOLE ==================== -->
+<section id="sec-console" class="section">
+  <div class="page-header">
+    <h1>Swarm Console</h1>
+    <p>Launch AI agent teams against your sales and marketing goals</p>
+  </div>
+
+  <div id="console-wrap">
+    <div id="console-titlebar">
+      <div class="traffic-lights">
+        <div class="tl tl-red" onclick="clearConsole()" title="Clear"></div>
+        <div class="tl tl-yellow" onclick="showProModal()" title="Minimize"></div>
+        <div class="tl tl-green" onclick="toggleFullscreen()" title="Fullscreen"></div>
+      </div>
+      <span id="console-title">Sales &amp; Marketing Nanobot Swarm · Terminal</span>
+      <div id="console-controls">
+        <button class="console-ctrl" onclick="clearConsole()">CLR</button>
+        <button class="console-ctrl" onclick="expandConsole()">⤢ Expand</button>
+        <button class="console-ctrl" onclick="toggleFullscreen()">⤡ Full</button>
+      </div>
+    </div>
+    <div id="console-body">
+      <div id="console-config">
+        <div class="config-group">
+          <label>Agent Team</label>
+          <select id="team-select" class="config-select">
+            <option value="auto">🤖 Auto-Detect from Goal</option>
+            <option value="lead-gen">🎯 Lead Generation Engine</option>
+            <option value="content">✍️ Content Marketing Team</option>
+            <option value="email">📧 Email Campaign Manager</option>
+            <option value="social">📱 Social Media Strategist</option>
+            <option value="analytics">📊 Campaign Analytics Hub</option>
+            <option value="competitive">🔍 Competitive Intelligence</option>
+            <option value="sales-enable">🤝 Sales Enablement Team</option>
+            <option value="abm">🏢 ABM Orchestrator</option>
+            <option value="brand">🎨 Brand Voice Guardian</option>
+            <option value="growth">🚀 Growth Hacker Lab</option>
+          </select>
+        </div>
+        <div class="config-group">
+          <label>Mode</label>
+          <select id="mode-select" class="config-select" style="min-width:140px">
+            <option value="hierarchical">Hierarchical</option>
+            <option value="flat">Flat / Parallel</option>
+            <option value="sequential">Sequential</option>
+          </select>
+        </div>
+        <div class="config-group" id="goal-group">
+          <label>Marketing Goal</label>
+          <textarea id="goal-input" placeholder="Describe your sales or marketing goal... e.g. 'Create a 5-email nurture sequence for SaaS trial users who haven't converted after 14 days'"></textarea>
+        </div>
+        <button id="launch-btn" onclick="launchSwarm()">🚀 Launch Swarm</button>
+      </div>
+      <div id="console-output-wrap">
+        <div id="console-output">
+          <div class="out-line system">╔══════════════════════════════════════════════════════════════╗</div>
+          <div class="out-line system">║     Sales &amp; Marketing Nanobot Swarm · v2.0.0              ║</div>
+          <div class="out-line system">║     Powered by VibeCaaS.com / NeuralQuantum.ai LLC           ║</div>
+          <div class="out-line system">╚══════════════════════════════════════════════════════════════╝</div>
+          <div class="out-line system">─────────────────────────────────────────────────────────────</div>
+          <div class="out-line info">[SYSTEM] Initializing AI agent swarm network...</div>
+          <div class="out-line info">[SYSTEM] 10 specialized marketing teams loaded</div>
+          <div class="out-line success">[SYSTEM] ✓ Backend connection established</div>
+          <div class="out-line success">[SYSTEM] ✓ All agents operational</div>
+          <div class="out-line system">─────────────────────────────────────────────────────────────</div>
+          <div class="out-line result">Ready. Enter your marketing goal above and click Launch Swarm.</div>
+          <div class="out-line system">Tip: Press Ctrl+Enter to launch · Escape to exit fullscreen</div>
+          <span id="cursor-blink"></span>
+        </div>
+      </div>
+      <div id="console-status">
+        <div id="run-status">
+          <div class="pulse"></div>
+          <span id="status-text">Idle — Ready for mission</span>
+        </div>
+        <span style="margin-left:auto" id="token-count">Tokens: 0</span>
+        <span>·</span>
+        <span id="agent-count">Agents: 0 active</span>
+        <span>·</span>
+        <span id="elapsed-time">Time: 0s</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2 mt-4">
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Mission Presets</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="action-btn secondary w-full" style="justify-content:flex-start;text-align:left" onclick="loadPreset('nurture')">
+          📧 5-email SaaS trial nurture sequence
+        </button>
+        <button class="action-btn secondary w-full" style="justify-content:flex-start;text-align:left" onclick="loadPreset('competitor')">
+          🔍 Full competitor analysis + battlecard
+        </button>
+        <button class="action-btn secondary w-full" style="justify-content:flex-start;text-align:left" onclick="loadPreset('seo')">
+          📝 SEO content strategy for target keywords
+        </button>
+        <button class="action-btn secondary w-full" style="justify-content:flex-start;text-align:left" onclick="loadPreset('abm')">
+          🏢 ABM campaign for Fortune 500 accounts
+        </button>
+        <button class="action-btn secondary w-full" style="justify-content:flex-start;text-align:left" onclick="loadPreset('icp')">
+          🎯 ICP definition and lead scoring model
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Console Shortcuts</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="flex items-center gap-3">
+          <kbd style="padding:3px 8px;border-radius:4px;background:rgba(99,102,241,0.15);color:var(--indigo);font-size:12px;font-family:monospace">Ctrl+Enter</kbd>
+          <span class="text-sm">Launch Swarm</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <kbd style="padding:3px 8px;border-radius:4px;background:rgba(99,102,241,0.15);color:var(--indigo);font-size:12px;font-family:monospace">Escape</kbd>
+          <span class="text-sm">Exit Fullscreen</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <kbd style="padding:3px 8px;border-radius:4px;background:rgba(99,102,241,0.15);color:var(--indigo);font-size:12px;font-family:monospace">Ctrl+L</kbd>
+          <span class="text-sm">Clear Console</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <kbd style="padding:3px 8px;border-radius:4px;background:rgba(99,102,241,0.15);color:var(--indigo);font-size:12px;font-family:monospace">Ctrl+F</kbd>
+          <span class="text-sm">Fullscreen Toggle</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <kbd style="padding:3px 8px;border-radius:4px;background:rgba(99,102,241,0.15);color:var(--indigo);font-size:12px;font-family:monospace">Ctrl+K</kbd>
+          <span class="text-sm">Focus Goal Input</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TEAMS ==================== -->
+<section id="sec-teams" class="section">
+  <div class="page-header">
+    <h1>Agent Teams</h1>
+    <p>10 specialized AI teams ready to execute your marketing strategy</p>
+  </div>
+  <div class="teams-grid" id="teams-grid">
+
+    <div class="team-card" onclick="launchTeam('lead-gen','Lead Generation Engine')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(6,182,212,0.15)">🎯</div>
+        <div>
+          <div class="team-name">Lead Generation Engine</div>
+          <span class="team-mode" style="background:rgba(6,182,212,0.15);color:var(--cyan)">Hierarchical</span>
+        </div>
+      </div>
+      <div class="team-desc">Multi-channel prospecting with AI-powered ICP scoring and qualification. Identifies, enriches, and prioritizes leads across LinkedIn, web scraping, intent data, and inbound channels.</div>
+      <div class="team-footer">
+        <span class="team-agents">6 agents · Lead Scoring · ICP Match</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('content','Content Marketing Team')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(139,92,246,0.15)">✍️</div>
+        <div>
+          <div class="team-name">Content Marketing Team</div>
+          <span class="team-mode" style="background:rgba(139,92,246,0.15);color:var(--purple)">Hierarchical</span>
+        </div>
+      </div>
+      <div class="team-desc">SEO-optimized content strategy from keyword research to distribution. Creates blog posts, whitepapers, case studies, and landing pages at scale with brand consistency.</div>
+      <div class="team-footer">
+        <span class="team-agents">8 agents · SEO · Content Calendar</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('email','Email Campaign Manager')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(99,102,241,0.15)">📧</div>
+        <div>
+          <div class="team-name">Email Campaign Manager</div>
+          <span class="team-mode" style="background:rgba(99,102,241,0.15);color:var(--indigo)">Sequential</span>
+        </div>
+      </div>
+      <div class="team-desc">Automated sequences with A/B testing and deliverability optimization. Manages nurture flows, re-engagement campaigns, and transactional emails with ML-driven send-time optimization.</div>
+      <div class="team-footer">
+        <span class="team-agents">5 agents · A/B Testing · Deliverability</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('social','Social Media Strategist')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(236,72,153,0.15)">📱</div>
+        <div>
+          <div class="team-name">Social Media Strategist</div>
+          <span class="team-mode" style="background:rgba(236,72,153,0.15);color:var(--pink)">Flat</span>
+        </div>
+      </div>
+      <div class="team-desc">Platform-specific content calendars and paid amplification strategy. Optimizes organic reach and manages paid social across LinkedIn, Twitter/X, Instagram, and TikTok.</div>
+      <div class="team-footer">
+        <span class="team-agents">7 agents · Paid Social · Organic</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('analytics','Campaign Analytics Hub')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(6,182,212,0.15)">📊</div>
+        <div>
+          <div class="team-name">Campaign Analytics Hub</div>
+          <span class="team-mode" style="background:rgba(6,182,212,0.15);color:var(--cyan)">Hierarchical</span>
+        </div>
+      </div>
+      <div class="team-desc">Unified attribution modeling, CAC/LTV analysis, and budget optimization. Tracks multi-touch attribution across all channels and provides actionable ROI insights and forecasting.</div>
+      <div class="team-footer">
+        <span class="team-agents">6 agents · Attribution · Forecasting</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('competitive','Competitive Intelligence')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(245,158,11,0.15)">🔍</div>
+        <div>
+          <div class="team-name">Competitive Intelligence</div>
+          <span class="team-mode" style="background:rgba(245,158,11,0.15);color:var(--amber)">Flat</span>
+        </div>
+      </div>
+      <div class="team-desc">Real-time competitor tracking, positioning analysis, and battlecard creation. Monitors competitor messaging, pricing changes, product launches, and customer sentiment across the web.</div>
+      <div class="team-footer">
+        <span class="team-agents">5 agents · Battlecards · Monitoring</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('sales-enable','Sales Enablement Team')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(16,185,129,0.15)">🤝</div>
+        <div>
+          <div class="team-name">Sales Enablement Team</div>
+          <span class="team-mode" style="background:rgba(16,185,129,0.15);color:var(--emerald)">Hierarchical</span>
+        </div>
+      </div>
+      <div class="team-desc">Sales collateral, objection handling guides, and pipeline coaching. Creates pitch decks, one-pagers, demo scripts, and ROI calculators aligned to buyer journey stages.</div>
+      <div class="team-footer">
+        <span class="team-agents">6 agents · Collateral · Coaching</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('abm','ABM Orchestrator')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(99,102,241,0.15)">🏢</div>
+        <div>
+          <div class="team-name">ABM Orchestrator</div>
+          <span class="team-mode" style="background:rgba(99,102,241,0.15);color:var(--indigo)">Hierarchical</span>
+        </div>
+      </div>
+      <div class="team-desc">Account-based marketing campaigns for high-value enterprise targets. Coordinates hyper-personalized outreach, intent-based triggers, and executive engagement programs for key accounts.</div>
+      <div class="team-footer">
+        <span class="team-agents">8 agents · 1:1 Personalization · Exec</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('brand','Brand Voice Guardian')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(236,72,153,0.15)">🎨</div>
+        <div>
+          <div class="team-name">Brand Voice Guardian</div>
+          <span class="team-mode" style="background:rgba(236,72,153,0.15);color:var(--pink)">Sequential</span>
+        </div>
+      </div>
+      <div class="team-desc">Brand consistency audits, messaging matrix, and tone of voice guidelines. Reviews all outbound content for brand alignment, maintains style guides, and trains teams on brand standards.</div>
+      <div class="team-footer">
+        <span class="team-agents">4 agents · Brand Audit · Style Guide</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+    <div class="team-card" onclick="launchTeam('growth','Growth Hacker Lab')">
+      <div class="team-card-header">
+        <div class="team-icon" style="background:rgba(139,92,246,0.15)">🚀</div>
+        <div>
+          <div class="team-name">Growth Hacker Lab</div>
+          <span class="team-mode" style="background:rgba(139,92,246,0.15);color:var(--purple)">Flat</span>
+        </div>
+      </div>
+      <div class="team-desc">Viral loop design, referral mechanics, and growth experiment backlog. Designs and runs rapid experiments across acquisition, activation, retention, and referral to find repeatable growth levers.</div>
+      <div class="team-footer">
+        <span class="team-agents">7 agents · Experiments · Viral Loops</span>
+        <button class="launch-btn">Launch Team →</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== CAMPAIGNS ==================== -->
+<section id="sec-campaigns" class="section">
+  <div class="page-header">
+    <h1>Campaign Management</h1>
+    <p>Monitor and manage all active marketing campaigns</p>
+  </div>
+
+  <div class="campaigns-header">
+    <div class="flex gap-2">
+      <button class="action-btn primary" onclick="showProModal()">+ New Campaign</button>
+      <button class="action-btn secondary" onclick="showProModal()">Import</button>
+    </div>
+    <div class="flex gap-2">
+      <select class="config-select" style="min-width:120px;padding:8px 12px">
+        <option>All Status</option>
+        <option>Active</option>
+        <option>Paused</option>
+        <option>Draft</option>
+      </select>
+      <select class="config-select" style="min-width:140px;padding:8px 12px">
+        <option>All Channels</option>
+        <option>Email</option>
+        <option>Paid Social</option>
+        <option>SEO</option>
+        <option>ABM</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="overflow-x:auto">
+      <table class="campaign-table">
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th>Team</th>
+            <th>Status</th>
+            <th>Channel</th>
+            <th>Budget</th>
+            <th>Spend</th>
+            <th>Leads</th>
+            <th>ROAS</th>
+            <th>Progress</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="font-semibold text-sm">Q2 SaaS Trial Nurture</div><div class="text-xs text-secondary">May 1 – Jun 30</div></td>
+            <td><span class="text-xs">📧 Email Manager</span></td>
+            <td><span class="status-pill active">Active</span></td>
+            <td><span class="text-xs">Email</span></td>
+            <td><span class="text-sm">$8,000</span></td>
+            <td><span class="text-sm">$3,240</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--cyan)">847</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--emerald)">5.1x</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:41%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Manage</button></td>
+          </tr>
+          <tr>
+            <td><div class="font-semibold text-sm">Enterprise ABM Wave 3</div><div class="text-xs text-secondary">Apr 15 – Jun 15</div></td>
+            <td><span class="text-xs">🏢 ABM Orchestrator</span></td>
+            <td><span class="status-pill active">Active</span></td>
+            <td><span class="text-xs">Multi-channel</span></td>
+            <td><span class="text-sm">$25,000</span></td>
+            <td><span class="text-sm">$18,500</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--cyan)">24</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--emerald)">8.2x</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Manage</button></td>
+          </tr>
+          <tr>
+            <td><div class="font-semibold text-sm">LinkedIn Thought Leadership</div><div class="text-xs text-secondary">Mar 1 – Ongoing</div></td>
+            <td><span class="text-xs">📱 Social Strategist</span></td>
+            <td><span class="status-pill active">Active</span></td>
+            <td><span class="text-xs">LinkedIn</span></td>
+            <td><span class="text-sm">$5,000/mo</span></td>
+            <td><span class="text-sm">$15,200</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--cyan)">1,204</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--emerald)">3.8x</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Manage</button></td>
+          </tr>
+          <tr>
+            <td><div class="font-semibold text-sm">Google Ads — Mid-Market</div><div class="text-xs text-secondary">Apr 1 – May 31</div></td>
+            <td><span class="text-xs">📊 Analytics Hub</span></td>
+            <td><span class="status-pill paused">Paused</span></td>
+            <td><span class="text-xs">Paid Search</span></td>
+            <td><span class="text-sm">$12,000</span></td>
+            <td><span class="text-sm">$7,890</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--cyan)">312</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--amber)">2.1x</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Manage</button></td>
+          </tr>
+          <tr>
+            <td><div class="font-semibold text-sm">SEO Content Blitz Q2</div><div class="text-xs text-secondary">Apr 1 – Jun 30</div></td>
+            <td><span class="text-xs">✍️ Content Team</span></td>
+            <td><span class="status-pill active">Active</span></td>
+            <td><span class="text-xs">SEO / Organic</span></td>
+            <td><span class="text-sm">$6,000</span></td>
+            <td><span class="text-sm">$2,100</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--cyan)">589</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--emerald)">6.4x</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Manage</button></td>
+          </tr>
+          <tr>
+            <td><div class="font-semibold text-sm">Referral Program Launch</div><div class="text-xs text-secondary">May 15 – Draft</div></td>
+            <td><span class="text-xs">🚀 Growth Lab</span></td>
+            <td><span class="status-pill draft">Draft</span></td>
+            <td><span class="text-xs">Referral</span></td>
+            <td><span class="text-sm">$4,000</span></td>
+            <td><span class="text-sm">$0</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--text-secondary)">—</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--text-secondary)">—</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Edit</button></td>
+          </tr>
+          <tr>
+            <td><div class="font-semibold text-sm">Winter Holiday Push</div><div class="text-xs text-secondary">Dec 1 – Dec 31</div></td>
+            <td><span class="text-xs">📣 Multi-team</span></td>
+            <td><span class="status-pill ended">Ended</span></td>
+            <td><span class="text-xs">All Channels</span></td>
+            <td><span class="text-sm">$18,000</span></td>
+            <td><span class="text-sm">$18,000</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--cyan)">2,841</span></td>
+            <td><span class="text-sm font-semibold" style="color:var(--emerald)">7.1x</span></td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+            <td><button class="action-btn secondary" style="padding:4px 10px;font-size:11px" onclick="showProModal()">Report</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2 mt-4">
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Budget Allocation</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm">ABM / Enterprise</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">$25,000 · 38%</span>
+          </div>
+          <div class="progress-bar" style="height:8px"><div class="progress-fill" style="width:38%;background:linear-gradient(90deg,#6366f1,#8b5cf6)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm">Paid Search / Social</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">$17,000 · 26%</span>
+          </div>
+          <div class="progress-bar" style="height:8px"><div class="progress-fill" style="width:26%;background:linear-gradient(90deg,#ec4899,#f472b6)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm">Email / Nurture</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">$8,000 · 12%</span>
+          </div>
+          <div class="progress-bar" style="height:8px"><div class="progress-fill" style="width:12%;background:linear-gradient(90deg,#06b6d4,#0ea5e9)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm">SEO / Content</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">$6,000 · 9%</span>
+          </div>
+          <div class="progress-bar" style="height:8px"><div class="progress-fill" style="width:9%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm">Growth / Referral</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">$4,000 · 6%</span>
+          </div>
+          <div class="progress-bar" style="height:8px"><div class="progress-fill" style="width:6%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Campaign Health Score</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="flex items-center gap-3 p-2 rounded" style="background:rgba(16,185,129,0.08)">
+          <span style="font-size:18px">✅</span>
+          <div>
+            <div class="text-sm font-semibold">3 campaigns on track</div>
+            <div class="text-xs text-secondary">Leads and ROAS above target</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded" style="background:rgba(245,158,11,0.08)">
+          <span style="font-size:18px">⚠️</span>
+          <div>
+            <div class="text-sm font-semibold">1 campaign needs attention</div>
+            <div class="text-xs text-secondary">Google Ads ROAS below 2.5x threshold</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded" style="background:rgba(99,102,241,0.08)">
+          <span style="font-size:18px">📋</span>
+          <div>
+            <div class="text-sm font-semibold">1 draft pending launch</div>
+            <div class="text-xs text-secondary">Referral Program awaiting approval</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded" style="background:rgba(6,182,212,0.08)">
+          <span style="font-size:18px">🎯</span>
+          <div>
+            <div class="text-sm font-semibold">Q2 pace: 73% of target</div>
+            <div class="text-xs text-secondary">On track to hit 5,000 MQL goal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BUILDER ==================== -->
+<section id="sec-builder" class="section">
+  <div class="page-header">
+    <h1>Agent Builder</h1>
+    <p>Design custom AI agents and assemble specialized teams</p>
+  </div>
+
+  <div class="builder-tabs">
+    <button class="builder-tab active" onclick="switchBuilderTab('agent',this)">🤖 Agent Builder</button>
+    <button class="builder-tab" onclick="switchBuilderTab('team',this)">👥 Team Builder</button>
+  </div>
+
+  <!-- AGENT BUILDER -->
+  <div id="builder-agent" class="builder-panel active">
+    <div class="card mb-4">
+      <h3 class="font-semibold mb-2" style="font-size:14px">Agent Specification</h3>
+      <p class="text-sm text-secondary mb-3">Describe the marketing agent you want to create. Be specific about its role, skills, tools, and behavior.</p>
+      <div class="build-area">
+        <div>
+          <label class="text-xs text-secondary" style="display:block;margin-bottom:6px">Agent Description</label>
+          <textarea id="agent-spec" class="build-input" placeholder="Example: Create a B2B lead qualification agent that:
+- Scores inbound leads based on ICP criteria (company size, industry, tech stack, intent signals)
+- Enriches lead data using LinkedIn, Clearbit, and 6sense
+- Assigns MQL/SQL status with confidence score
+- Drafts personalized outreach for AEs based on lead profile
+- Integrates with Salesforce CRM for automatic sync
+
+Skills needed: Data enrichment, ICP scoring, CRM integration, email personalization
+Tools: Web scraper, LinkedIn API, Clearbit, 6sense, Salesforce
+Behavior: Conservative qualification (prefer quality over quantity)
+Output: Scored lead record + outreach draft in JSON"></textarea>
+          <button class="build-btn" onclick="buildAgent()">🤖 Build Agent</button>
+        </div>
+        <div>
+          <label class="text-xs text-secondary" style="display:block;margin-bottom:6px">Generated Agent Config (JSON)</label>
+          <div id="agent-output" class="build-output">{
+  "agent": null,
+  "status": "awaiting_specification",
+  "message": "Describe your agent above and click Build Agent"
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Agent Templates</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+        <button class="action-btn secondary" style="flex-direction:column;align-items:flex-start;padding:14px;height:auto" onclick="loadAgentTemplate('lead-scorer')">
+          <span style="font-size:20px;margin-bottom:6px">🎯</span>
+          <span class="font-semibold text-sm">Lead Scorer</span>
+          <span class="text-xs text-secondary mt-1">ICP matching + intent signals</span>
+        </button>
+        <button class="action-btn secondary" style="flex-direction:column;align-items:flex-start;padding:14px;height:auto" onclick="loadAgentTemplate('content-writer')">
+          <span style="font-size:20px;margin-bottom:6px">✍️</span>
+          <span class="font-semibold text-sm">Content Writer</span>
+          <span class="text-xs text-secondary mt-1">SEO blog posts + copy</span>
+        </button>
+        <button class="action-btn secondary" style="flex-direction:column;align-items:flex-start;padding:14px;height:auto" onclick="loadAgentTemplate('email-writer')">
+          <span style="font-size:20px;margin-bottom:6px">📧</span>
+          <span class="font-semibold text-sm">Email Copywriter</span>
+          <span class="text-xs text-secondary mt-1">Personalized sequences</span>
+        </button>
+        <button class="action-btn secondary" style="flex-direction:column;align-items:flex-start;padding:14px;height:auto" onclick="loadAgentTemplate('social-writer')">
+          <span style="font-size:20px;margin-bottom:6px">📱</span>
+          <span class="font-semibold text-sm">Social Media Manager</span>
+          <span class="text-xs text-secondary mt-1">Platform-native content</span>
+        </button>
+        <button class="action-btn secondary" style="flex-direction:column;align-items:flex-start;padding:14px;height:auto" onclick="loadAgentTemplate('analyst')">
+          <span style="font-size:20px;margin-bottom:6px">📊</span>
+          <span class="font-semibold text-sm">Campaign Analyst</span>
+          <span class="text-xs text-secondary mt-1">Attribution + ROI reporting</span>
+        </button>
+        <button class="action-btn secondary" style="flex-direction:column;align-items:flex-start;padding:14px;height:auto" onclick="loadAgentTemplate('competitor-watcher')">
+          <span style="font-size:20px;margin-bottom:6px">🔍</span>
+          <span class="font-semibold text-sm">Competitor Watcher</span>
+          <span class="text-xs text-secondary mt-1">Real-time intel gathering</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM BUILDER -->
+  <div id="builder-team" class="builder-panel">
+    <div class="card mb-4">
+      <h3 class="font-semibold mb-2" style="font-size:14px">Team Specification</h3>
+      <p class="text-sm text-secondary mb-3">Describe the marketing team you want to assemble. Include the team's objective, required agent roles, coordination style, and success metrics.</p>
+      <div class="build-area">
+        <div>
+          <label class="text-xs text-secondary" style="display:block;margin-bottom:6px">Team Description</label>
+          <textarea id="team-spec" class="build-input" placeholder="Example: Build a Product Launch Team for a new AI analytics feature:
+
+Objective: Drive 500 beta signups and $50K pipeline in 30 days
+
+Required agents:
+- Launch Strategist (coordinates overall plan)
+- PR & Announcement Writer (press release, launch blog)
+- Product Educator (feature demos, tutorial content)
+- Community Manager (Product Hunt, Slack communities)
+- Paid Acquisition Manager (launch week PPC blitz)
+- Analytics Tracker (daily metrics, conversion tracking)
+
+Coordination: Hierarchical (Launch Strategist as lead)
+Success metrics: Beta signups, demo requests, press mentions
+Timeline: 2 weeks pre-launch + 2 weeks post-launch"></textarea>
+          <button class="build-btn" onclick="buildTeam()">👥 Build Team</button>
+        </div>
+        <div>
+          <label class="text-xs text-secondary" style="display:block;margin-bottom:6px">Generated Team Config (JSON)</label>
+          <div id="team-output" class="build-output">{
+  "team": null,
+  "status": "awaiting_specification",
+  "message": "Describe your team above and click Build Team"
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Team Composition Tips</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+        <div class="card card-sm" style="background:#0a0a14">
+          <div class="text-sm font-semibold mb-1">🏗️ Hierarchical Teams</div>
+          <div class="text-xs text-secondary">Best for complex campaigns needing coordination. One lead agent delegates to specialists. Use for ABM, product launches, multi-channel campaigns.</div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14">
+          <div class="text-sm font-semibold mb-1">⚡ Flat / Parallel Teams</div>
+          <div class="text-xs text-secondary">Best for high-volume, independent tasks. All agents work simultaneously. Use for content production, social posting, lead enrichment at scale.</div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14">
+          <div class="text-sm font-semibold mb-1">🔗 Sequential Teams</div>
+          <div class="text-xs text-secondary">Best for pipeline workflows with dependencies. Each agent passes output to next. Use for lead-to-revenue flows, content review chains, approval workflows.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ANALYTICS ==================== -->
+<section id="sec-analytics" class="section">
+  <div class="page-header">
+    <h1>Marketing Analytics</h1>
+    <p>Unified performance intelligence across all channels and campaigns</p>
+  </div>
+
+  <!-- FUNNEL + METRICS ROW -->
+  <div class="analytics-grid">
+    <div class="card" style="grid-column:span 1">
+      <h3 class="font-semibold mb-4" style="font-size:14px">Marketing Funnel</h3>
+      <div class="funnel-wrap" style="padding:0">
+        <div class="funnel-stage">
+          <span class="funnel-label">Visitors</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:100%;background:linear-gradient(90deg,#6366f1,#818cf8)">
+              <span style="color:#fff;font-size:11px">100%</span>
+            </div>
+          </div>
+          <span class="funnel-count" style="color:var(--indigo)">84,200</span>
+        </div>
+        <div class="funnel-stage">
+          <span class="funnel-label">Leads</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:58%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)">
+              <span style="color:#fff;font-size:11px">5.8%</span>
+            </div>
+          </div>
+          <span class="funnel-count" style="color:var(--purple)">4,872</span>
+        </div>
+        <div class="funnel-stage">
+          <span class="funnel-label">MQLs</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:38%;background:linear-gradient(90deg,#ec4899,#f472b6)">
+              <span style="color:#fff;font-size:11px">2.4%</span>
+            </div>
+          </div>
+          <span class="funnel-count" style="color:var(--pink)">1,987</span>
+        </div>
+        <div class="funnel-stage">
+          <span class="funnel-label">SQLs</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:22%;background:linear-gradient(90deg,#06b6d4,#22d3ee)">
+              <span style="color:#fff;font-size:11px">0.56%</span>
+            </div>
+          </div>
+          <span class="funnel-count" style="color:var(--cyan)">471</span>
+        </div>
+        <div class="funnel-stage">
+          <span class="funnel-label">Customers</span>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-bar" style="width:10%;background:linear-gradient(90deg,#10b981,#34d399)">
+              <span style="color:#fff;font-size:11px">0.13%</span>
+            </div>
+          </div>
+          <span class="funnel-count" style="color:var(--emerald)">112</span>
+        </div>
+      </div>
+      <div class="mt-3" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="card card-sm" style="background:#0a0a14;padding:10px">
+          <div class="text-xs text-secondary">Lead → MQL</div>
+          <div class="text-sm font-bold" style="color:var(--cyan)">40.8%</div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14;padding:10px">
+          <div class="text-xs text-secondary">MQL → SQL</div>
+          <div class="text-sm font-bold" style="color:var(--emerald)">23.7%</div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14;padding:10px">
+          <div class="text-xs text-secondary">SQL → Customer</div>
+          <div class="text-sm font-bold" style="color:var(--purple)">23.8%</div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14;padding:10px">
+          <div class="text-xs text-secondary">Overall Conv.</div>
+          <div class="text-sm font-bold" style="color:var(--pink)">0.13%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Channel Performance</h3>
+      <div style="overflow-x:auto">
+        <table class="channels-table">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Leads</th>
+              <th>CAC</th>
+              <th>ROAS</th>
+              <th>Conv%</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="flex items-center gap-2"><span>🔍</span><span class="font-semibold">SEO / Organic</span></div></td>
+              <td><span style="color:var(--cyan)">1,840</span></td>
+              <td><span style="color:var(--emerald)">$12</span></td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span style="color:var(--emerald)">8.4x</span>
+                  <div class="roas-bar" style="width:84px"></div>
+                </div>
+              </td>
+              <td style="color:var(--emerald)">37.8%</td>
+              <td style="color:var(--emerald)">▲ 12%</td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-2"><span>💰</span><span class="font-semibold">Paid Search</span></div></td>
+              <td><span style="color:var(--cyan)">920</span></td>
+              <td><span style="color:var(--amber)">$48</span></td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span style="color:var(--amber)">3.2x</span>
+                  <div class="roas-bar" style="width:32px;background:var(--amber)"></div>
+                </div>
+              </td>
+              <td style="color:var(--text-primary)">18.9%</td>
+              <td style="color:var(--red)">▼ 4%</td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-2"><span>📧</span><span class="font-semibold">Email</span></div></td>
+              <td><span style="color:var(--cyan)">847</span></td>
+              <td><span style="color:var(--emerald)">$8</span></td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span style="color:var(--emerald)">5.1x</span>
+                  <div class="roas-bar" style="width:51px"></div>
+                </div>
+              </td>
+              <td style="color:var(--emerald)">21.4%</td>
+              <td style="color:var(--emerald)">▲ 8%</td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-2"><span>📱</span><span class="font-semibold">Social Media</span></div></td>
+              <td><span style="color:var(--cyan)">612</span></td>
+              <td><span style="color:var(--text-primary)">$31</span></td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span style="color:var(--purple)">4.0x</span>
+                  <div class="roas-bar" style="width:40px;background:var(--purple)"></div>
+                </div>
+              </td>
+              <td style="color:var(--text-primary)">12.6%</td>
+              <td style="color:var(--emerald)">▲ 19%</td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-2"><span>🤝</span><span class="font-semibold">Referral</span></div></td>
+              <td><span style="color:var(--cyan)">321</span></td>
+              <td><span style="color:var(--emerald)">$5</span></td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span style="color:var(--emerald)">11.2x</span>
+                  <div class="roas-bar" style="width:100%;max-width:80px"></div>
+                </div>
+              </td>
+              <td style="color:var(--emerald)">31.2%</td>
+              <td style="color:var(--emerald)">▲ 34%</td>
+            </tr>
+            <tr>
+              <td><div class="flex items-center gap-2"><span>🏢</span><span class="font-semibold">ABM / Direct</span></div></td>
+              <td><span style="color:var(--cyan)">332</span></td>
+              <td><span style="color:var(--red)">$148</span></td>
+              <td>
+                <div class="flex items-center gap-2">
+                  <span style="color:var(--cyan)">9.8x</span>
+                  <div class="roas-bar" style="width:78px;background:var(--cyan)"></div>
+                </div>
+              </td>
+              <td style="color:var(--emerald)">42.2%</td>
+              <td style="color:var(--emerald)">▲ 7%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT + ROI ROW -->
+  <div class="grid-2 mt-4">
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Top Content Performance</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card card-sm" style="background:#0a0a14;padding:12px">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs" style="padding:2px 6px;border-radius:4px;background:rgba(6,182,212,0.15);color:var(--cyan)">Blog</span>
+            <span class="text-sm font-semibold truncate">"10 Signs You Need Marketing Automation"</span>
+          </div>
+          <div class="flex gap-3 text-xs text-secondary">
+            <span>👁 12,400 views</span><span>🎯 340 leads</span><span>⏱ 4m avg read</span>
+          </div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14;padding:12px">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs" style="padding:2px 6px;border-radius:4px;background:rgba(139,92,246,0.15);color:var(--purple)">Guide</span>
+            <span class="text-sm font-semibold truncate">"The Complete B2B Lead Scoring Playbook"</span>
+          </div>
+          <div class="flex gap-3 text-xs text-secondary">
+            <span>👁 8,920 views</span><span>🎯 287 leads</span><span>📄 PDF download</span>
+          </div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14;padding:12px">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs" style="padding:2px 6px;border-radius:4px;background:rgba(236,72,153,0.15);color:var(--pink)">Video</span>
+            <span class="text-sm font-semibold truncate">"AI Sales Automation Demo — 5 min"</span>
+          </div>
+          <div class="flex gap-3 text-xs text-secondary">
+            <span>👁 6,210 views</span><span>🎯 198 leads</span><span>▶ 68% completion</span>
+          </div>
+        </div>
+        <div class="card card-sm" style="background:#0a0a14;padding:12px">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs" style="padding:2px 6px;border-radius:4px;background:rgba(245,158,11,0.15);color:var(--amber)">Webinar</span>
+            <span class="text-sm font-semibold truncate">"How We 3x'd Pipeline with ABM in 90 Days"</span>
+          </div>
+          <div class="flex gap-3 text-xs text-secondary">
+            <span>👥 1,840 registered</span><span>🎯 421 MQLs</span><span>📅 On-demand</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="font-semibold mb-3" style="font-size:14px">Campaign ROI Comparison</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-semibold">ABM Enterprise Wave 3</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">8.2x ROAS</span>
+          </div>
+          <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:82%;background:linear-gradient(90deg,#6366f1,#8b5cf6)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-semibold">SEO Content Blitz Q2</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">6.4x ROAS</span>
+          </div>
+          <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:64%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-semibold">Q2 SaaS Trial Nurture</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">5.1x ROAS</span>
+          </div>
+          <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:51%;background:linear-gradient(90deg,#06b6d4,#22d3ee)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-semibold">LinkedIn Thought Leadership</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">3.8x ROAS</span>
+          </div>
+          <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:38%;background:linear-gradient(90deg,#ec4899,#f472b6)"></div></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-semibold">Google Ads Mid-Market</span>
+            <span class="text-xs text-secondary" style="margin-left:auto">2.1x ROAS</span>
+          </div>
+          <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:21%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+        </div>
+        <div class="mt-3 p-3 rounded" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2)">
+          <div class="text-sm font-semibold" style="color:var(--emerald)">AI Recommendation</div>
+          <div class="text-xs text-secondary mt-1">Shift 15% budget from Paid Search to SEO and ABM for projected +0.8x blended ROAS improvement by Q3.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="metrics-grid mt-4">
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(6,182,212,0.15)">💰</div>
+      <div class="metric-label">Avg Customer LTV</div>
+      <div class="metric-value" style="color:var(--cyan)">$8,400</div>
+      <div class="metric-change up">▲ 12% YoY</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(239,68,68,0.15)">🧮</div>
+      <div class="metric-label">Blended CAC</div>
+      <div class="metric-value" style="color:var(--red)">$186</div>
+      <div class="metric-change up">▼ 8% (improving)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(16,185,129,0.15)">📐</div>
+      <div class="metric-label">LTV : CAC Ratio</div>
+      <div class="metric-value" style="color:var(--emerald)">45:1</div>
+      <div class="metric-change up">▲ Excellent</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(139,92,246,0.15)">⏱</div>
+      <div class="metric-label">Time to Close</div>
+      <div class="metric-value" style="color:var(--purple)">24d</div>
+      <div class="metric-change up">▲ 6d faster vs Q1</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(245,158,11,0.15)">📧</div>
+      <div class="metric-label">Email Open Rate</div>
+      <div class="metric-value" style="color:var(--amber)">34.2%</div>
+      <div class="metric-change up">▲ Above industry avg</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background:rgba(236,72,153,0.15)">🔗</div>
+      <div class="metric-label">Domain Authority</div>
+      <div class="metric-value" style="color:var(--pink)">67</div>
+      <div class="metric-change up">▲ +4 this quarter</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== MODAL ==================== -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-box">
+    <div style="font-size:40px;margin-bottom:12px">🚀</div>
+    <h2>Pro Version Coming Soon</h2>
+    <p>Advanced features including real-time AI execution, campaign automation, CRM integrations, custom agent training, and enterprise analytics are coming in the Pro version.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;text-align:left">
+      <div class="flex items-center gap-2 text-sm"><span style="color:var(--emerald)">✓</span> Live AI agent execution with streaming</div>
+      <div class="flex items-center gap-2 text-sm"><span style="color:var(--emerald)">✓</span> Salesforce, HubSpot, Marketo integrations</div>
+      <div class="flex items-center gap-2 text-sm"><span style="color:var(--emerald)">✓</span> Custom agent fine-tuning on your data</div>
+      <div class="flex items-center gap-2 text-sm"><span style="color:var(--emerald)">✓</span> Automated campaign execution workflows</div>
+      <div class="flex items-center gap-2 text-sm"><span style="color:var(--emerald)">✓</span> White-label reporting + client portals</div>
+    </div>
+    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">Got it — Notify Me</button>
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer id="footer">
+  <div class="footer-links">
+    <a href="#" onclick="showProModal()">FAQ</a>
+    <a href="#" onclick="showProModal()">Documentation</a>
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="#" onclick="showProModal()">API Reference</a>
+    <a href="https://vibecaas.com" target="_blank">VibeCaaS.com</a>
+    <a href="https://neuralquantum.ai" target="_blank">NeuralQuantum.ai</a>
+  </div>
+  <div class="footer-copy">© 2025 NeuralQuantum.ai LLC · Powered by VibeCaaS.com · All rights reserved</div>
+  <div class="footer-badge">🚀 Pro Version Coming Soon</div>
+</footer>
+
+</main>
+<script>
+// ===== STATE =====
+let isRunning = false;
+let isFullscreen = false;
+let isExpanded = false;
+let startTime = null;
+let timerInterval = null;
+let tokenCount = 0;
+let activeAgents = 0;
+let abortController = null;
+
+// ===== NAVIGATION =====
+function showSection(id, btn, isMobile) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  const btnClass = isMobile ? '.mobile-nav-btn' : '.nav-btn';
+  document.querySelectorAll(btnClass).forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (isMobile) {
+    document.getElementById('mobile-nav').classList.remove('open');
+    // Sync desktop nav
+    document.querySelectorAll('.nav-btn').forEach(b => {
+      if (b.textContent.trim().toLowerCase().startsWith(id.charAt(0).toUpperCase() + id.slice(1).split('-')[0])) {
+        // approximate match
+      }
+    });
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleMobileNav() {
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+
+// ===== HEALTH CHECK =====
+async function checkHealth() {
+  const dot = document.getElementById('status-dot');
+  const label = document.getElementById('status-label');
+  try {
+    const res = await fetch('/health', { signal: AbortSignal.timeout(5000) });
+    if (res.ok) {
+      dot.className = 'online';
+      label.textContent = 'Backend Online';
+    } else {
+      dot.className = 'error';
+      label.textContent = 'Backend Error';
+    }
+  } catch {
+    dot.className = 'error';
+    label.textContent = 'Offline Mode';
+  }
+}
+
+// ===== CONSOLE OUTPUT =====
+function appendLine(text, type = 'result') {
+  const out = document.getElementById('console-output');
+  const cursor = document.getElementById('cursor-blink');
+  const line = document.createElement('div');
+  line.className = 'out-line ' + type;
+  line.textContent = text;
+  if (cursor) out.insertBefore(line, cursor);
+  else out.appendChild(line);
+  out.scrollTop = out.scrollHeight;
+  tokenCount += Math.ceil(text.length / 4);
+  document.getElementById('token-count').textContent = 'Tokens: ' + tokenCount.toLocaleString();
+}
+
+function clearConsole() {
+  const out = document.getElementById('console-output');
+  out.innerHTML = '';
+  const cursor = document.createElement('span');
+  cursor.id = 'cursor-blink';
+  out.appendChild(cursor);
+  tokenCount = 0;
+  activeAgents = 0;
+  document.getElementById('token-count').textContent = 'Tokens: 0';
+  document.getElementById('agent-count').textContent = 'Agents: 0 active';
+  document.getElementById('elapsed-time').textContent = 'Time: 0s';
+  document.getElementById('status-text').textContent = 'Idle — Ready for mission';
+  appendLine('Console cleared. Ready for next mission.', 'system');
+}
+
+function setRunning(val) {
+  isRunning = val;
+  const btn = document.getElementById('launch-btn');
+  btn.disabled = val;
+  btn.textContent = val ? '⏳ Running...' : '🚀 Launch Swarm';
+  if (val) {
+    startTime = Date.now();
+    timerInterval = setInterval(() => {
+      const secs = Math.floor((Date.now() - startTime) / 1000);
+      document.getElementById('elapsed-time').textContent = 'Time: ' + secs + 's';
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+// ===== LAUNCH SWARM =====
+async function launchSwarm() {
+  const goal = document.getElementById('goal-input').value.trim();
+  if (!goal) {
+    document.getElementById('goal-input').focus();
+    document.getElementById('goal-input').style.borderColor = 'var(--red)';
+    setTimeout(() => document.getElementById('goal-input').style.borderColor = 'var(--border)', 2000);
+    return;
+  }
+  if (isRunning) return;
+
+  const teamId = document.getElementById('team-select').value;
+  const mode = document.getElementById('mode-select').value;
+  const teamName = document.getElementById('team-select').options[document.getElementById('team-select').selectedIndex].text;
+
+  clearConsole();
+  setRunning(true);
+  document.getElementById('status-text').textContent = 'Initializing swarm...';
+
+  const ts = new Date().toLocaleTimeString();
+  appendLine('═══════════════════════════════════════════════════', 'system');
+  appendLine('[' + ts + '] MISSION LAUNCH', 'info');
+  appendLine('Team: ' + teamName, 'info');
+  appendLine('Mode: ' + mode.toUpperCase(), 'info');
+  appendLine('Goal: ' + goal, 'info');
+  appendLine('═══════════════════════════════════════════════════', 'system');
+
+  const resolvedTeam = teamId === 'auto' ? autoDetectTeam(goal) : teamId;
+  if (teamId === 'auto') appendLine('[AUTO-DETECT] Selected team: ' + resolvedTeam, 'warn');
+
+  appendLine('[SYSTEM] Spinning up agent network...', 'system');
+
+  try {
+    abortController = new AbortController();
+    const payload = { goal, team: resolvedTeam, mode };
+    const res = await fetch('/swarm/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: abortController.signal
+    });
+
+    if (res.ok && res.body) {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const data = JSON.parse(line.replace(/^data: /, ''));
+            handleStreamEvent(data);
+          } catch {
+            if (line.startsWith('data: ')) {
+              appendLine(line.slice(6), 'result');
+            } else {
+              appendLine(line, 'result');
+            }
+          }
+        }
+      }
+      if (buffer.trim()) appendLine(buffer, 'result');
+    } else if (res.ok) {
+      const data = await res.json();
+      renderResponse(data);
+    } else {
+      throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+    }
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      appendLine('[SYSTEM] Mission aborted by user', 'warn');
+    } else {
+      appendLine('[SYSTEM] Backend unreachable — running demo mode', 'warn');
+      await runDemoMode(goal, resolvedTeam, mode);
+    }
+  } finally {
+    setRunning(false);
+    document.getElementById('status-text').textContent = 'Mission complete';
+    appendLine('───────────────────────────────────────────────────', 'system');
+    appendLine('[SYSTEM] Swarm mission complete. Review output above.', 'success');
+  }
+}
+
+function handleStreamEvent(data) {
+  if (data.type === 'agent_start') {
+    activeAgents++;
+    document.getElementById('agent-count').textContent = 'Agents: ' + activeAgents + ' active';
+    appendLine('[' + (data.agent || 'AGENT') + '] Starting task: ' + (data.task || ''), 'agent');
+  } else if (data.type === 'agent_output') {
+    appendLine('[' + (data.agent || 'AGENT') + '] ' + (data.content || ''), 'result');
+  } else if (data.type === 'agent_complete') {
+    activeAgents = Math.max(0, activeAgents - 1);
+    document.getElementById('agent-count').textContent = 'Agents: ' + activeAgents + ' active';
+    appendLine('[' + (data.agent || 'AGENT') + '] ✓ Task complete', 'success');
+  } else if (data.type === 'error') {
+    appendLine('[ERROR] ' + (data.message || 'Unknown error'), 'error');
+  } else if (data.content) {
+    appendLine(data.content, 'result');
+  } else if (typeof data === 'string') {
+    appendLine(data, 'result');
+  }
+}
+
+function renderResponse(data) {
+  if (data.output) appendLine(data.output, 'result');
+  if (data.result) appendLine(typeof data.result === 'string' ? data.result : JSON.stringify(data.result, null, 2), 'result');
+  if (data.agents) {
+    data.agents.forEach(a => appendLine('[' + a.name + '] ' + (a.output || a.status || ''), 'agent'));
+  }
+}
+
+// ===== DEMO MODE =====
+async function runDemoMode(goal, team, mode) {
+  const demos = getDemoSequence(goal, team);
+  for (const step of demos) {
+    await sleep(step.delay);
+    appendLine(step.text, step.type);
+    if (step.agents) {
+      activeAgents = step.agents;
+      document.getElementById('agent-count').textContent = 'Agents: ' + activeAgents + ' active';
+      document.getElementById('status-text').textContent = step.agents + ' agents working...';
+    }
+  }
+  activeAgents = 0;
+  document.getElementById('agent-count').textContent = 'Agents: 0 active';
+}
+
+function getDemoSequence(goal, team) {
+  const g = goal.toLowerCase();
+  if (g.includes('email') || g.includes('nurture') || g.includes('sequence')) {
+    return emailNurtureDemo(goal);
+  } else if (g.includes('competitor') || g.includes('competitive') || g.includes('battlecard')) {
+    return competitorDemo(goal);
+  } else if (g.includes('content') || g.includes('blog') || g.includes('seo')) {
+    return contentDemo(goal);
+  } else if (g.includes('abm') || g.includes('account') || g.includes('enterprise')) {
+    return abmDemo(goal);
+  } else if (g.includes('lead') || g.includes('prospect') || g.includes('icp')) {
+    return leadGenDemo(goal);
+  }
+  return genericDemo(goal, team);
+}
+
+function emailNurtureDemo(goal) {
+  return [
+    { delay: 400, type: 'info', text: '[EMAIL-MANAGER] Analyzing goal: email nurture sequence', agents: 3 },
+    { delay: 600, type: 'agent', text: '[STRATEGY-AGENT] Identifying audience segment and trigger conditions...' },
+    { delay: 800, type: 'result', text: '  → Segment: SaaS trial users, 14-day non-converters' },
+    { delay: 600, type: 'agent', text: '[COPY-AGENT] Drafting email #1: Day 0 — Value reminder...' },
+    { delay: 1000, type: 'result', text: '  Subject: "You\'re one step from [KEY OUTCOME] — here\'s how"' },
+    { delay: 400, type: 'result', text: '  Preview: "Most teams see results in 48 hours. Let me show you how."' },
+    { delay: 600, type: 'agent', text: '[COPY-AGENT] Drafting email #2: Day 3 — Social proof...' },
+    { delay: 800, type: 'result', text: '  Subject: "How [COMPANY] 3x\'d their pipeline in 30 days"' },
+    { delay: 600, type: 'agent', text: '[COPY-AGENT] Drafting email #3: Day 7 — Feature spotlight...' },
+    { delay: 800, type: 'result', text: '  Subject: "Did you know you can do [FEATURE] in 2 clicks?"' },
+    { delay: 600, type: 'agent', text: '[COPY-AGENT] Drafting email #4: Day 10 — Objection handling...' },
+    { delay: 800, type: 'result', text: '  Subject: "Is [PAIN POINT] stopping you? Here\'s our answer."' },
+    { delay: 600, type: 'agent', text: '[COPY-AGENT] Drafting email #5: Day 14 — Final CTA...' },
+    { delay: 800, type: 'result', text: '  Subject: "Last chance — your trial ends soon + special offer"' },
+    { delay: 400, type: 'agent', text: '[A/B-AGENT] Generating subject line variants for A/B testing...', agents: 4 },
+    { delay: 800, type: 'result', text: '  → 3 variants per email, 25/25/50 split recommended' },
+    { delay: 400, type: 'agent', text: '[DELIVERABILITY-AGENT] Checking spam triggers and send-time optimization...' },
+    { delay: 600, type: 'result', text: '  → Optimal send times: Tue 10am, Thu 2pm (your segment timezone)' },
+    { delay: 400, type: 'agent', text: '[ANALYTICS-AGENT] Setting up tracking events and conversion goals...', agents: 5 },
+    { delay: 800, type: 'success', text: '✓ 5-email sequence generated with A/B variants and tracking setup' },
+    { delay: 200, type: 'result', text: '  Expected: 28-34% open rate, 4.2% CTR, 2.1% trial-to-paid conversion lift', agents: 0 },
+  ];
+}
+
+function competitorDemo(goal) {
+  return [
+    { delay: 400, type: 'info', text: '[COMPETITIVE-INTEL] Initiating competitor analysis...', agents: 4 },
+    { delay: 600, type: 'agent', text: '[CRAWLER-AGENT] Scanning competitor websites, pricing pages, blogs...' },
+    { delay: 1200, type: 'result', text: '  → Analyzing 12 direct competitors' },
+    { delay: 600, type: 'agent', text: '[SENTIMENT-AGENT] Mining G2, Capterra, Reddit for customer reviews...' },
+    { delay: 800, type: 'result', text: '  → 2,847 reviews processed across all platforms' },
+    { delay: 600, type: 'agent', text: '[POSITIONING-AGENT] Mapping competitive landscape and whitespace...', agents: 5 },
+    { delay: 1000, type: 'result', text: '  → Key differentiators: Speed (7/12), Price (4/12), AI features (3/12)' },
+    { delay: 600, type: 'agent', text: '[BATTLECARD-AGENT] Generating win/loss battlecards...' },
+    { delay: 800, type: 'result', text: '  → 12 battlecards created with objection handling scripts' },
+    { delay: 600, type: 'agent', text: '[MONITORING-AGENT] Setting up real-time change alerts...', agents: 3 },
+    { delay: 600, type: 'result', text: '  → Monitoring: pricing changes, new features, job postings, ad spend' },
+    { delay: 400, type: 'success', text: '✓ Full competitive intelligence report ready', agents: 0 },
+    { delay: 200, type: 'result', text: '  Top threats: Competitor A (price), Competitor C (AI roadmap)' },
+    { delay: 200, type: 'result', text: '  Biggest gaps to exploit: Onboarding UX, enterprise integrations' },
+  ];
+}
+
+function contentDemo(goal) {
+  return [
+    { delay: 400, type: 'info', text: '[CONTENT-TEAM] Starting SEO content strategy...', agents: 5 },
+    { delay: 600, type: 'agent', text: '[KEYWORD-AGENT] Researching target keywords and search intent...' },
+    { delay: 1000, type: 'result', text: '  → 847 keywords identified, 42 high-priority targets' },
+    { delay: 600, type: 'agent', text: '[OUTLINE-AGENT] Creating content briefs for top 10 opportunities...' },
+    { delay: 800, type: 'result', text: '  → Avg search volume: 8,400/mo · Avg difficulty: 38/100' },
+    { delay: 600, type: 'agent', text: '[WRITER-AGENT] Drafting cornerstone article #1...', agents: 6 },
+    { delay: 1200, type: 'result', text: '  "The Complete Guide to B2B Lead Generation in 2025" — 3,400 words' },
+    { delay: 600, type: 'agent', text: '[SEO-AGENT] Optimizing on-page elements, internal linking map...' },
+    { delay: 800, type: 'result', text: '  → Title, meta, H-structure, LSI keywords, schema markup applied' },
+    { delay: 600, type: 'agent', text: '[DISTRIBUTION-AGENT] Planning content amplification strategy...', agents: 4 },
+    { delay: 800, type: 'result', text: '  → 8 repurposing formats: LinkedIn posts, Twitter threads, newsletter, video script' },
+    { delay: 400, type: 'success', text: '✓ Content strategy + first article ready for publishing', agents: 0 },
+    { delay: 200, type: 'result', text: '  Projected: 12,000 organic visits/mo within 90 days' },
+  ];
+}
+
+function abmDemo(goal) {
+  return [
+    { delay: 400, type: 'info', text: '[ABM-ORCHESTRATOR] Initiating account-based marketing mission...', agents: 5 },
+    { delay: 600, type: 'agent', text: '[ICP-AGENT] Defining ideal customer profile for enterprise tier...' },
+    { delay: 800, type: 'result', text: '  → ICP: 500-5000 employees, SaaS/Tech, Series B+, US/EU' },
+    { delay: 600, type: 'agent', text: '[TARGETING-AGENT] Identifying and scoring target accounts from TAM...', agents: 6 },
+    { delay: 1000, type: 'result', text: '  → 847 accounts scored, 24 in Tier-1 (high-intent)' },
+    { delay: 600, type: 'agent', text: '[RESEARCH-AGENT] Deep-diving Tier-1 accounts — news, triggers, stakeholders...' },
+    { delay: 1200, type: 'result', text: '  → Recent triggers: 8 funding rounds, 5 exec hires, 11 product launches' },
+    { delay: 600, type: 'agent', text: '[PERSONALIZATION-AGENT] Crafting hyper-personalized messaging per account...', agents: 7 },
+    { delay: 1000, type: 'result', text: '  → Custom exec briefs, personalized landing pages, tailored case studies' },
+    { delay: 600, type: 'agent', text: '[ORCHESTRATION-AGENT] Sequencing multi-touch outreach across channels...', agents: 4 },
+    { delay: 800, type: 'result', text: '  → 12-touch sequence: LinkedIn, email, direct mail, paid, events' },
+    { delay: 400, type: 'success', text: '✓ ABM campaign ready for launch — 24 Tier-1 accounts targeted', agents: 0 },
+    { delay: 200, type: 'result', text: '  Projected: 8 demos booked, $1.2M pipeline in 60 days' },
+  ];
+}
+
+function leadGenDemo(goal) {
+  return [
+    { delay: 400, type: 'info', text: '[LEAD-GEN-ENGINE] Activating multi-channel prospecting...', agents: 4 },
+    { delay: 600, type: 'agent', text: '[ICP-AGENT] Refreshing ideal customer profile criteria...' },
+    { delay: 600, type: 'result', text: '  → Firmographic + technographic + behavioral signals combined' },
+    { delay: 600, type: 'agent', text: '[DISCOVERY-AGENT] Scanning LinkedIn, Apollo, ZoomInfo for prospects...', agents: 6 },
+    { delay: 1000, type: 'result', text: '  → 12,400 prospects discovered matching base criteria' },
+    { delay: 600, type: 'agent', text: '[ENRICHMENT-AGENT] Enriching contact data — email, phone, social...' },
+    { delay: 1000, type: 'result', text: '  → 94.2% email coverage, 71% phone coverage achieved' },
+    { delay: 600, type: 'agent', text: '[SCORING-AGENT] Applying ML scoring model to all prospects...', agents: 5 },
+    { delay: 1000, type: 'result', text: '  → A-tier: 847 leads · B-tier: 2,340 · C-tier: 9,213' },
+    { delay: 600, type: 'agent', text: '[INTENT-AGENT] Cross-referencing with intent data and buying signals...' },
+    { delay: 800, type: 'result', text: '  → 234 showing active buying intent this week' },
+    { delay: 400, type: 'agent', text: '[CRM-AGENT] Syncing top leads to Salesforce with priority routing...' },
+    { delay: 600, type: 'success', text: '✓ Lead generation complete — 847 A-tier leads ready for outreach', agents: 0 },
+    { delay: 200, type: 'result', text: '  Hot list synced to CRM with automated AE assignment' },
+  ];
+}
+
+function genericDemo(goal, team) {
+  return [
+    { delay: 400, type: 'info', text: '[SWARM] Analyzing mission parameters...', agents: 3 },
+    { delay: 600, type: 'agent', text: '[ORCHESTRATOR] Decomposing goal into agent tasks...' },
+    { delay: 800, type: 'result', text: '  → Identified 6 primary task clusters for optimal coverage' },
+    { delay: 600, type: 'agent', text: '[RESEARCH-AGENT] Gathering market context and data...', agents: 5 },
+    { delay: 1000, type: 'result', text: '  → Research phase complete. Key insights captured.' },
+    { delay: 600, type: 'agent', text: '[STRATEGY-AGENT] Formulating strategic recommendations...' },
+    { delay: 800, type: 'result', text: '  → High-confidence strategy aligned with your goal developed' },
+    { delay: 600, type: 'agent', text: '[EXECUTION-AGENT] Creating action plan with prioritized steps...', agents: 4 },
+    { delay: 1000, type: 'result', text: '  → 12-step execution roadmap generated with timeline' },
+    { delay: 600, type: 'agent', text: '[QUALITY-AGENT] Reviewing outputs for accuracy and completeness...' },
+    { delay: 600, type: 'success', text: '✓ Mission complete. Full plan ready for implementation.', agents: 0 },
+    { delay: 200, type: 'result', text: '  Connect to backend API for live AI-powered execution.' },
+  ];
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ===== AUTO-DETECT TEAM =====
+function autoDetectTeam(goal) {
+  const g = goal.toLowerCase();
+  if (g.includes('email') || g.includes('nurture') || g.includes('sequence') || g.includes('drip')) return 'email';
+  if (g.includes('seo') || g.includes('blog') || g.includes('content') || g.includes('article')) return 'content';
+  if (g.includes('linkedin') || g.includes('twitter') || g.includes('social') || g.includes('instagram')) return 'social';
+  if (g.includes('competitor') || g.includes('competitive') || g.includes('battlecard') || g.includes('pricing')) return 'competitive';
+  if (g.includes('lead') || g.includes('prospect') || g.includes('icp') || g.includes('qualify')) return 'lead-gen';
+  if (g.includes('abm') || g.includes('account') || g.includes('enterprise') || g.includes('fortune')) return 'abm';
+  if (g.includes('analytics') || g.includes('roas') || g.includes('attribution') || g.includes('cac')) return 'analytics';
+  if (g.includes('brand') || g.includes('voice') || g.includes('tone') || g.includes('messaging')) return 'brand';
+  if (g.includes('sales') || g.includes('pitch') || g.includes('deck') || g.includes('objection')) return 'sales-enable';
+  if (g.includes('growth') || g.includes('viral') || g.includes('referral') || g.includes('experiment')) return 'growth';
+  return 'analytics';
+}
+
+// ===== CONSOLE CONTROLS =====
+function toggleFullscreen() {
+  const wrap = document.getElementById('console-wrap');
+  const output = document.getElementById('console-output');
+  isFullscreen = !isFullscreen;
+  if (isFullscreen) {
+    wrap.classList.add('fullscreen');
+    output.classList.add('fullscreen-output');
+    document.body.style.overflow = 'hidden';
+  } else {
+    wrap.classList.remove('fullscreen');
+    output.classList.remove('fullscreen-output');
+    document.body.style.overflow = '';
+  }
+}
+
+function expandConsole() {
+  const output = document.getElementById('console-output');
+  isExpanded = !isExpanded;
+  output.style.maxHeight = isExpanded ? '800px' : '';
+}
+
+// ===== TEAM ACTIONS =====
+function launchTeam(teamId, teamName) {
+  showSection('console', null, false);
+  document.querySelectorAll('.nav-btn').forEach((b, i) => {
+    b.classList.remove('active');
+    if (b.textContent.trim() === 'Swarm Console') b.classList.add('active');
+  });
+  document.getElementById('team-select').value = teamId;
+  const placeholders = {
+    'lead-gen': "Run a prospecting campaign for B2B SaaS companies with 50-500 employees in the US. Focus on companies using Salesforce with recent Series A or B funding.",
+    'content': "Create a 3-month SEO content calendar targeting 'marketing automation' keywords. Include topic clusters, content briefs, and a distribution plan.",
+    'email': "Build a 7-email onboarding sequence for new free trial users. Focus on feature discovery, social proof, and upgrade CTAs.",
+    'social': "Develop a LinkedIn content strategy for a B2B SaaS company targeting VP/C-suite buyers. Include post formats, cadence, and paid amplification plan.",
+    'analytics': "Analyze Q2 campaign performance across all channels. Identify top ROI channels, underperformers, and budget reallocation recommendations.",
+    'competitive': "Research our top 5 competitors: pricing, positioning, product features, and customer sentiment. Create battlecards for each.",
+    'sales-enable': "Build a complete sales playbook for enterprise deals including discovery questions, objection handling, ROI calculator, and competitive responses.",
+    'abm': "Design a 90-day ABM program targeting 20 Fortune 1000 accounts in financial services. Include account selection criteria, personalization strategy, and engagement sequence.",
+    'brand': "Audit our brand voice across all marketing channels. Create a messaging matrix, tone of voice guide, and brand compliance checklist.",
+    'growth': "Design 5 growth experiments focused on improving trial-to-paid conversion. Include hypothesis, test design, success metrics, and expected impact."
+  };
+  document.getElementById('goal-input').value = placeholders[teamId] || '';
+  document.getElementById('goal-input').focus();
+}
+
+function quickAction(action) {
+  const presets = {
+    'New Campaign': 'Design a new multi-channel demand generation campaign for our core product. Target: mid-market SaaS companies 100-1000 employees. Goal: 200 MQLs in 30 days. Budget: $15,000.',
+    'Generate Content': 'Create a comprehensive content cluster around "AI-powered sales automation" — cornerstone article (3000+ words), 5 supporting blogs, 10 LinkedIn posts, and 1 email newsletter.',
+    'Analyze Competitors': 'Analyze our top 8 competitors: pricing strategies, messaging, product positioning, customer reviews, and recent marketing moves. Produce actionable insights and competitive gaps.',
+    'Score Leads': 'Review and score our last 30 days of inbound leads against our ICP criteria. Identify top 20% for immediate outreach, create personalized opener for each.',
+    'ABM Campaign': 'Launch an ABM campaign targeting 15 strategic accounts in the enterprise fintech space. Create personalized outreach sequences and account intelligence briefs.',
+    'A/B Test': 'Design A/B tests for our homepage hero section, primary CTA, and email subject lines. Define hypothesis, test variants, sample sizes, and success metrics.'
+  };
+  showSection('console', null, false);
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.textContent.trim() === 'Swarm Console') b.classList.add('active');
+  });
+  document.getElementById('goal-input').value = presets[action] || action;
+  document.getElementById('team-select').value = 'auto';
+  document.getElementById('goal-input').focus();
+}
+
+// ===== PRESETS =====
+function loadPreset(key) {
+  const presets = {
+    nurture: { team: 'email', goal: "Create a 5-email nurture sequence for SaaS trial users who haven't converted after 14 days. Include personalization tokens, send-time optimization, A/B subject line variants, and expected conversion metrics." },
+    competitor: { team: 'competitive', goal: "Conduct a full competitive analysis of our top 6 competitors. I need: pricing comparison, feature matrix, positioning map, customer sentiment analysis from reviews, and ready-to-use battlecards for our sales team." },
+    seo: { team: 'content', goal: "Build a complete SEO content strategy for our target keyword cluster around 'B2B marketing automation'. Include keyword research, content gap analysis, 12-month content calendar, and optimization recommendations for existing pages." },
+    abm: { team: 'abm', goal: "Design a 60-day ABM campaign targeting Fortune 500 accounts in the insurance and financial services industry. Include account selection scoring model, hyper-personalized messaging for 3 buyer personas, and a 10-touch multi-channel sequence." },
+    icp: { team: 'lead-gen', goal: "Define our ideal customer profile based on our top 50 customers by LTV. Create a detailed ICP document with firmographic, technographic, and behavioral criteria, plus a lead scoring model our team can implement in Salesforce." }
+  };
+  const p = presets[key];
+  if (p) {
+    document.getElementById('team-select').value = p.team;
+    document.getElementById('goal-input').value = p.goal;
+  }
+}
+
+// ===== BUILDER =====
+function switchBuilderTab(tab, btn) {
+  document.querySelectorAll('.builder-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.builder-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('builder-' + tab).classList.add('active');
+}
+
+function loadAgentTemplate(tpl) {
+  const templates = {
+    'lead-scorer': `Create an intelligent lead scoring agent for B2B SaaS:
+
+Role: Lead qualification and ICP matching specialist
+Inputs: Raw lead data (name, company, title, email, source)
+Process:
+  1. Enrich lead with Clearbit, LinkedIn, and 6sense data
+  2. Score against ICP criteria (industry, company size, funding, tech stack)
+  3. Layer in intent signals and buying triggers
+  4. Calculate composite score (0-100) with confidence rating
+  5. Assign MQL/SQL status and recommended next action
+
+Tools needed: Clearbit API, LinkedIn Sales Nav, 6sense, Salesforce
+Output: Enriched lead JSON with score, status, and personalized outreach draft
+Behavior: Conservative — favor quality leads with 75+ scores for AE routing`,
+    'content-writer': `Create an SEO content writer agent:
+
+Role: B2B SaaS content creation specialist
+Inputs: Target keyword, content type, audience persona, CTA goal
+Process:
+  1. Research SERP top 10 for keyword intent and gaps
+  2. Build detailed outline with H2/H3 structure
+  3. Write long-form content (1500-3500 words)
+  4. Optimize: meta, title tag, internal links, LSI keywords
+  5. Add relevant CTAs and lead magnets
+
+Tools: SEMrush API, Google Search Console, Grammarly, brand style guide
+Output: Publish-ready article in markdown + SEO metadata JSON
+Quality bar: Flesch-Kincaid 60+, E-E-A-T optimized, 1% keyword density`,
+    'email-writer': `Create a personalized email copywriter agent:
+
+Role: B2B email sequence specialist with persuasion psychology
+Inputs: Recipient profile, sequence goal, product/offer, tone (formal/casual)
+Process:
+  1. Analyze recipient's role, company, and pain points
+  2. Map email to appropriate funnel stage
+  3. Write subject line (+ 2 A/B variants) using proven frameworks
+  4. Craft personalized body with social proof and clear CTA
+  5. Optimize preview text and footer
+
+Frameworks used: AIDA, PAS, STAR storytelling, Cialdini principles
+Output: Complete email JSON with subject, preview, body, CTA, and A/B variants
+Deliverability: Spam score check, read-time estimate, mobile preview`,
+    'social-writer': `Create a social media content manager agent:
+
+Role: Platform-native B2B social content specialist
+Platforms: LinkedIn (primary), Twitter/X, Instagram
+Inputs: Topic/angle, target audience, brand voice guide, content goals
+Process:
+  1. Research trending angles and hashtags for topic
+  2. Adapt message for each platform's algorithm and format
+  3. Write native content (no cross-posting!) per platform
+  4. Suggest optimal posting time and engagement hooks
+  5. Propose paid amplification strategy for top posts
+
+LinkedIn: Thought leadership, carousels, polls (700-1200 chars)
+Twitter/X: Thread-first, punchy hooks, engagement bait (< 280 chars)
+Output: Platform-specific posts with hashtags, timing, and boost budget`,
+    'analyst': `Create a campaign analytics and attribution agent:
+
+Role: Marketing performance analyst and optimization advisor
+Inputs: Campaign data from all channels, CRM revenue data, date range
+Process:
+  1. Aggregate data across UTM sources, channels, campaigns
+  2. Apply multi-touch attribution model (data-driven preferred)
+  3. Calculate channel-level CAC, ROAS, CPL, LTV
+  4. Identify top and bottom performers with statistical significance
+  5. Generate budget reallocation recommendations
+
+Models: First-touch, last-touch, linear, time-decay, data-driven
+Output: Executive summary, channel scorecard, recommendations, forecast
+Alert: Flag anomalies (>20% variance from 30-day baseline)`,
+    'competitor-watcher': `Create a competitive intelligence monitoring agent:
+
+Role: Real-time competitive intelligence gatherer
+Target: [list competitor domains]
+Monitoring: Pricing pages, product changelogs, job boards, social, ads, PR
+Process:
+  1. Daily crawl of competitor websites for changes
+  2. Weekly sentiment analysis from G2, Capterra, Reddit, Twitter
+  3. Monthly deep-dive report on positioning and messaging shifts
+  4. Alert on: pricing changes, new features, funding, exec moves
+
+Tools: Web scraper, DiffAlert, SpyFu, Winmo, BuiltWith
+Output: Weekly brief (changes + implications), monthly battlecard updates
+Alerts: Slack/email notification within 2 hours of significant changes`
+  };
+  document.getElementById('agent-spec').value = templates[tpl] || '';
+}
+
+async function buildAgent() {
+  const spec = document.getElementById('agent-spec').value.trim();
+  if (!spec) return;
+  const output = document.getElementById('agent-output');
+  output.textContent = '// Building agent...\n// Analyzing specification...';
+
+  await sleep(800);
+
+  try {
+    const res = await fetch('/swarm/build-agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ spec })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      output.textContent = JSON.stringify(data, null, 2);
+      return;
+    }
+  } catch {}
+
+  // Demo output
+  const lines = spec.split('\n').filter(l => l.trim());
+  const name = extractAgentName(spec);
+  const demoConfig = {
+    agent: {
+      id: 'agent-' + Date.now(),
+      name: name,
+      role: lines[1] ? lines[1].replace(/^Role:\s*/i, '').trim() : 'Marketing Specialist',
+      version: '1.0.0',
+      type: 'task-agent',
+      created_at: new Date().toISOString(),
+      skills: extractSkills(spec),
+      tools: extractTools(spec),
+      behavior: { mode: 'autonomous', confidence_threshold: 0.75, max_retries: 3 },
+      output_format: 'structured_json',
+      quality_checks: ['relevance', 'accuracy', 'completeness'],
+      integrations: ['salesforce', 'hubspot', 'slack'],
+      status: 'ready'
+    },
+    config_version: '2.0',
+    platform: 'VibeCaaS.com',
+    generated_by: 'NeuralQuantum.ai LLC'
+  };
+  output.textContent = JSON.stringify(demoConfig, null, 2);
+}
+
+async function buildTeam() {
+  const spec = document.getElementById('team-spec').value.trim();
+  if (!spec) return;
+  const output = document.getElementById('team-output');
+  output.textContent = '// Building team...\n// Analyzing team specification...';
+
+  await sleep(1000);
+
+  try {
+    const res = await fetch('/swarm/build-team', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ spec })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      output.textContent = JSON.stringify(data, null, 2);
+      return;
+    }
+  } catch {}
+
+  const mode = spec.toLowerCase().includes('hierarchical') ? 'hierarchical' :
+               spec.toLowerCase().includes('flat') || spec.toLowerCase().includes('parallel') ? 'flat' : 'sequential';
+  const demoConfig = {
+    team: {
+      id: 'team-' + Date.now(),
+      name: extractTeamName(spec),
+      objective: 'Execute specified marketing goal with measurable outcomes',
+      mode: mode,
+      version: '1.0.0',
+      created_at: new Date().toISOString(),
+      agents: generateTeamAgents(spec),
+      coordination: {
+        mode: mode,
+        communication: 'event-driven',
+        handoff_protocol: 'json-schema',
+        retry_policy: 'exponential-backoff'
+      },
+      success_metrics: extractMetrics(spec),
+      estimated_duration: '2-4 hours',
+      parallelism: mode === 'flat' ? 'full' : mode === 'hierarchical' ? 'partial' : 'none'
+    },
+    config_version: '2.0',
+    platform: 'VibeCaaS.com',
+    generated_by: 'NeuralQuantum.ai LLC'
+  };
+  output.textContent = JSON.stringify(demoConfig, null, 2);
+}
+
+function extractAgentName(spec) {
+  const match = spec.match(/(?:Create|Build|Make) (?:a|an) (.+?) agent/i);
+  return match ? match[1].trim() + ' Agent' : 'Marketing Agent';
+}
+
+function extractTeamName(spec) {
+  const match = spec.match(/(?:Build|Create|Make|Assemble) (?:a|an)? (.+?) [Tt]eam/i);
+  return match ? match[1].trim() + ' Team' : 'Marketing Team';
+}
+
+function extractSkills(spec) {
+  const skills = [];
+  if (/lead|prospect|icp|qualify/i.test(spec)) skills.push('lead-qualification');
+  if (/content|blog|seo|write/i.test(spec)) skills.push('content-creation');
+  if (/email|sequence|nurture/i.test(spec)) skills.push('email-copywriting');
+  if (/data|analytics|metric|report/i.test(spec)) skills.push('data-analysis');
+  if (/social|linkedin|twitter/i.test(spec)) skills.push('social-media');
+  if (/competitor|competitive|battlecard/i.test(spec)) skills.push('competitive-intel');
+  if (skills.length === 0) skills.push('marketing-strategy', 'copywriting');
+  return skills;
+}
+
+function extractTools(spec) {
+  const tools = [];
+  if (/salesforce/i.test(spec)) tools.push('salesforce-crm');
+  if (/hubspot/i.test(spec)) tools.push('hubspot');
+  if (/linkedin/i.test(spec)) tools.push('linkedin-api');
+  if (/clearbit/i.test(spec)) tools.push('clearbit');
+  if (/semrush/i.test(spec)) tools.push('semrush');
+  if (tools.length === 0) tools.push('web-search', 'content-generator', 'analytics-reader');
+  return tools;
+}
+
+function extractMetrics(spec) {
+  const metrics = [];
+  if (/lead|mql|sql/i.test(spec)) metrics.push('leads_generated');
+  if (/conversion|convert/i.test(spec)) metrics.push('conversion_rate');
+  if (/roas|roi/i.test(spec)) metrics.push('roas');
+  if (/pipeline|revenue/i.test(spec)) metrics.push('pipeline_generated');
+  if (/content|blog|post/i.test(spec)) metrics.push('content_pieces_created');
+  if (metrics.length === 0) metrics.push('tasks_completed', 'quality_score');
+  return metrics;
+}
+
+function generateTeamAgents(spec) {
+  return [
+    { role: 'Team Orchestrator', type: 'coordinator', priority: 1 },
+    { role: 'Research Specialist', type: 'researcher', priority: 2 },
+    { role: 'Content Creator', type: 'generator', priority: 3 },
+    { role: 'Quality Reviewer', type: 'reviewer', priority: 4 },
+    { role: 'Analytics Reporter', type: 'analyst', priority: 5 }
+  ];
+}
+
+// ===== MODAL =====
+function showProModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (isFullscreen) toggleFullscreen();
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    launchSwarm();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+    e.preventDefault();
+    clearConsole();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+    if (document.getElementById('sec-console').classList.contains('active')) {
+      e.preventDefault();
+      toggleFullscreen();
+    }
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    showSection('console', null, false);
+    document.getElementById('goal-input').focus();
+  }
+});
+
+// Focus goal input with Ctrl+Enter hint
+document.getElementById('goal-input').addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    launchSwarm();
+  }
+});
+
+// ===== FETCH TEAMS FROM API =====
+async function loadTeams() {
+  try {
+    const res = await fetch('/swarm/teams', { signal: AbortSignal.timeout(3000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.teams && data.teams.length > 0) {
+        console.log('Teams loaded from API:', data.teams.length);
+      }
+    }
+  } catch {}
+}
+
+// ===== DATE =====
+function updateDate() {
+  const now = new Date();
+  document.getElementById('dash-date').textContent =
+    now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  checkHealth();
+  loadTeams();
+  updateDate();
+  setInterval(checkHealth, 30000);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/nanobot/static/index.html" },
+    { "source": "/faq", "destination": "/nanobot/static/faq.html" },
+    { "source": "/docs-page", "destination": "/nanobot/static/docs-page.html" },
+    { "source": "/health", "destination": "/api/index.py" },
+    { "source": "/swarm/:path*", "destination": "/api/index.py" },
+    { "source": "/v1/:path*", "destination": "/api/index.py" },
+    { "source": "/agent/:path*", "destination": "/api/index.py" },
+    { "source": "/team/:path*", "destination": "/api/index.py" },
+    { "source": "/docs", "destination": "/api/index.py" },
+    { "source": "/openapi.json", "destination": "/api/index.py" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

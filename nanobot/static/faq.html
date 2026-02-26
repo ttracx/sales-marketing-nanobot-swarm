@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — Sales & Marketing Nanobot Swarm</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary:   #0a0e1a;
+      --bg-secondary: #0f1629;
+      --bg-card:      #111827;
+      --bg-card-hover:#161f35;
+      --border:       #1e2d4a;
+      --border-light: #2a3f6a;
+      --indigo-400:   #818cf8;
+      --indigo-500:   #6366f1;
+      --indigo-600:   #4f46e5;
+      --purple-400:   #c084fc;
+      --purple-500:   #a855f7;
+      --cyan-400:     #22d3ee;
+      --green-400:    #4ade80;
+      --yellow-400:   #facc15;
+      --text-primary: #f1f5f9;
+      --text-secondary:#94a3b8;
+      --text-muted:   #64748b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0f1629 0%, #1a1040 50%, #0f1629 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--indigo-500), var(--purple-500));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text { font-weight: 700; font-size: 1.1rem; }
+    .logo-text span { color: var(--indigo-400); }
+
+    nav { display: flex; gap: 6px; }
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    nav a:hover { color: var(--text-primary); background: rgba(99,102,241,0.15); }
+    nav a.active { color: var(--indigo-400); background: rgba(99,102,241,0.2); }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(180deg, #1a1040 0%, var(--bg-primary) 100%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.35);
+      color: var(--indigo-400);
+      padding: 4px 14px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, var(--indigo-400));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.8rem;
+    }
+    .hero p { color: var(--text-secondary); max-width: 560px; margin: 0 auto 2rem; font-size: 1rem; }
+
+    /* ── Search bar ── */
+    .search-wrap {
+      max-width: 520px; margin: 0 auto;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      color: var(--text-primary);
+      padding: 12px 16px 12px 44px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--indigo-500); }
+    .search-wrap input::placeholder { color: var(--text-muted); }
+    .search-wrap .icon {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%); font-size: 16px; color: var(--text-muted);
+    }
+
+    /* ── Layout ── */
+    .main { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+    /* ── TOC ── */
+    .toc {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 3rem;
+    }
+    .toc a {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 0.85rem; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .toc a:hover { border-color: var(--indigo-500); color: var(--indigo-400); background: rgba(99,102,241,0.1); }
+
+    /* ── Section ── */
+    .faq-section { margin-bottom: 3.5rem; }
+    .section-title {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--indigo-600), var(--purple-500));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .section-title h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+    .section-title .count {
+      margin-left: auto;
+      background: rgba(99,102,241,0.15);
+      color: var(--indigo-400);
+      padding: 2px 10px; border-radius: 12px;
+      font-size: 0.78rem; font-weight: 600;
+    }
+
+    /* ── Accordion ── */
+    .faq-list { display: flex; flex-direction: column; gap: 8px; }
+
+    details {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    details:hover { border-color: var(--border-light); }
+    details[open] { border-color: rgba(99,102,241,0.4); }
+
+    summary {
+      display: flex; align-items: center; gap: 12px;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .q-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(168,85,247,0.25));
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: var(--indigo-400);
+    }
+    details[open] .q-icon { background: linear-gradient(135deg, rgba(99,102,241,0.4), rgba(168,85,247,0.4)); }
+    summary h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); flex: 1; }
+    .chevron {
+      width: 20px; height: 20px; flex-shrink: 0;
+      color: var(--text-muted);
+      transition: transform 0.25s;
+    }
+    details[open] .chevron { transform: rotate(180deg); }
+
+    .answer {
+      padding: 0 1.25rem 1.25rem 4rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .answer p { margin-bottom: 0.75rem; }
+    .answer p:last-child { margin-bottom: 0; }
+    .answer ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+    .answer ul li { margin-bottom: 0.4rem; }
+    .answer code {
+      background: rgba(99,102,241,0.15);
+      color: var(--indigo-400);
+      padding: 1px 6px; border-radius: 4px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.85em;
+    }
+    .answer a { color: var(--indigo-400); text-decoration: none; }
+    .answer a:hover { text-decoration: underline; }
+
+    /* ── Badge inside answer ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+    }
+    .badge-pro  { background: rgba(250,204,21,0.15); color: var(--yellow-400); border: 1px solid rgba(250,204,21,0.3); }
+    .badge-free { background: rgba(74,222,128,0.1);  color: var(--green-400);  border: 1px solid rgba(74,222,128,0.25); }
+    .badge-new  { background: rgba(99,102,241,0.15); color: var(--indigo-400); border: 1px solid rgba(99,102,241,0.3); }
+
+    /* ── Info box ── */
+    .info-box {
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--indigo-400);
+    }
+
+    /* ── Still have questions ── */
+    .contact-cta {
+      background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08));
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .contact-cta h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .contact-cta p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 8px;
+      font-size: 0.875rem; font-weight: 600; text-decoration: none;
+      transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--indigo-600), var(--purple-500));
+      color: #fff;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+    .btn-outline:hover { border-color: var(--indigo-500); color: var(--indigo-400); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    footer a { color: var(--indigo-400); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 1rem; }
+
+    @media (max-width: 600px) {
+      .header-inner { flex-direction: column; height: auto; padding: 0.75rem 0; gap: 0.5rem; }
+      nav { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="header-inner">
+    <a href="/nanobot/static/index.html" class="logo">
+      <div class="logo-icon">🤖</div>
+      <span class="logo-text">SM <span>Nanobot</span> Swarm</span>
+    </a>
+    <nav>
+      <a href="/nanobot/static/index.html">Dashboard</a>
+      <a href="/nanobot/static/docs-page.html">Docs</a>
+      <a href="/nanobot/static/faq.html" class="active">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <div class="hero-tag">📖 Help Center</div>
+  <h1>Frequently Asked Questions</h1>
+  <p>Everything you need to know about the Sales &amp; Marketing Nanobot Swarm platform.</p>
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" placeholder="Search questions…" id="faq-search" />
+  </div>
+</section>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main">
+
+  <!-- TOC -->
+  <div class="toc">
+    <a href="#general">🌐 General</a>
+    <a href="#getting-started">🚀 Getting Started</a>
+    <a href="#agent-teams">🤖 Agent Teams</a>
+    <a href="#integrations">🔗 Integrations</a>
+    <a href="#technical">⚙️ Technical</a>
+    <a href="#pro">⭐ Pro Version</a>
+  </div>
+
+  <!-- ─── 1. GENERAL QUESTIONS ─── -->
+  <section class="faq-section" id="general">
+    <div class="section-title">
+      <div class="section-icon">🌐</div>
+      <h2>General Questions</h2>
+      <span class="count">5 Q&amp;As</span>
+    </div>
+    <div class="faq-list">
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What exactly is the Sales &amp; Marketing Nanobot Swarm?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>The Sales &amp; Marketing Nanobot Swarm is a hierarchical AI agent platform built on top of large language models (Ollama / NVIDIA NIM / OpenAI-compatible). It orchestrates a swarm of specialized sub-agents—each focused on a distinct marketing or sales discipline—to execute complex, multi-step campaigns autonomously.</p>
+          <p>Instead of a single monolithic AI assistant, you get a coordinated team: a Director-level orchestrator that decomposes your goal, dispatches work to specialist agents (SEO, Paid Ads, Social Media, Email, CRO, etc.), aggregates their outputs, and returns consolidated, actionable results.</p>
+          <div class="info-box">💡 Think of it as hiring an entire marketing department that runs at AI speed, 24/7, for a fraction of the cost.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How does the swarm architecture differ from a single AI assistant?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Traditional AI assistants have one context window. The swarm runs parallel, isolated agents simultaneously, each with a dedicated system prompt and tool set. Key advantages:</p>
+          <ul>
+            <li><strong>Parallelism</strong> — multiple specialists run concurrently, dramatically reducing total latency.</li>
+            <li><strong>Specialization</strong> — each agent has deep, domain-specific instructions rather than a generic prompt.</li>
+            <li><strong>Scalability</strong> — add more agent slots or teams without architectural changes.</li>
+            <li><strong>Auditability</strong> — every agent response is logged individually with full reasoning traces.</li>
+          </ul>
+          <p>The Director agent synthesizes outputs using a structured reduction pass, ensuring contradictions are resolved and final recommendations are coherent.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What LLM backends are supported?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Any backend that speaks the OpenAI Chat Completions API format is supported out of the box:</p>
+          <ul>
+            <li><strong>Ollama</strong> (default for local/self-hosted) — <code>llama3.3</code>, <code>mistral</code>, <code>qwen2.5</code>, and more</li>
+            <li><strong>NVIDIA NIM</strong> — enterprise-grade GPU inference with sub-second latency</li>
+            <li><strong>OpenAI</strong> — GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo</li>
+            <li><strong>Azure OpenAI</strong> — for enterprise compliance</li>
+            <li><strong>Anthropic Claude</strong> via an OpenAI-compatible proxy</li>
+            <li><strong>Any OpenAI-compatible endpoint</strong> — LM Studio, vLLM, Together AI, Groq, etc.</li>
+          </ul>
+          <p>Switch backends by setting <code>AI_API_BASE_URL</code> and <code>AI_MODEL_NAME</code> in your environment.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Is there a free tier? What are the usage limits?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>The core platform is <span class="badge badge-free">✓ Free &amp; Open Source</span> under the MIT license. You only pay for the LLM inference you consume:</p>
+          <ul>
+            <li><strong>Self-hosted Ollama</strong>: completely free (your hardware)</li>
+            <li><strong>OpenAI API</strong>: standard OpenAI pricing, no markup</li>
+            <li><strong>NVIDIA NIM</strong>: per-token NIM pricing</li>
+          </ul>
+          <p>The hosted Swarm Cloud service (coming soon) will offer a free tier with 500 swarm runs / month. <span class="badge badge-pro">⭐ Pro</span> tiers unlock higher limits, persistent memory, and team collaboration.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Who is this built for?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>The platform is designed for three primary personas:</p>
+          <ul>
+            <li><strong>Solo founders &amp; startups</strong> — get a full marketing department without headcount</li>
+            <li><strong>Growth &amp; marketing teams</strong> — automate repetitive research, drafting, and reporting tasks</li>
+            <li><strong>Agencies &amp; consultants</strong> — run multi-client campaigns in parallel with consistent output quality</li>
+          </ul>
+          <p>Technical users can deploy locally or on their own infrastructure. Non-technical users can use the dashboard UI or the Vercel 1-click deploy.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ─── 2. GETTING STARTED ─── -->
+  <section class="faq-section" id="getting-started">
+    <div class="section-title">
+      <div class="section-icon">🚀</div>
+      <h2>Getting Started</h2>
+      <span class="count">4 Q&amp;As</span>
+    </div>
+    <div class="faq-list">
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What API keys do I need to get started?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Only one is truly required: an LLM API key (or a local Ollama instance). Everything else is optional and enables additional features:</p>
+          <ul>
+            <li><strong>Required:</strong> <code>AI_API_KEY</code> — your LLM provider key (or leave blank for local Ollama)</li>
+            <li><strong>Optional:</strong> <code>HUBSPOT_API_KEY</code> — enables CRM sync</li>
+            <li><strong>Optional:</strong> <code>SALESFORCE_ACCESS_TOKEN</code> — Salesforce lead push</li>
+            <li><strong>Optional:</strong> <code>GA4_MEASUREMENT_ID</code> / <code>GA4_API_SECRET</code> — analytics events</li>
+            <li><strong>Optional:</strong> <code>SLACK_BOT_TOKEN</code> — Slack alerts on campaign completion</li>
+          </ul>
+          <p>Copy <code>.env.example</code> to <code>.env</code> and fill in only what you need. The swarm gracefully degrades—tools for missing integrations are simply unavailable to agents.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How do I deploy the swarm for the first time?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Three deployment paths depending on your setup:</p>
+          <ul>
+            <li><strong>Vercel (fastest)</strong>: click the Deploy button in the README, set env vars in the Vercel dashboard, done.</li>
+            <li><strong>Local / Docker</strong>:
+              <ol style="margin:0.5rem 0 0 1rem">
+                <li>Clone the repo: <code>git clone https://github.com/ttracx/sales-marketing-nanobot-swarm</code></li>
+                <li>Run setup: <code>./scripts/setup.sh</code></li>
+                <li>Edit <code>.env</code> with your keys</li>
+                <li>Start: <code>./scripts/launch.sh</code></li>
+              </ol>
+            </li>
+            <li><strong>Railway / Render</strong>: Use the one-click deploy buttons, set env vars in their dashboard UI.</li>
+          </ul>
+          <p>After deployment, visit <code>/nanobot/static/index.html</code> for the dashboard or hit <code>/health</code> to confirm the API is running.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How do I run my first swarm campaign?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Use the dashboard UI <em>or</em> call the API directly. Quick curl example:</p>
+          <pre style="background:#0a0e1a;border:1px solid #1e2d4a;border-radius:8px;padding:1rem;overflow-x:auto;font-family:monospace;font-size:0.82rem;color:#818cf8;margin:0.75rem 0">curl -X POST http://localhost:8200/swarm/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task": "Create a 30-day content calendar for a B2B SaaS product targeting HR managers",
+    "team": "content_creation",
+    "context": { "audience": "HR managers", "industry": "SaaS", "tone": "professional" }
+  }'</pre>
+          <p>The response includes the task breakdown, each agent's individual output, the synthesized result, and a run ID for polling status on long-running jobs.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>I'm getting connection errors to the AI backend — what should I check?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Common causes and fixes:</p>
+          <ul>
+            <li><strong>Ollama not running</strong>: Run <code>ollama serve</code> and confirm <code>http://localhost:11434/api/tags</code> responds.</li>
+            <li><strong>Wrong API base URL</strong>: Verify <code>AI_API_BASE_URL</code> in <code>.env</code>. Default for Ollama is <code>http://localhost:11434</code>.</li>
+            <li><strong>Missing model</strong>: Run <code>ollama pull llama3.3</code> to download the default model.</li>
+            <li><strong>API key invalid</strong>: Test your key with a direct curl to the provider's endpoint.</li>
+            <li><strong>CORS in browser</strong>: If calling from a browser, the API must be on the same origin or have CORS headers set — configure <code>CORS_ORIGINS</code>.</li>
+          </ul>
+          <p>Check logs with <code>docker logs sm-nanobot-swarm</code> or the Railway/Render log streams for detailed error messages.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ─── 3. AGENT TEAMS ─── -->
+  <section class="faq-section" id="agent-teams">
+    <div class="section-title">
+      <div class="section-icon">🤖</div>
+      <h2>Agent Teams</h2>
+      <span class="count">5 Q&amp;As</span>
+    </div>
+    <div class="faq-list">
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What are the 10 pre-configured agent teams?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <ul>
+            <li><strong>🎯 Full Funnel Swarm</strong> — end-to-end campaign: awareness → conversion → retention</li>
+            <li><strong>🔍 SEO Research Swarm</strong> — keyword research, SERP analysis, content gap analysis, technical audit prep</li>
+            <li><strong>📢 Paid Ads Swarm</strong> — Google Ads / Meta Ads campaign structure, bidding strategy, ad copy generation</li>
+            <li><strong>✍️ Content Creation Swarm</strong> — blog posts, landing pages, email sequences, social posts, video scripts</li>
+            <li><strong>📧 Email Marketing Swarm</strong> — drip sequences, A/B subject lines, segmentation strategy, deliverability tips</li>
+            <li><strong>📱 Social Media Swarm</strong> — multi-platform scheduling, hashtag research, engagement strategy, trend spotting</li>
+            <li><strong>🧪 CRO Swarm</strong> — conversion rate optimization, heatmap analysis interpretation, A/B test hypotheses</li>
+            <li><strong>🤝 Sales Intelligence Swarm</strong> — ICP profiling, lead scoring, objection handling scripts, outreach sequences</li>
+            <li><strong>📊 Analytics &amp; Reporting Swarm</strong> — KPI dashboards, cohort analysis, attribution modeling, executive summaries</li>
+            <li><strong>🎨 Brand Strategy Swarm</strong> — positioning, messaging frameworks, persona development, competitive analysis</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How do I choose the right team for my task?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Use the <strong>Full Funnel Swarm</strong> when you're unsure — it decomposes the task and routes sub-tasks to the appropriate specialists automatically.</p>
+          <p>For targeted work, match your goal to the team:</p>
+          <ul>
+            <li>Ranking on Google? → <strong>SEO Research Swarm</strong></li>
+            <li>Launching paid campaigns? → <strong>Paid Ads Swarm</strong></li>
+            <li>Writing blog content at scale? → <strong>Content Creation Swarm</strong></li>
+            <li>Nurturing leads via email? → <strong>Email Marketing Swarm</strong></li>
+            <li>Improving landing page conversion? → <strong>CRO Swarm</strong></li>
+          </ul>
+          <p>You can also call <code>GET /swarm/teams</code> to list all available teams with descriptions and example prompts.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Can I customize agent prompts or create my own agents?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Yes — at multiple levels:</p>
+          <ul>
+            <li><strong>Team-level context</strong>: Pass a <code>context</code> object to <code>/swarm/run</code> to inject brand guidelines, audience info, tone of voice, etc. into all agents' prompts.</li>
+            <li><strong>Custom agents</strong>: Use <code>POST /agent/build</code> to define a custom agent with your own system prompt, tools, and model parameters.</li>
+            <li><strong>Custom teams</strong>: Use <code>POST /team/build</code> to assemble a team of agents (built-in or custom) with a custom director instruction.</li>
+            <li><strong>Source editing</strong>: Fork the repo and edit <code>nanobot/teams/*.py</code> for deep customization — each team file is self-contained and well-documented.</li>
+          </ul>
+          <div class="info-box">📋 See the API Reference in <a href="/nanobot/static/docs-page.html">Docs</a> for full schemas for <code>/agent/build</code> and <code>/team/build</code>.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How many agents can run in parallel?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>The default concurrency is <code>MAX_CONCURRENT_AGENTS=5</code>, configurable via environment variable. The ceiling depends on:</p>
+          <ul>
+            <li><strong>LLM backend rate limits</strong> — OpenAI tiers, NIM quotas, etc.</li>
+            <li><strong>Available VRAM</strong> — for local Ollama, each concurrent request consumes additional memory</li>
+            <li><strong>Server resources</strong> — CPU/RAM for the FastAPI process</li>
+          </ul>
+          <p>On a hosted OpenAI Tier 2 account with a 16-core server, you can reliably run 20–50 concurrent agents. With local <code>llama3.3</code> on an RTX 4090, 3–5 concurrent is typical.</p>
+          <p><span class="badge badge-pro">⭐ Pro</span> plans unlock dynamic concurrency scaling with intelligent queuing.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Do agents have memory between runs?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>By default, agents are <strong>stateless</strong> — each run is independent. This makes the system simple, predictable, and horizontally scalable.</p>
+          <p>Persistent memory is available via two mechanisms:</p>
+          <ul>
+            <li><strong>Conversation threads</strong>: Pass a <code>thread_id</code> in your request to maintain context across calls within a session (stored in Redis if configured).</li>
+            <li><strong>Long-term memory</strong> <span class="badge badge-pro">⭐ Pro</span>: Vector database integration (Pinecone / Weaviate) stores campaign history, brand knowledge, and past outputs that agents can retrieve via similarity search.</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ─── 4. INTEGRATIONS ─── -->
+  <section class="faq-section" id="integrations">
+    <div class="section-title">
+      <div class="section-icon">🔗</div>
+      <h2>Integrations</h2>
+      <span class="count">4 Q&amp;As</span>
+    </div>
+    <div class="faq-list">
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How does the HubSpot integration work?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Set <code>HUBSPOT_API_KEY</code> in your environment. The Sales Intelligence Swarm and Email Marketing Swarm automatically gain access to HubSpot tools:</p>
+          <ul>
+            <li><strong>Contact lookup</strong> — agents can pull contact properties to personalize outreach</li>
+            <li><strong>Lead creation</strong> — new leads identified during research can be pushed directly to HubSpot</li>
+            <li><strong>Deal stage awareness</strong> — agents tailor messaging based on where leads are in the funnel</li>
+            <li><strong>List enrollment</strong> — completed email sequences can auto-enroll contacts</li>
+          </ul>
+          <p>The integration uses HubSpot's v3 API with OAuth token refresh support. Webhook ingest is on the Pro roadmap.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Can I connect Salesforce?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Yes. Set <code>SALESFORCE_ACCESS_TOKEN</code>, <code>SALESFORCE_INSTANCE_URL</code>, and optionally <code>SALESFORCE_REFRESH_TOKEN</code>. The swarm can:</p>
+          <ul>
+            <li>Query and update Lead, Contact, Opportunity, and Account objects via SOQL</li>
+            <li>Create tasks and activities from agent recommendations</li>
+            <li>Push AI-generated email sequences as email templates</li>
+          </ul>
+          <p>For production, we recommend using a Connected App with OAuth 2.0 rather than a personal access token. See the docs for setup instructions.</p>
+          <div class="info-box">🔒 All Salesforce API calls are made server-side — your credentials are never exposed to the browser.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How does Google Analytics 4 integration work?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Configure <code>GA4_MEASUREMENT_ID</code> and <code>GA4_API_SECRET</code> (from your GA4 property's Measurement Protocol settings). The Analytics &amp; Reporting Swarm can:</p>
+          <ul>
+            <li><strong>Send custom events</strong> — track swarm actions as GA4 events for attribution</li>
+            <li><strong>Read report data</strong> via the GA4 Data API (requires <code>GA4_PROPERTY_ID</code> and a service account)</li>
+            <li><strong>Generate insight summaries</strong> — agents interpret raw metric trends and surface actionable insights</li>
+          </ul>
+          <p>For read access, download your service account JSON and set <code>GOOGLE_APPLICATION_CREDENTIALS</code> to its path.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Which social media platforms are supported?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>The Social Media Swarm generates platform-optimized content for all major channels:</p>
+          <ul>
+            <li><strong>LinkedIn</strong> — professional long-form posts, carousel scripts, newsletter sections</li>
+            <li><strong>X (Twitter)</strong> — tweet threads, engagement hooks, trending topic tie-ins</li>
+            <li><strong>Instagram</strong> — caption copy, hashtag sets, Reels scripts, Story prompts</li>
+            <li><strong>Facebook</strong> — page posts, group content, event copy</li>
+            <li><strong>TikTok</strong> — short-form video scripts, trending sound suggestions, text overlays</li>
+            <li><strong>YouTube</strong> — video titles, descriptions, chapter markers, community posts</li>
+          </ul>
+          <p>Direct publishing (posting via API) is available for LinkedIn and X. Other platforms are on the Pro roadmap. Content is generated in platform-native formats with character limits respected automatically.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ─── 5. TECHNICAL QUESTIONS ─── -->
+  <section class="faq-section" id="technical">
+    <div class="section-title">
+      <div class="section-icon">⚙️</div>
+      <h2>Technical Questions</h2>
+      <span class="count">4 Q&amp;As</span>
+    </div>
+    <div class="faq-list">
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What is the Ollama backend and why is it the default?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Ollama is an open-source runtime that lets you run LLMs locally on your machine — no API costs, no data leaving your network. It's the default because:</p>
+          <ul>
+            <li><strong>Privacy</strong> — all prompts and responses stay on your infrastructure</li>
+            <li><strong>Cost</strong> — zero per-token cost once the model is downloaded</li>
+            <li><strong>Latency</strong> — no network round trips for inference</li>
+            <li><strong>Flexibility</strong> — supports hundreds of models (Llama, Mistral, Qwen, Phi, Gemma, etc.)</li>
+          </ul>
+          <p>To use it: <code>brew install ollama</code> (macOS) or follow ollama.ai instructions, then <code>ollama pull llama3.3</code>. The swarm connects to <code>http://localhost:11434</code> by default.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What is NVIDIA NIM and when should I use it?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>NVIDIA NIM (NVIDIA Inference Microservices) provides containerized, GPU-accelerated LLM inference optimized for enterprise workloads. Use it when you need:</p>
+          <ul>
+            <li><strong>Sub-100ms TTFT</strong> — token-to-first-token latency critical for real-time UX</li>
+            <li><strong>High throughput</strong> — thousands of concurrent requests with guaranteed SLAs</li>
+            <li><strong>On-premise compliance</strong> — air-gapped or VPC deployments with NVIDIA DGX / HGX hardware</li>
+            <li><strong>Production reliability</strong> — enterprise support, health checks, autoscaling</li>
+          </ul>
+          <p>Set <code>AI_API_BASE_URL=https://your-nim-endpoint.com</code>, <code>AI_API_KEY=your-nim-api-key</code>, and <code>AI_MODEL_NAME=meta/llama-3.3-70b-instruct</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Can I self-host this on my own servers? What are the requirements?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Yes — self-hosting is fully supported. Minimum requirements for the API server (without local LLM):</p>
+          <ul>
+            <li>Python 3.11+ environment or Docker runtime</li>
+            <li>512 MB RAM (1 GB+ recommended)</li>
+            <li>Any modern Linux/macOS/Windows Server host</li>
+          </ul>
+          <p>If running Ollama locally on the same machine, add GPU requirements per model (e.g., Llama 3.3 70B needs ~40 GB VRAM or can run quantized on 24 GB).</p>
+          <p>Docker Compose example:</p>
+          <pre style="background:#0a0e1a;border:1px solid #1e2d4a;border-radius:8px;padding:0.75rem;overflow-x:auto;font-family:monospace;font-size:0.8rem;color:#818cf8;margin:0.75rem 0">docker compose up -d sm-nanobot-swarm</pre>
+          <p>The compose file starts both the API server and an Ollama sidecar, pre-pulled with the default model.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Are there rate limits or timeouts on swarm runs?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Configurable via environment variables:</p>
+          <ul>
+            <li><code>SWARM_TIMEOUT_SECONDS</code> — max wall-clock time per swarm run (default: 120s)</li>
+            <li><code>AGENT_TIMEOUT_SECONDS</code> — max time per individual agent call (default: 30s)</li>
+            <li><code>MAX_CONCURRENT_AGENTS</code> — parallel agent slots (default: 5)</li>
+            <li><code>MAX_TOKENS_PER_AGENT</code> — max output tokens per agent (default: 2048)</li>
+          </ul>
+          <p>Long-running tasks (large content calendars, comprehensive audits) can use the async mode: submit with <code>"async": true</code> to get a <code>run_id</code>, then poll <code>GET /swarm/run/{run_id}</code> for results.</p>
+          <p>Vercel serverless deployments are subject to the 60s execution limit on Hobby plans (300s on Pro). For long tasks, use Railway, Render, or self-hosted Docker.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ─── 6. PRO VERSION ─── -->
+  <section class="faq-section" id="pro">
+    <div class="section-title">
+      <div class="section-icon">⭐</div>
+      <h2>Pro Version</h2>
+      <span class="count">3 Q&amp;As</span>
+    </div>
+    <div class="faq-list">
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>What features are included in the Pro version?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p><span class="badge badge-pro">⭐ Pro</span> adds enterprise-grade capabilities on top of the open-source base:</p>
+          <ul>
+            <li>🧠 <strong>Long-term vector memory</strong> — agents remember brand guidelines, past campaigns, customer personas across all runs</li>
+            <li>📅 <strong>Scheduled swarm campaigns</strong> — cron-based execution with email/Slack delivery of results</li>
+            <li>👥 <strong>Team collaboration</strong> — multi-user workspaces with role-based access control</li>
+            <li>🔄 <strong>Workflow automation</strong> — chain swarm outputs into automated pipelines (e.g., research → draft → review → publish)</li>
+            <li>📊 <strong>Advanced analytics dashboard</strong> — swarm performance metrics, cost tracking, output quality scores</li>
+            <li>🎨 <strong>White-label dashboard</strong> — custom domain, logo, color scheme for agencies</li>
+            <li>🔗 <strong>Additional integrations</strong> — Zapier, Make.com, HubSpot webhooks, Notion, Airtable</li>
+            <li>⚡ <strong>Priority inference</strong> — dedicated NIM endpoints for consistent sub-2s latency</li>
+            <li>🛡️ <strong>SOC 2 compliance mode</strong> — audit logs, data retention policies, SSO</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>How much does Pro cost?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Pro pricing (when launched) is planned as:</p>
+          <ul>
+            <li><strong>Starter</strong> — $49/month — 5,000 swarm runs, 1 workspace, 3 users</li>
+            <li><strong>Growth</strong> — $149/month — 25,000 swarm runs, 5 workspaces, 10 users, white-label</li>
+            <li><strong>Agency</strong> — $399/month — unlimited runs, unlimited workspaces, unlimited users, dedicated support</li>
+            <li><strong>Enterprise</strong> — custom — on-premise deployment, SLA, dedicated account manager</li>
+          </ul>
+          <p>Early adopters who join the waitlist receive 50% off the first 6 months. LLM inference costs are separate (your own API keys) or included in the Enterprise tier with managed NIM endpoints.</p>
+          <div class="info-box">📬 <a href="mailto:pro@neuralquantum.ai">Join the waitlist</a> to get notified at launch and lock in early adopter pricing.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>
+          <div class="q-icon">Q</div>
+          <h3>Can I migrate from the free open-source version to Pro?</h3>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">
+          <p>Yes — migration is designed to be seamless:</p>
+          <ul>
+            <li>Your existing deployment keeps running exactly as-is with no changes</li>
+            <li>Pro features are unlocked by adding a <code>SM_PRO_LICENSE_KEY</code> to your environment variables</li>
+            <li>No code changes required for core functionality upgrades</li>
+            <li>Custom agents and teams you've built carry over automatically</li>
+            <li>Historical run data can be imported to the Pro analytics dashboard</li>
+          </ul>
+          <p>The Pro license key is verified against our licensing API on startup. Self-hosted Pro deployments ping the licensing server once daily — no per-request phoning home.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="contact-cta">
+    <h2>Still have questions?</h2>
+    <p>Our team and community are ready to help you get the most out of the swarm.</p>
+    <div class="btn-group">
+      <a href="https://github.com/ttracx/sales-marketing-nanobot-swarm/issues" class="btn btn-primary" target="_blank" rel="noopener">💬 Open a GitHub Issue</a>
+      <a href="/nanobot/static/docs-page.html" class="btn btn-outline">📖 Read the Docs</a>
+      <a href="mailto:support@neuralquantum.ai" class="btn btn-outline">✉️ Email Support</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="footer-links">
+    <a href="/nanobot/static/index.html">Dashboard</a>
+    <a href="/nanobot/static/docs-page.html">Documentation</a>
+    <a href="/nanobot/static/faq.html">FAQ</a>
+    <a href="https://github.com/ttracx/sales-marketing-nanobot-swarm" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:support@neuralquantum.ai">Support</a>
+  </div>
+  <p>Powered by <a href="https://neuralquantum.ai" target="_blank" rel="noopener">NeuralQuantum.ai LLC</a> &amp; <a href="https://vibecaas.com" target="_blank" rel="noopener">VibeCaaS.com</a> · MIT License</p>
+</footer>
+
+<script>
+  // Accordion: close others when opening one
+  document.querySelectorAll('details').forEach(detail => {
+    detail.addEventListener('toggle', () => {
+      if (detail.open) {
+        document.querySelectorAll('details').forEach(other => {
+          if (other !== detail && other.open) other.removeAttribute('open');
+        });
+      }
+    });
+  });
+
+  // Search filter
+  const searchInput = document.getElementById('faq-search');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    document.querySelectorAll('details').forEach(detail => {
+      const text = detail.textContent.toLowerCase();
+      const match = !q || text.includes(q);
+      detail.style.display = match ? '' : 'none';
+      if (match && q) detail.setAttribute('open', '');
+    });
+    // Show/hide empty sections
+    document.querySelectorAll('.faq-section').forEach(section => {
+      const visible = [...section.querySelectorAll('details')].some(d => d.style.display !== 'none');
+      section.style.display = visible ? '' : 'none';
+    });
+  });
+</script>
+</body>
+</html>
