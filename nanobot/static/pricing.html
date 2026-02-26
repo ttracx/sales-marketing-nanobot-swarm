@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Sales & Marketing Nanobot Swarm Pricing — Simple, transparent plans for every team.">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/neuralquantum-icon.png">
+<title>Pricing — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --card-bg2:#16213e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --grad-h:linear-gradient(135deg,#818cf8,#a78bfa,#f472b6);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100}
+#logo-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+#nq-icon{width:34px;height:34px;object-fit:contain;flex-shrink:0;border-radius:8px}
+.logo-icon-fallback{width:34px;height:34px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+#brand-name{font-size:15px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
+.nav-link:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+.btn-primary{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;background:var(--grad);color:#fff;transition:all .2s;white-space:nowrap}
+.btn-primary:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.4)}
+
+/* MAIN */
+#main{margin-top:60px;padding:0}
+
+/* HERO */
+.hero{text-align:center;padding:72px 24px 48px;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,0.12) 0%,transparent 70%)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,0.1);border:1px solid var(--border);border-radius:20px;padding:5px 16px;font-size:12px;font-weight:600;color:var(--indigo);margin-bottom:20px;letter-spacing:.5px;text-transform:uppercase}
+.hero h1{font-size:clamp(32px,6vw,56px);font-weight:800;line-height:1.1;margin-bottom:16px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:18px;color:var(--text-secondary);max-width:540px;margin:0 auto 36px;line-height:1.6}
+
+/* BILLING TOGGLE */
+.billing-toggle{display:inline-flex;align-items:center;gap:16px;background:var(--card-bg);border:1px solid var(--border);border-radius:40px;padding:6px 8px;margin-bottom:16px}
+.toggle-label{font-size:14px;font-weight:500;color:var(--text-secondary);padding:6px 16px;border-radius:30px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.toggle-label.active{background:rgba(99,102,241,0.2);color:var(--text-primary)}
+.toggle-switch{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:#374151;border-radius:12px;transition:background .3s}
+.toggle-track::before{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .3s}
+.toggle-switch input:checked ~ .toggle-track{background:var(--indigo)}
+.toggle-switch input:checked ~ .toggle-track::before{transform:translateX(20px)}
+.save-badge{font-size:11px;font-weight:700;background:rgba(16,185,129,0.15);color:var(--emerald);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:2px 10px}
+
+/* PRICING CARDS */
+.pricing-section{max-width:1280px;margin:0 auto;padding:0 24px 64px}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:start}
+@media(max-width:1100px){.pricing-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.pricing-grid{grid-template-columns:1fr}}
+
+.pricing-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:28px 24px;position:relative;transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
+.pricing-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,0.4)}
+.pricing-card.featured{border-color:var(--indigo);background:linear-gradient(160deg,#1e1e3a,#1a1a2e);transform:scale(1.03);box-shadow:0 0 0 1px var(--indigo),0 20px 60px rgba(99,102,241,0.2)}
+.pricing-card.featured:hover{transform:scale(1.03) translateY(-4px)}
+
+.card-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:16px;letter-spacing:.3px;text-transform:uppercase;width:fit-content}
+.badge-onetime{background:rgba(6,182,212,0.15);color:var(--cyan);border:1px solid rgba(6,182,212,0.3)}
+.badge-weekly{background:rgba(16,185,129,0.15);color:var(--emerald);border:1px solid rgba(16,185,129,0.3)}
+.badge-popular{background:var(--grad);color:#fff}
+.badge-annual{background:rgba(139,92,246,0.15);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+
+.card-name{font-size:18px;font-weight:700;margin-bottom:6px}
+.price-display{margin:16px 0 6px;display:flex;align-items:baseline;gap:2px}
+.price-currency{font-size:22px;font-weight:700;align-self:flex-start;margin-top:6px}
+.price-amount{font-size:44px;font-weight:800;line-height:1;letter-spacing:-1px}
+.price-period{font-size:14px;color:var(--text-secondary);margin-left:2px}
+.price-annual-note{font-size:12px;color:var(--emerald);margin-top:4px;min-height:18px}
+.card-subtitle{font-size:13px;color:var(--text-secondary);margin-bottom:20px}
+
+.features-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;flex:1}
+.features-list li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--text-primary);line-height:1.4}
+.feature-check{width:18px;height:18px;border-radius:50%;background:rgba(16,185,129,0.15);color:var(--emerald);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:1px;font-weight:700}
+
+.cta-btn{display:block;text-align:center;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:700;transition:all .2s;margin-top:auto}
+.cta-gradient{background:var(--grad);color:#fff}
+.cta-gradient:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+.cta-outline{background:transparent;color:var(--indigo);border:1px solid rgba(99,102,241,0.4)}
+.cta-outline:hover{background:rgba(99,102,241,0.1);border-color:var(--indigo)}
+
+/* COMPARISON TABLE */
+.comparison-section{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+.comparison-section h2{font-size:28px;font-weight:700;text-align:center;margin-bottom:8px}
+.section-subtitle{font-size:15px;color:var(--text-secondary);text-align:center;margin-bottom:40px}
+.comparison-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+.comparison-table{width:100%;border-collapse:collapse;min-width:640px}
+.comparison-table th{padding:14px 16px;font-size:12px;font-weight:700;text-align:center;color:var(--text-secondary);background:rgba(0,0,0,0.3);letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.comparison-table th:first-child{text-align:left}
+.comparison-table th.col-featured{color:var(--indigo)}
+.comparison-table td{padding:12px 16px;font-size:13px;text-align:center;border-bottom:1px solid rgba(99,102,241,0.06);color:var(--text-secondary)}
+.comparison-table td:first-child{text-align:left;color:var(--text-primary);font-weight:500}
+.comparison-table tr:last-child td{border-bottom:none}
+.comparison-table tr:hover td{background:rgba(99,102,241,0.03)}
+.col-featured{color:var(--text-primary)}
+.yes{color:#10b981;font-weight:700;font-size:15px}
+.no{color:#374151;font-size:15px}
+.row-cat{background:rgba(99,102,241,0.05)}
+.row-cat td{font-size:11px;font-weight:700;color:var(--indigo);letter-spacing:.5px;text-transform:uppercase;padding:8px 16px}
+.unlimited{color:#10b981;font-weight:600}
+
+/* FAQ */
+.faq-section{max-width:700px;margin:0 auto;padding:0 24px 80px}
+.faq-section h2{font-size:28px;font-weight:700;text-align:center;margin-bottom:8px}
+.faq-item{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;background:var(--card-bg);overflow:hidden}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;font-size:15px;font-weight:600;color:var(--text-primary);background:transparent;text-align:left;cursor:pointer;transition:background .2s;gap:12px}
+.faq-q:hover{background:rgba(99,102,241,0.05)}
+.faq-arrow{width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,0.15);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:transform .3s}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s ease;font-size:14px;color:var(--text-secondary);line-height:1.7;padding:0 20px}
+.faq-item.open .faq-body{max-height:300px;padding:0 20px 18px}
+.faq-body a{color:var(--indigo)}
+
+/* FOOTER */
+footer{background:var(--card-bg);border-top:1px solid var(--border);padding:32px 24px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-logo-icon{width:28px;height:28px;border-radius:6px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.footer-brand-name{font-size:13px;font-weight:600;color:var(--text-primary)}
+.footer-brand-sub{font-size:11px;color:var(--text-secondary)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--text-secondary);transition:color .2s}
+.footer-links a:hover{color:var(--text-primary)}
+.footer-copy{font-size:12px;color:var(--text-secondary);text-align:right}
+@media(max-width:600px){.footer-inner{flex-direction:column;align-items:flex-start}.footer-copy{text-align:left}}
+.section-divider{height:1px;background:var(--border);max-width:1100px;margin:0 auto 64px;opacity:.5}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div id="logo-wrap">
+    <img id="nq-icon" src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="logo-icon-fallback" style="display:none">NQ</div>
+    <span id="brand-name">Sales &amp; Marketing Nanobot Swarm</span>
+  </div>
+  <div id="topbar-right">
+    <a href="/" class="nav-link">&#8592; Dashboard</a>
+    <a href="/auth" class="nav-link">Sign In</a>
+    <a href="/auth#signup" class="btn-primary">Start Free &#8594;</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">&#128200; Pricing</div>
+    <h1>Simple, Transparent Pricing</h1>
+    <p>Start free. Scale when you're ready. No hidden fees.</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div class="billing-toggle">
+        <span class="toggle-label active" id="lbl-monthly" onclick="setBilling('monthly')">Monthly</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="billing-chk" onchange="toggleBilling()">
+          <div class="toggle-track"></div>
+        </label>
+        <span class="toggle-label" id="lbl-annual" onclick="setBilling('annual')">Annual</span>
+      </div>
+      <div class="save-badge" id="save-badge" style="opacity:0;transition:opacity .3s">&#10003; Save 17% with annual billing</div>
+    </div>
+  </section>
+
+  <!-- PRICING CARDS -->
+  <section class="pricing-section">
+    <div class="pricing-grid">
+
+      <!-- Card 1: Campaign Pack -->
+      <div class="pricing-card">
+        <span class="card-badge badge-onetime">One-Time</span>
+        <div class="card-name">Campaign Pack</div>
+        <div class="price-display">
+          <span class="price-currency">$</span>
+          <span class="price-amount">29</span>
+        </div>
+        <div class="price-annual-note">&nbsp;</div>
+        <div class="card-subtitle">10 swarm runs, no expiry</div>
+        <ul class="features-list">
+          <li><span class="feature-check">&#10003;</span><span>10 swarm runs</span></li>
+          <li><span class="feature-check">&#10003;</span><span>All 10 agent teams</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Full AI output</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Copy &amp; export results</span></li>
+          <li><span class="feature-check">&#10003;</span><span>No subscription required</span></li>
+          <li><span class="feature-check">&#10003;</span><span>30-day result history</span></li>
+        </ul>
+        <a href="https://buy.stripe.com/fZu7sL0jr3QteyN30O1sQ1h" target="_blank" rel="noopener" class="cta-btn cta-outline">Buy Campaign Pack &#8594;</a>
+      </div>
+
+      <!-- Card 2: Starter Weekly -->
+      <div class="pricing-card">
+        <span class="card-badge badge-weekly">Weekly</span>
+        <div class="card-name">Starter Weekly</div>
+        <div class="price-display">
+          <span class="price-currency">$</span>
+          <span class="price-amount">19</span>
+          <span class="price-period">/wk</span>
+        </div>
+        <div class="price-annual-note">&nbsp;</div>
+        <div class="card-subtitle">25 runs/week, renews weekly</div>
+        <ul class="features-list">
+          <li><span class="feature-check">&#10003;</span><span>25 swarm runs per week</span></li>
+          <li><span class="feature-check">&#10003;</span><span>All 10 agent teams</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Agent + team builder</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Basic campaign analytics</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Email support</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Cancel anytime</span></li>
+        </ul>
+        <a href="https://buy.stripe.com/aFafZhgip5YBbmBcBo1sQ1i" target="_blank" rel="noopener" class="cta-btn cta-outline">Start Weekly &#8594;</a>
+      </div>
+
+      <!-- Card 3: Growth Monthly (Featured) -->
+      <div class="pricing-card featured">
+        <span class="card-badge badge-popular">&#11088; Most Popular</span>
+        <div class="card-name">Growth Monthly</div>
+        <div class="price-display">
+          <span class="price-currency">$</span>
+          <span class="price-amount" id="growth-amount">69</span>
+          <span class="price-period" id="growth-period">/month</span>
+        </div>
+        <div class="price-annual-note" id="growth-note">&nbsp;</div>
+        <div class="card-subtitle">Unlimited runs, professional tools</div>
+        <ul class="features-list">
+          <li><span class="feature-check">&#10003;</span><span>Unlimited swarm runs</span></li>
+          <li><span class="feature-check">&#10003;</span><span>All 10 agent teams</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Custom agent + team builder</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Advanced campaign analytics</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Campaign history &amp; export</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Priority AI backend</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Email + chat support</span></li>
+          <li><span class="feature-check">&#10003;</span><span>5 team member seats</span></li>
+        </ul>
+        <a href="https://buy.stripe.com/bJe7sL7LT5YB0HX6d01sQ1j" target="_blank" rel="noopener" class="cta-btn cta-gradient" id="growth-cta">Start Growth &#8594;</a>
+      </div>
+
+      <!-- Card 4: Agency Annual -->
+      <div class="pricing-card">
+        <span class="card-badge badge-annual">Annual</span>
+        <div class="card-name">Agency Annual</div>
+        <div class="price-display">
+          <span class="price-currency">$</span>
+          <span class="price-amount" id="agency-amount">599</span>
+          <span class="price-period">/year</span>
+        </div>
+        <div class="price-annual-note" id="agency-note">&nbsp;</div>
+        <div class="card-subtitle">Everything for agencies &amp; teams</div>
+        <ul class="features-list">
+          <li><span class="feature-check">&#10003;</span><span>Everything in Growth</span></li>
+          <li><span class="feature-check">&#10003;</span><span>White-label API access</span></li>
+          <li><span class="feature-check">&#10003;</span><span>CRM integrations (HubSpot/Salesforce)</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Scheduled campaigns</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Batch runs (up to 5 simultaneous)</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Webhook triggers</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Dedicated support</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Unlimited team seats</span></li>
+          <li><span class="feature-check">&#10003;</span><span>Custom team templates</span></li>
+          <li><span class="feature-check">&#10003;</span><span>2 months free (vs monthly)</span></li>
+        </ul>
+        <a href="https://buy.stripe.com/aFa28r4zH5YBgGVeJw1sQ1k" target="_blank" rel="noopener" class="cta-btn cta-outline">Start Agency &#8594;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <div class="section-divider"></div>
+  <section class="comparison-section">
+    <h2>Full Feature Comparison</h2>
+    <p class="section-subtitle">Everything you need to know about each plan</p>
+    <div class="comparison-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Campaign Pack</th>
+            <th>Starter Weekly</th>
+            <th class="col-featured">Growth Monthly</th>
+            <th>Agency Annual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-cat"><td>Core Access</td><td></td><td></td><td></td><td></td></tr>
+          <tr>
+            <td>Swarm runs</td>
+            <td>10 one-time</td>
+            <td>25/week</td>
+            <td class="col-featured unlimited">Unlimited</td>
+            <td class="unlimited">Unlimited</td>
+          </tr>
+          <tr>
+            <td>Agent teams</td>
+            <td>All 10</td>
+            <td>All 10</td>
+            <td class="col-featured">All 10</td>
+            <td>All 10</td>
+          </tr>
+          <tr>
+            <td>Agent builder</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+            <td class="col-featured"><span class="yes">&#10003;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Team builder</td>
+            <td><span class="no">&#10005;</span></td>
+            <td>Basic</td>
+            <td class="col-featured">Custom</td>
+            <td>Custom + templates</td>
+          </tr>
+          <tr class="row-cat"><td>Analytics &amp; Data</td><td></td><td></td><td></td><td></td></tr>
+          <tr>
+            <td>Analytics</td>
+            <td><span class="no">&#10005;</span></td>
+            <td>Basic</td>
+            <td class="col-featured">Advanced</td>
+            <td>Advanced</td>
+          </tr>
+          <tr>
+            <td>Campaign history</td>
+            <td>30 days</td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="yes">&#10003;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Export results</td>
+            <td><span class="yes">&#10003;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="yes">&#10003;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+          </tr>
+          <tr class="row-cat"><td>Infrastructure</td><td></td><td></td><td></td><td></td></tr>
+          <tr>
+            <td>Priority AI backend</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="yes">&#10003;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>API access</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="no">&#10005;</span></td>
+            <td>White-label</td>
+          </tr>
+          <tr>
+            <td>CRM integrations</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="no">&#10005;</span></td>
+            <td>HubSpot + Salesforce</td>
+          </tr>
+          <tr>
+            <td>Scheduled campaigns</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="no">&#10005;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Batch runs</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="no">&#10005;</span></td>
+            <td>Up to 5 simultaneous</td>
+          </tr>
+          <tr>
+            <td>Webhook triggers</td>
+            <td><span class="no">&#10005;</span></td>
+            <td><span class="no">&#10005;</span></td>
+            <td class="col-featured"><span class="no">&#10005;</span></td>
+            <td><span class="yes">&#10003;</span></td>
+          </tr>
+          <tr class="row-cat"><td>Team &amp; Support</td><td></td><td></td><td></td><td></td></tr>
+          <tr>
+            <td>Team seats</td>
+            <td>1</td>
+            <td>1</td>
+            <td class="col-featured">5</td>
+            <td>Unlimited</td>
+          </tr>
+          <tr>
+            <td>Support</td>
+            <td>&#8212;</td>
+            <td>Email</td>
+            <td class="col-featured">Email + Chat</td>
+            <td>Dedicated</td>
+          </tr>
+          <tr>
+            <td>SLA</td>
+            <td>&#8212;</td>
+            <td>&#8212;</td>
+            <td class="col-featured">&#8212;</td>
+            <td>99.9% uptime SLA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <div class="section-divider"></div>
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <p class="section-subtitle">Got questions? We have answers.</p>
+
+    <div class="faq-item" id="faq-1">
+      <button class="faq-q" onclick="toggleFaq('faq-1')">
+        <span>Can I cancel anytime?</span>
+        <div class="faq-arrow">&#9660;</div>
+      </button>
+      <div class="faq-body">
+        Yes &#8212; weekly and monthly plans can be cancelled at any time from your billing portal, and you retain access until the end of your paid period. Annual plans are non-refundable after the 14-day money-back guarantee window. If you cancel within 14 days, you will receive a full refund.
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-2">
+      <button class="faq-q" onclick="toggleFaq('faq-2')">
+        <span>What happens when I run out of swarm runs?</span>
+        <div class="faq-arrow">&#9660;</div>
+      </button>
+      <div class="faq-body">
+        If you are on the Campaign Pack and exhaust your 10 runs, you can purchase additional Campaign Packs at any time &#8212; they never expire. Alternatively, upgrade to Starter Weekly or Growth Monthly for a higher or unlimited run allowance. Weekly plan runs reset at the start of each billing week.
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq-3">
+      <button class="faq-q" onclick="toggleFaq('faq-3')">
+        <span>Is there a free trial?</span>
+        <div class="faq-arrow">&#9660;</div>
+      </button>
+      <div class="faq-body">
+        Yes! You can try the Sales &amp; Marketing Nanobot Swarm for free at <a href="https://sales-marketing-nanobot-swarm.vibecaas.app" target="_blank" rel="noopener">sales-marketing-nanobot-swarm.vibecaas.app</a>. The public demo gives you access to all 10 agent teams with a limited number of free runs so you can evaluate the platform before purchasing.
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-icon">NQ</div>
+      <div>
+        <div class="footer-brand-name">Sales &amp; Marketing Nanobot Swarm</div>
+        <div class="footer-brand-sub">Powered by VibeCaaS.com / NeuralQuantum.ai LLC</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="/">Dashboard</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/docs">Docs</a>
+      <a href="/faq">FAQ</a>
+      <a href="/auth">Sign In</a>
+    </div>
+    <div class="footer-copy">
+      &copy; 2025 NeuralQuantum.ai LLC &amp; VibeCaaS.com<br>
+      All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Billing Toggle ─────────────────────────────────────────────────────────
+var billingMode = 'monthly';
+
+function setBilling(mode) {
+  billingMode = mode;
+  var chk = document.getElementById('billing-chk');
+  chk.checked = (mode === 'annual');
+  document.getElementById('lbl-monthly').classList.toggle('active', mode === 'monthly');
+  document.getElementById('lbl-annual').classList.toggle('active', mode === 'annual');
+  document.getElementById('save-badge').style.opacity = (mode === 'annual') ? '1' : '0';
+  updatePrices();
+}
+
+function toggleBilling() {
+  var chk = document.getElementById('billing-chk');
+  setBilling(chk.checked ? 'annual' : 'monthly');
+}
+
+function updatePrices() {
+  var annual = (billingMode === 'annual');
+
+  // Growth card
+  var growthAmount = document.getElementById('growth-amount');
+  var growthNote   = document.getElementById('growth-note');
+  if (annual) {
+    growthAmount.textContent = '57';
+    growthNote.textContent   = '$57/mo \u00b7 billed $599/year \u00b7 save $229';
+  } else {
+    growthAmount.textContent = '69';
+    growthNote.textContent   = '\u00a0';
+  }
+
+  // Agency card
+  var agencyAmount = document.getElementById('agency-amount');
+  var agencyNote   = document.getElementById('agency-note');
+  if (annual) {
+    agencyAmount.textContent = '499';
+    agencyNote.textContent   = 'billed $499/year \u00b7 save 17%';
+  } else {
+    agencyAmount.textContent = '599';
+    agencyNote.textContent   = '\u00a0';
+  }
+}
+
+// ── FAQ Accordion ──────────────────────────────────────────────────────────
+function toggleFaq(id) {
+  var item   = document.getElementById(id);
+  var wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el) {
+    el.classList.remove('open');
+  });
+  if (!wasOpen) { item.classList.add('open'); }
+}
+</script>
+</body>
+</html>

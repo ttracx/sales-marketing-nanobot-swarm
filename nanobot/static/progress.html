@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Progress — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card-bg: #1a1a2e;
+    --card-bg2: #16213e;
+    --indigo: #6366f1;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    --cyan: #06b6d4;
+    --emerald: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border: rgba(99, 102, 241, 0.2);
+    --grad: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* Header */
+  .header {
+    position: fixed; top: 0; left: 0; right: 0; height: 60px;
+    background: rgba(15,15,26,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-left img { width: 32px; height: 32px; border-radius: 6px; }
+  .header-title {
+    font-size: 16px; font-weight: 700;
+    background: var(--grad); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .header-back {
+    color: var(--text-secondary); text-decoration: none; font-size: 13px;
+    padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .header-back:hover { color: var(--text-primary); border-color: var(--indigo); }
+  .header-right { display: flex; align-items: center; gap: 14px; }
+  .live-indicator { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--emerald); }
+  .live-dot {
+    width: 8px; height: 8px; background: var(--emerald); border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; transform:scale(1); box-shadow:0 0 0 0 rgba(16,185,129,0.6); }
+    50% { opacity:0.8; transform:scale(1.15); box-shadow:0 0 0 5px rgba(16,185,129,0); }
+  }
+  .btn-new-run {
+    background: var(--grad); color: #fff; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-new-run:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-new-run:active { transform: translateY(0); }
+
+  /* Layout */
+  main { padding: 80px 24px 40px; max-width: 1200px; margin: 0 auto; }
+  .page-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start; }
+  @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px; font-weight: 600; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Runs subheader */
+  .runs-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+  .runs-header h2 { font-size: 20px; font-weight: 700; }
+  .runs-header-right { display: flex; align-items: center; gap: 10px; }
+  .countdown-text { font-size: 12px; color: var(--text-secondary); }
+  .btn-refresh {
+    background: transparent; border: 1px solid var(--border); color: var(--text-secondary);
+    border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-refresh:hover { border-color: var(--indigo); color: var(--text-primary); }
+
+  /* Run card */
+  .run-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    border-left-width: 4px; margin-bottom: 16px; overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .run-card:hover { box-shadow: 0 4px 24px rgba(99,102,241,0.12); }
+  .run-card.status-running { border-left-color: var(--indigo); }
+  .run-card.status-complete { border-left-color: var(--emerald); }
+  .run-card.status-failed { border-left-color: var(--red); }
+  .run-card.status-archived { border-left-color: #374151; opacity: 0.55; }
+
+  .run-card-top { padding: 16px 18px 12px; }
+  .run-card-title-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px; flex-wrap: wrap; gap: 6px;
+  }
+  .run-card-name { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .run-status-badge { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+  .run-status-badge.running { background: rgba(99,102,241,0.15); color: var(--indigo); }
+  .run-status-badge.complete { background: rgba(16,185,129,0.15); color: var(--emerald); }
+  .run-status-badge.failed { background: rgba(239,68,68,0.15); color: var(--red); }
+  .run-status-badge.archived { background: rgba(55,65,81,0.3); color: #6b7280; }
+  .status-dot-running { width:6px; height:6px; border-radius:50%; background:var(--indigo); animation:pulse-dot 1.5s infinite; display:inline-block; }
+  .run-goal { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
+
+  /* Meta row */
+  .run-meta {
+    display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary);
+    flex-wrap: wrap; padding: 10px 18px; border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.15); overflow-x: auto;
+  }
+  .run-meta span { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+
+  /* Progress */
+  .run-progress-section { padding: 12px 18px; border-top: 1px solid rgba(255,255,255,0.04); }
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .progress-bar-track { flex:1; height:8px; background:rgba(255,255,255,0.07); border-radius:4px; overflow:hidden; }
+  .progress-bar-fill { height:100%; border-radius:4px; transition:width 0.4s ease; }
+  .progress-bar-fill.running { background:linear-gradient(90deg,var(--indigo),var(--purple)); position:relative; overflow:hidden; }
+  .progress-bar-fill.running::after {
+    content:''; position:absolute; top:0; left:-100%; right:0; bottom:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+    animation:shimmer-bar 1.8s infinite;
+  }
+  @keyframes shimmer-bar { 0%{left:-100%} 100%{left:100%} }
+  .progress-bar-fill.complete { background:var(--emerald); }
+  .progress-bar-fill.failed { background:var(--red); }
+  .progress-pct { font-size:12px; font-weight:700; min-width:36px; text-align:right; }
+  .progress-label { font-size:11px; color:var(--text-secondary); }
+
+  /* Actions */
+  .run-actions {
+    padding: 10px 18px; border-top: 1px solid rgba(255,255,255,0.04);
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .btn-action {
+    background: transparent; border: 1px solid var(--border); color: var(--text-secondary);
+    border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center; gap: 4px;
+  }
+  .btn-action:hover { border-color: var(--indigo); color: var(--text-primary); }
+  .btn-action.expand-open { color: var(--indigo); border-color: var(--indigo); }
+
+  /* Expandable output */
+  .run-output { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .run-output.open { max-height: 600px; overflow-y: auto; }
+  .run-output-inner { padding: 16px 18px; border-top: 1px solid rgba(255,255,255,0.04); }
+  .run-output pre {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+    padding: 14px; font-size: 12px; line-height: 1.6; color: var(--text-primary);
+    white-space: pre-wrap; word-break: break-word;
+    font-family: 'JetBrains Mono','Fira Code','Consolas',monospace;
+    max-height: 400px; overflow-y: auto;
+  }
+  .run-output-copy {
+    margin-top: 10px; background: transparent; border: 1px solid var(--border);
+    color: var(--text-secondary); border-radius: 6px; padding: 5px 12px;
+    font-size: 12px; cursor: pointer; transition: all 0.2s;
+  }
+  .run-output-copy:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* Empty state */
+  .empty-state { text-align:center; padding:60px 24px; border:2px dashed var(--border); border-radius:12px; color:var(--text-secondary); }
+  .empty-icon { font-size:48px; margin-bottom:16px; }
+  .empty-state h3 { font-size:18px; color:var(--text-primary); margin-bottom:8px; }
+  .empty-state p { font-size:14px; margin-bottom:20px; }
+  .btn-start {
+    background:var(--grad); color:#fff; border:none; border-radius:8px;
+    padding:10px 22px; font-size:14px; font-weight:600; cursor:pointer;
+    text-decoration:none; display:inline-block; transition:opacity 0.2s;
+  }
+  .btn-start:hover { opacity:0.85; }
+
+  /* Shimmer skeleton */
+  .shimmer-card { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; }
+  .shimmer-line {
+    height:14px;
+    background:linear-gradient(90deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.1) 50%,rgba(255,255,255,0.04) 100%);
+    background-size:200% 100%; border-radius:4px; margin-bottom:10px; animation:shimmer 1.5s infinite;
+  }
+  .shimmer-line.wide{width:70%} .shimmer-line.med{width:50%} .shimmer-line.narrow{width:35%}
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* Sidebar */
+  .sidebar { position:sticky; top:76px; }
+  .status-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:13px;
+  }
+  .status-item:last-child { border-bottom:none; }
+  .status-item .label { color:var(--text-secondary); }
+
+  /* Stats */
+  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat-item { background:var(--card-bg2); border:1px solid var(--border); border-radius:8px; padding:12px; }
+  .stat-value {
+    font-size:22px; font-weight:800; background:var(--grad);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1.2;
+  }
+  .stat-label { font-size:11px; color:var(--text-secondary); margin-top:4px; text-transform:uppercase; letter-spacing:0.04em; }
+
+  /* Team chart */
+  .team-chart-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:12px; }
+  .team-chart-label { width:110px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-primary); flex-shrink:0; }
+  .team-chart-count { width:22px; text-align:right; color:var(--text-secondary); flex-shrink:0; font-size:11px; }
+  .team-chart-bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+  .team-chart-bar-fill { height:100%; border-radius:4px; background:var(--grad); transition:width 0.4s ease; min-width:4px; }
+
+  /* Quick launch */
+  .quick-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+  .quick-btn {
+    background:var(--card-bg2); border:1px solid var(--border); border-radius:8px;
+    padding:8px 4px; cursor:pointer; text-align:center; color:var(--text-secondary);
+    transition:all 0.2s; display:flex; flex-direction:column; align-items:center; gap:3px;
+  }
+  .quick-btn:hover { border-color:var(--indigo); color:var(--text-primary); background:rgba(99,102,241,0.08); box-shadow:0 0 10px rgba(99,102,241,0.2); }
+  .qb-emoji { font-size:18px; }
+  .qb-label { font-size:9px; text-align:center; line-height:1.2; }
+
+  /* Goal chips */
+  .goal-chip {
+    background:var(--card-bg2); border:1px solid var(--border); border-radius:20px;
+    padding:6px 12px; font-size:12px; color:var(--text-secondary); cursor:pointer;
+    margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    transition:all 0.2s; display:block;
+  }
+  .goal-chip:hover { border-color:var(--indigo); color:var(--text-primary); background:rgba(99,102,241,0.08); }
+
+  /* Modal */
+  .modal-backdrop {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(6px); z-index:200; align-items:center; justify-content:center; padding:16px;
+  }
+  .modal-backdrop.open { display:flex; }
+  .modal-box {
+    background:#1a1a2e; border:1px solid var(--border); border-radius:16px; padding:28px;
+    max-width:560px; width:90%; box-shadow:0 24px 60px rgba(0,0,0,0.6); animation:modal-in 0.2s ease;
+  }
+  @keyframes modal-in { from{opacity:0;transform:scale(0.95) translateY(-10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .modal-title { font-size:18px; font-weight:700; }
+  .modal-close {
+    background:transparent; border:1px solid var(--border); color:var(--text-secondary);
+    border-radius:6px; width:30px; height:30px; cursor:pointer; font-size:16px;
+    display:flex; align-items:center; justify-content:center; transition:all 0.2s;
+  }
+  .modal-close:hover { border-color:var(--red); color:var(--red); }
+  .modal-section-label { font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px; }
+  .team-pills { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px; }
+  .team-pill {
+    background:var(--card-bg2); border:1px solid var(--border); border-radius:20px;
+    padding:6px 12px; font-size:12px; color:var(--text-secondary); cursor:pointer;
+    transition:all 0.2s; display:flex; align-items:center; gap:5px;
+  }
+  .team-pill:hover { border-color:var(--indigo); color:var(--text-primary); }
+  .team-pill.active { background:rgba(99,102,241,0.15); border-color:var(--indigo); color:var(--indigo); font-weight:600; }
+  .modal-textarea {
+    width:100%; min-height:100px; background:var(--card-bg2); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; font-size:15px; color:var(--text-primary);
+    resize:vertical; outline:none; font-family:inherit; transition:border-color 0.2s; margin-bottom:20px;
+  }
+  .modal-textarea:focus { border-color:var(--indigo); }
+  .modal-textarea::placeholder { color:var(--text-secondary); }
+  .modal-footer { display:flex; justify-content:flex-end; gap:10px; }
+  .btn-cancel {
+    background:transparent; border:1px solid var(--border); color:var(--text-secondary);
+    border-radius:8px; padding:10px 18px; font-size:14px; cursor:pointer; transition:all 0.2s;
+  }
+  .btn-cancel:hover { border-color:var(--text-secondary); color:var(--text-primary); }
+  .btn-launch {
+    background:var(--grad); color:#fff; border:none; border-radius:8px;
+    padding:10px 22px; font-size:14px; font-weight:600; cursor:pointer;
+    transition:opacity 0.2s; display:flex; align-items:center; gap:6px;
+    min-width:130px; justify-content:center;
+  }
+  .btn-launch:hover { opacity:0.88; }
+  .btn-launch:disabled { opacity:0.5; cursor:not-allowed; }
+  .spinner {
+    width:14px; height:14px; border:2px solid rgba(255,255,255,0.3);
+    border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* Toast */
+  .toast {
+    position:fixed; bottom:24px; right:24px; background:var(--card-bg);
+    border:1px solid var(--border); border-radius:10px; padding:12px 18px;
+    font-size:13px; color:var(--text-primary); z-index:300;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4); transform:translateY(80px);
+    opacity:0; transition:all 0.3s ease; pointer-events:none;
+  }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-track{background:rgba(255,255,255,0.03)}
+  ::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.3);border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(99,102,241,0.5)}
+
+  @media(max-width:768px){
+    .header-title{display:none}
+    .sidebar{position:static}
+    main{padding:74px 14px 30px}
+    .modal-box{padding:20px;width:95%}
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-left">
+    <img src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none'">
+    <span class="header-title">Live Progress</span>
+    <a href="/" class="header-back">&#8592; Dashboard</a>
+  </div>
+  <div class="header-right">
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      Live
+    </div>
+    <button class="btn-new-run" onclick="openModal()">New Run +</button>
+  </div>
+</header>
+
+<!-- Main -->
+<main>
+  <div class="page-grid">
+
+    <!-- LEFT: Runs Panel -->
+    <div id="runs-panel">
+      <div class="runs-header">
+        <h2>Active &amp; Recent Runs</h2>
+        <div class="runs-header-right">
+          <span class="countdown-text" id="countdown-display">Refresh in 10s</span>
+          <button class="btn-refresh" onclick="manualRefresh()">&#8635; Refresh</button>
+        </div>
+      </div>
+      <div id="runs-list"></div>
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <div class="sidebar">
+
+      <!-- Backend Status -->
+      <div class="card">
+        <div class="card-title">
+          <span class="live-dot" style="width:6px;height:6px"></span>
+          System Status
+        </div>
+        <div id="status-content"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="card">
+        <div class="card-title">&#128200; Today's Activity</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Total Runs</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-success">&#8212;</div>
+            <div class="stat-label">Success Rate</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-latency">&#8212;</div>
+            <div class="stat-label">Avg Latency</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-top-team" style="font-size:13px">&#8212;</div>
+            <div class="stat-label">Top Team</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Chart -->
+      <div class="card">
+        <div class="card-title">&#128202; Team Usage</div>
+        <div id="team-chart"></div>
+      </div>
+
+      <!-- Quick Launch -->
+      <div class="card">
+        <div class="card-title">&#9889; Quick Launch</div>
+        <div class="quick-grid" id="quick-launch-grid"></div>
+      </div>
+
+      <!-- Recent Goals -->
+      <div class="card">
+        <div class="card-title">&#128336; Recent Goals</div>
+        <div id="recent-goals"></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer style="border-top:1px solid var(--border);padding:20px;text-align:center;margin-top:40px">
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px;flex-wrap:wrap">
+    <img src="/images/neuralquantum-horizontal.png" alt="NeuralQuantum.ai" style="height:22px;opacity:0.8" onerror="this.style.display='none'">
+    <span style="color:#374151">&#183;</span>
+    <img src="/images/vibecaas-logo.png" alt="VibeCaaS" style="height:18px;opacity:0.8" onerror="this.style.display='none'">
+  </div>
+  <div style="font-size:12px;color:#4b5563">&#169; 2025 NeuralQuantum.ai LLC &#183; Powered by VibeCaaS.com</div>
+</footer>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="backdropClose(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">&#128640; New Swarm Run</span>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="modal-section-label">Select Team</div>
+    <div class="team-pills" id="modal-team-pills"></div>
+    <div class="modal-section-label">Goal</div>
+    <textarea
+      id="modal-goal"
+      class="modal-textarea"
+      placeholder="What do you want to achieve? e.g. Build a lead gen funnel for fintech CFOs at mid-market companies"
+    ></textarea>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-launch" id="launch-btn" onclick="launchRun()">
+        <span id="launch-icon-wrap">&#128640;</span>
+        <span id="launch-text">Launch Swarm &#8594;</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Constants ──────────────────────────────────────────────
+  var STORAGE_KEY = 'sm_swarm_runs';
+
+  var TEAM_EMOJIS = {
+    'lead-generation-engine':  '\uD83C\uDFAF',
+    'content-marketing-team':  '\uD83D\uDCDD',
+    'email-campaign-manager':  '\u2709\uFE0F',
+    'social-media-strategist': '\uD83D\uDCF1',
+    'campaign-analytics-hub':  '\uD83D\uDCCA',
+    'competitive-intelligence':'\uD83D\uDD0D',
+    'sales-enablement-team':   '\uD83E\uDD1D',
+    'abm-orchestrator':        '\uD83C\uDFE6',
+    'brand-voice-guardian':    '\uD83C\uDFA8',
+    'growth-hacker-lab':       '\uD83D\uDE80'
+  };
+
+  var TEAM_SHORT_NAMES = {
+    'lead-generation-engine':  'Lead Gen',
+    'content-marketing-team':  'Content',
+    'email-campaign-manager':  'Email',
+    'social-media-strategist': 'Social',
+    'campaign-analytics-hub':  'Analytics',
+    'competitive-intelligence':'Intel',
+    'sales-enablement-team':   'Sales',
+    'abm-orchestrator':        'ABM',
+    'brand-voice-guardian':    'Brand',
+    'growth-hacker-lab':       'Growth'
+  };
+
+  var TEAM_KEYS = Object.keys(TEAM_EMOJIS);
+
+  var PROGRESS_LABELS = {
+    running:  'Executing sub-tasks\u2026',
+    complete: 'Completed successfully',
+    failed:   'Execution failed',
+    archived: 'Archived'
+  };
+
+  // ── DOM helpers (safe — textContent only for user data) ────
+  function qid(id) { return document.getElementById(id); }
+
+  function setText(el, val) {
+    if (el) { el.textContent = val == null ? '' : String(val); }
+  }
+
+  /** Create a DOM element with optional properties and text children.
+   *  className, id, style are set directly. All other keys use setAttribute.
+   *  Children must be strings (become TextNodes) or Elements. */
+  function el(tag, props, children) {
+    var node = document.createElement(tag);
+    if (props) {
+      Object.keys(props).forEach(function (k) {
+        if (k === 'className') { node.className = props[k]; }
+        else if (k === 'id')    { node.id = props[k]; }
+        else if (k === 'style') { node.style.cssText = props[k]; }
+        else                    { node.setAttribute(k, props[k]); }
+      });
+    }
+    if (children) {
+      children.forEach(function (c) {
+        if (c == null) return;
+        node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+      });
+    }
+    return node;
+  }
+
+  function txt(str) { return document.createTextNode(String(str == null ? '' : str)); }
+
+  function clearEl(node) {
+    while (node && node.firstChild) { node.removeChild(node.firstChild); }
+  }
+
+  // ── Utilities ──────────────────────────────────────────────
+  function timeAgo(iso) {
+    try {
+      var diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+      if (diff < 60)    return diff + 's ago';
+      if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+      return Math.floor(diff / 86400) + 'd ago';
+    } catch (e) { return ''; }
+  }
+
+  function truncate(str, n) {
+    if (!str) return '';
+    return str.length > n ? str.slice(0, n) + '\u2026' : str;
+  }
+
+  function statusProgress(status) {
+    if (status === 'complete' || status === 'failed' || status === 'archived') return 100;
+    return Math.floor(Math.random() * 30) + 55;
+  }
+
+  // ── Store ──────────────────────────────────────────────────
+  function loadRuns() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+
+  function saveRuns(runs) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(runs.slice(0, 20))); }
+    catch (e) {}
+  }
+
+  function archiveRun(id) {
+    var runs = loadRuns();
+    var idx = -1;
+    for (var i = 0; i < runs.length; i++) { if (runs[i].id === id) { idx = i; break; } }
+    if (idx !== -1) {
+      runs[idx].status = 'archived';
+      saveRuns(runs);
+      renderRuns();
+      renderSidebar();
+      showToast('Run archived');
+    }
+  }
+
+  function deleteRun(id) {
+    saveRuns(loadRuns().filter(function (r) { return r.id !== id; }));
+    renderRuns();
+    renderSidebar();
+    showToast('Run removed');
+  }
+
+  function getTodayStats(runs) {
+    var today = new Date().toDateString();
+    var todayRuns = runs.filter(function (r) {
+      try { return new Date(r.timestamp).toDateString() === today; } catch (e) { return false; }
+    });
+    var total = todayRuns.length;
+    var completed = todayRuns.filter(function (r) { return r.status === 'complete'; }).length;
+    var successRate = total > 0 ? Math.round((completed / total) * 100) : null;
+    var latencies = todayRuns
+      .filter(function (r) { return r.latency && !isNaN(parseFloat(r.latency)); })
+      .map(function (r) { return parseFloat(r.latency); });
+    var avgLatency = latencies.length > 0
+      ? (latencies.reduce(function (a, b) { return a + b; }, 0) / latencies.length).toFixed(1)
+      : null;
+    var teamCount = {};
+    todayRuns.forEach(function (r) {
+      if (r.team && r.team !== 'auto') { teamCount[r.team] = (teamCount[r.team] || 0) + 1; }
+    });
+    var topTeam = null; var topCount = 0;
+    Object.keys(teamCount).forEach(function (t) {
+      if (teamCount[t] > topCount) { topTeam = t; topCount = teamCount[t]; }
+    });
+    var topTeamLabel = topTeam
+      ? (TEAM_EMOJIS[topTeam] || '') + ' ' + (TEAM_SHORT_NAMES[topTeam] || topTeam)
+      : null;
+    return { total: total, successRate: successRate, avgLatency: avgLatency, topTeam: topTeamLabel };
+  }
+
+  function getTeamCounts(runs) {
+    var counts = {};
+    runs.forEach(function (r) {
+      if (r.team && r.team !== 'auto') { counts[r.team] = (counts[r.team] || 0) + 1; }
+    });
+    return counts;
+  }
+
+  // ── Build status badge (DOM) ───────────────────────────────
+  function buildStatusBadge(status) {
+    var badge = el('span', { className: 'run-status-badge ' + status });
+    if (status === 'running') {
+      badge.appendChild(el('span', { className: 'status-dot-running' }));
+      badge.appendChild(txt('Running'));
+    } else if (status === 'complete') {
+      badge.appendChild(txt('\u2713 Complete'));
+    } else if (status === 'failed') {
+      badge.appendChild(txt('\u2715 Failed'));
+    } else {
+      badge.appendChild(txt('Archived'));
+    }
+    return badge;
+  }
+
+  // ── Build one run card (DOM only, no user data via innerHTML) ──
+  function buildRunCard(run) {
+    var status  = run.status || 'complete';
+    var pct     = statusProgress(status);
+    var ago     = timeAgo(run.timestamp);
+    var backend = run.backend || 'ollama';
+    var emoji   = TEAM_EMOJIS[run.team] || '\uD83E\uDD16';
+    var teamName = run.team || 'auto';
+
+    var card = el('div', { className: 'run-card status-' + status, id: 'run-' + run.id });
+
+    // ─ Top section ─
+    var top = el('div', { className: 'run-card-top' });
+    var titleRow = el('div', { className: 'run-card-title-row' });
+    var nameNode = el('div', { className: 'run-card-name' });
+    nameNode.appendChild(txt(emoji + ' ' + teamName));
+    titleRow.appendChild(nameNode);
+    titleRow.appendChild(buildStatusBadge(status));
+    top.appendChild(titleRow);
+    var goalNode = el('div', { className: 'run-goal' });
+    goalNode.appendChild(txt('\u201C' + truncate(run.goal || '', 120) + '\u201D'));
+    top.appendChild(goalNode);
+    card.appendChild(top);
+
+    // ─ Meta row ─
+    var meta = el('div', { className: 'run-meta' });
+    var metaItems = [
+      '\uD83E\uDD16 ' + (backend === 'nim' ? '4' : '7') + ' agents',
+      '\u26A1 ' + backend,
+      '\uD83D\uDD50 Started ' + ago
+    ];
+    if (run.latency) { metaItems.push('\u23F1 ' + run.latency + 's'); }
+    metaItems.forEach(function (s) {
+      var span = el('span');
+      span.appendChild(txt(s));
+      meta.appendChild(span);
+    });
+    card.appendChild(meta);
+
+    // ─ Progress ─
+    var progSection = el('div', { className: 'run-progress-section' });
+    var progRow = el('div', { className: 'progress-row' });
+    var track = el('div', { className: 'progress-bar-track' });
+    var fill  = el('div', { className: 'progress-bar-fill ' + status, style: 'width:' + pct + '%' });
+    track.appendChild(fill);
+    progRow.appendChild(track);
+    var pctNode = el('span', { className: 'progress-pct' });
+    pctNode.appendChild(txt(pct + '%'));
+    progRow.appendChild(pctNode);
+    progSection.appendChild(progRow);
+    var labelNode = el('div', { className: 'progress-label' });
+    labelNode.appendChild(txt(PROGRESS_LABELS[status] || ''));
+    progSection.appendChild(labelNode);
+    card.appendChild(progSection);
+
+    // ─ Actions ─
+    var actions = el('div', { className: 'run-actions' });
+
+    var expandBtn = el('button', { className: 'btn-action', id: 'expand-btn-' + run.id });
+    expandBtn.appendChild(txt('\u25BE Expand Output'));
+    expandBtn.addEventListener('click', (function (rid) {
+      return function () { toggleOutput(rid); };
+    })(run.id));
+    actions.appendChild(expandBtn);
+
+    var copyBtn = el('button', { className: 'btn-action' });
+    copyBtn.appendChild(txt('\uD83D\uDCCB Copy'));
+    copyBtn.addEventListener('click', (function (rid) {
+      return function () { copyResult(rid); };
+    })(run.id));
+    actions.appendChild(copyBtn);
+
+    var archBtn = el('button', { className: 'btn-action' });
+    if (status === 'archived') {
+      archBtn.appendChild(txt('\uD83D\uDDD1 Delete'));
+      archBtn.addEventListener('click', (function (rid) {
+        return function () { deleteRun(rid); };
+      })(run.id));
+    } else {
+      archBtn.appendChild(txt('\uD83D\uDDD1 Archive'));
+      archBtn.addEventListener('click', (function (rid) {
+        return function () { archiveRun(rid); };
+      })(run.id));
+    }
+    actions.appendChild(archBtn);
+    card.appendChild(actions);
+
+    // ─ Expandable output ─
+    if (run.result) {
+      var outputDiv = el('div', { className: 'run-output', id: 'output-' + run.id });
+      var inner = el('div', { className: 'run-output-inner' });
+      var pre = el('pre');
+      pre.appendChild(txt(run.result));
+      inner.appendChild(pre);
+      var ocBtn = el('button', { className: 'run-output-copy' });
+      ocBtn.appendChild(txt('\uD83D\uDCCB Copy Result'));
+      ocBtn.addEventListener('click', (function (rid) {
+        return function () { copyResult(rid); };
+      })(run.id));
+      inner.appendChild(ocBtn);
+      outputDiv.appendChild(inner);
+      card.appendChild(outputDiv);
+    }
+
+    return card;
+  }
+
+  function toggleOutput(id) {
+    var out = qid('output-' + id);
+    var btn = qid('expand-btn-' + id);
+    if (!out) return;
+    var isOpen = out.classList.contains('open');
+    out.classList.toggle('open', !isOpen);
+    if (btn) {
+      btn.classList.toggle('expand-open', !isOpen);
+      setText(btn, isOpen ? '\u25BE Expand Output' : '\u25B4 Collapse Output');
+    }
+  }
+
+  function copyResult(id) {
+    var run = loadRuns().filter(function (r) { return r.id === id; })[0];
+    if (!run || !run.result) { showToast('No result to copy'); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(run.result)
+        .then(function () { showToast('Copied to clipboard!'); })
+        .catch(function () { fallbackCopy(run.result); });
+    } else {
+      fallbackCopy(run.result);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Copied!'); }
+    catch (e) { showToast('Copy failed'); }
+    document.body.removeChild(ta);
+  }
+
+  // ── Shimmer ────────────────────────────────────────────────
+  var shimmerActive = false;
+
+  function buildShimmer() {
+    var div = el('div', { className: 'shimmer-card', id: 'shimmer-placeholder' });
+    div.appendChild(el('div', { className: 'shimmer-line wide' }));
+    div.appendChild(el('div', { className: 'shimmer-line med' }));
+    div.appendChild(el('div', { className: 'shimmer-line narrow' }));
+    return div;
+  }
+
+  function addShimmer() {
+    shimmerActive = true;
+    var list = qid('runs-list');
+    if (list) { list.insertBefore(buildShimmer(), list.firstChild); }
+  }
+
+  function removeShimmer() {
+    shimmerActive = false;
+    var s = qid('shimmer-placeholder');
+    if (s && s.parentNode) { s.parentNode.removeChild(s); }
+  }
+
+  // ── Render Runs ────────────────────────────────────────────
+  function renderRuns() {
+    var runs = loadRuns();
+    var list = qid('runs-list');
+    if (!list) return;
+    clearEl(list);
+    if (shimmerActive) { list.appendChild(buildShimmer()); }
+
+    if (runs.length === 0) {
+      var empty = el('div', { className: 'empty-state' });
+      var icon  = el('div', { className: 'empty-icon' }); icon.appendChild(txt('\uD83D\uDE80'));
+      var h3    = el('h3'); h3.appendChild(txt('No swarm runs yet'));
+      var p     = el('p'); p.appendChild(txt('Launch your first swarm to see results here \u2192'));
+      var link  = el('a', { className: 'btn-start', href: '/onboard' });
+      link.appendChild(txt('Start Onboarding \u2192'));
+      empty.appendChild(icon); empty.appendChild(h3); empty.appendChild(p); empty.appendChild(link);
+      list.appendChild(empty);
+      return;
+    }
+
+    runs.forEach(function (run) { list.appendChild(buildRunCard(run)); });
+  }
+
+  // ── Render Sidebar ─────────────────────────────────────────
+  function renderSidebar() {
+    var runs = loadRuns();
+    renderStats(runs);
+    renderTeamChart(runs);
+    renderQuickLaunch();
+    renderRecentGoals(runs);
+  }
+
+  function renderStats(runs) {
+    var stats = getTodayStats(runs);
+    setText(qid('stat-total'),    String(stats.total));
+    setText(qid('stat-success'),  stats.successRate !== null ? stats.successRate + '%' : '\u2014');
+    setText(qid('stat-latency'),  stats.avgLatency  !== null ? stats.avgLatency  + 's' : '\u2014');
+    var topEl = qid('stat-top-team');
+    setText(topEl, stats.topTeam || '\u2014');
+    if (topEl) { topEl.style.fontSize = (stats.topTeam && stats.topTeam.length > 10) ? '11px' : '13px'; }
+  }
+
+  function renderTeamChart(runs) {
+    var container = qid('team-chart');
+    if (!container) return;
+    clearEl(container);
+    var counts  = getTeamCounts(runs);
+    var entries = Object.keys(counts).map(function (k) { return [k, counts[k]]; });
+    entries.sort(function (a, b) { return b[1] - a[1]; });
+    entries = entries.slice(0, 6);
+
+    if (entries.length === 0) {
+      var p = el('div', { style: 'font-size:12px;color:var(--text-secondary);text-align:center;padding:10px 0' });
+      p.appendChild(txt('No data yet'));
+      container.appendChild(p);
+      return;
+    }
+
+    var maxCount = entries[0][1];
+    entries.forEach(function (entry) {
+      var team  = entry[0]; var count = entry[1];
+      var emoji = TEAM_EMOJIS[team]      || '\uD83E\uDD16';
+      var label = TEAM_SHORT_NAMES[team] || team;
+      var pct   = Math.round((count / maxCount) * 100);
+
+      var row      = el('div', { className: 'team-chart-row' });
+      var labelEl  = el('div', { className: 'team-chart-label' }); labelEl.appendChild(txt(emoji + ' ' + label));
+      var countEl  = el('div', { className: 'team-chart-count' }); countEl.appendChild(txt(String(count)));
+      var barTrack = el('div', { className: 'team-chart-bar-track' });
+      var barFill  = el('div', { className: 'team-chart-bar-fill', style: 'width:' + pct + '%' });
+      barTrack.appendChild(barFill);
+      row.appendChild(labelEl); row.appendChild(countEl); row.appendChild(barTrack);
+      container.appendChild(row);
+    });
+  }
+
+  function renderQuickLaunch() {
+    var grid = qid('quick-launch-grid');
+    if (!grid) return;
+    clearEl(grid);
+    TEAM_KEYS.forEach(function (team) {
+      var emoji = TEAM_EMOJIS[team];
+      var short = TEAM_SHORT_NAMES[team] || team;
+      var btn   = el('button', { className: 'quick-btn' });
+      var eEl   = el('span', { className: 'qb-emoji' }); eEl.appendChild(txt(emoji));
+      var lEl   = el('span', { className: 'qb-label' }); lEl.appendChild(txt(short));
+      btn.appendChild(eEl); btn.appendChild(lEl);
+      btn.addEventListener('click', (function (t) {
+        return function () { openModal(t); };
+      })(team));
+      grid.appendChild(btn);
+    });
+  }
+
+  function renderRecentGoals(runs) {
+    var container = qid('recent-goals');
+    if (!container) return;
+    clearEl(container);
+    var goals = runs.filter(function (r) { return r.goal; }).slice(0, 5);
+    if (goals.length === 0) {
+      var p = el('div', { style: 'font-size:12px;color:var(--text-secondary)' });
+      p.appendChild(txt('No recent goals'));
+      container.appendChild(p);
+      return;
+    }
+    goals.forEach(function (run) {
+      var chip = el('div', { className: 'goal-chip' });
+      chip.appendChild(txt(truncate(run.goal, 55)));
+      chip.addEventListener('click', (function (g) {
+        return function () { openModal('auto', g); };
+      })(run.goal));
+      container.appendChild(chip);
+    });
+  }
+
+  // ── Status card ────────────────────────────────────────────
+  function renderStatus(health) {
+    var container = qid('status-content');
+    if (!container) return;
+    clearEl(container);
+
+    var ollamaOk = health && (
+      health.ollama === true || health.ollama === 'ok' ||
+      (health.services && (health.services.ollama === 'ready' || health.services.ollama === true))
+    );
+    var nimOk = health && (
+      health.nim === true || health.nim === 'ok' ||
+      (health.services && (health.services.nim === 'ready' || health.services.nim === true))
+    );
+    var version = health ? (health.version || health.api_version || '1.0.0') : '\u2014';
+
+    function makeRow(label, valueNode) {
+      var row  = el('div', { className: 'status-item' });
+      var lbl  = el('span', { className: 'label' }); lbl.appendChild(txt(label));
+      row.appendChild(lbl); row.appendChild(valueNode);
+      return row;
+    }
+
+    function svcBadge(ok) {
+      var span = el('span', { style: 'display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;' +
+        'color:' + (ok ? 'var(--emerald)' : 'var(--red)') });
+      span.appendChild(txt(ok ? '\uD83D\uDFE2 Ready' : '\uD83D\uDD34 Offline'));
+      return span;
+    }
+
+    function smallSpan(val) {
+      var s = el('span', { style: 'font-size:12px;color:var(--text-secondary)' });
+      s.appendChild(txt(String(val)));
+      return s;
+    }
+
+    container.appendChild(makeRow('Ollama',      svcBadge(ollamaOk)));
+    container.appendChild(makeRow('NVIDIA NIM',  svcBadge(nimOk)));
+    container.appendChild(makeRow('API Version', smallSpan(version)));
+    container.appendChild(makeRow('Timestamp',   smallSpan(health ? 'just now' : '\u2014')));
+  }
+
+  // ── Modal ──────────────────────────────────────────────────
+  var selectedTeam = 'auto';
+  var isLaunching  = false;
+
+  function buildTeamPills() {
+    var container = qid('modal-team-pills');
+    if (!container) return;
+    clearEl(container);
+
+    function makePill(team, emoji, label) {
+      var pill = el('div', {
+        className: 'team-pill' + (selectedTeam === team ? ' active' : ''),
+        id: 'pill-' + team
+      });
+      pill.appendChild(txt(emoji + ' ' + label));
+      pill.addEventListener('click', (function (t) {
+        return function () { selectTeam(t); };
+      })(team));
+      return pill;
+    }
+
+    container.appendChild(makePill('auto', '\uD83E\uDD16', 'Auto-detect'));
+    TEAM_KEYS.forEach(function (team) {
+      container.appendChild(makePill(team, TEAM_EMOJIS[team], TEAM_SHORT_NAMES[team] || team));
+    });
+  }
+
+  function openModal(team, prefillGoal) {
+    selectedTeam = team || 'auto';
+    buildTeamPills();
+    var ta = qid('modal-goal');
+    if (ta) { ta.value = (typeof prefillGoal === 'string') ? prefillGoal : ''; }
+    var bd = qid('modal-backdrop');
+    if (bd) { bd.classList.add('open'); }
+    setTimeout(function () { if (ta) ta.focus(); }, 100);
+  }
+
+  function closeModal() {
+    if (isLaunching) return;
+    var bd = qid('modal-backdrop');
+    if (bd) { bd.classList.remove('open'); }
+    var ta = qid('modal-goal');
+    if (ta) { ta.value = ''; }
+    selectedTeam = 'auto';
+    setLaunching(false);
+  }
+
+  function backdropClose(e) {
+    if (e.target === qid('modal-backdrop')) { closeModal(); }
+  }
+
+  function selectTeam(team) {
+    selectedTeam = team;
+    document.querySelectorAll('.team-pill').forEach(function (p) { p.classList.remove('active'); });
+    var pill = qid('pill-' + team);
+    if (pill) { pill.classList.add('active'); }
+  }
+
+  function setLaunching(val) {
+    isLaunching = val;
+    var btn    = qid('launch-btn');
+    var wrap   = qid('launch-icon-wrap');
+    var textEl = qid('launch-text');
+    if (btn)    { btn.disabled = val; }
+    if (wrap) {
+      clearEl(wrap);
+      if (val) {
+        wrap.appendChild(el('div', { className: 'spinner' }));
+      } else {
+        wrap.appendChild(txt('\uD83D\uDE80'));
+      }
+    }
+    if (textEl) { setText(textEl, val ? 'Running\u2026' : 'Launch Swarm \u2192'); }
+  }
+
+  function launchRun() {
+    var ta   = qid('modal-goal');
+    var goal = ta ? ta.value.trim() : '';
+    if (!goal) { if (ta) ta.focus(); showToast('Please enter a goal'); return; }
+    if (isLaunching) return;
+
+    var team = selectedTeam === 'auto' ? undefined : selectedTeam;
+    setLaunching(true);
+    addShimmer();
+    renderRuns();
+
+    var t0   = Date.now();
+    var body = { goal: goal };
+    if (team) { body.team = team; }
+
+    var opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+    try {
+      var ctrl = new AbortController();
+      setTimeout(function () { ctrl.abort(); }, 120000);
+      opts.signal = ctrl.signal;
+    } catch (e) {}
+
+    fetch('/swarm/run', opts)
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (d) {
+        var run = {
+          id:        Date.now().toString(),
+          team:      d.team || team || 'auto',
+          goal:      goal,
+          status:    'complete',
+          result:    d.result || d.final_answer || d.output || '',
+          latency:   d.latency_seconds ? String(d.latency_seconds) : ((Date.now() - t0) / 1000).toFixed(1),
+          timestamp: new Date().toISOString(),
+          backend:   d.backend || 'ollama'
+        };
+        var runs = loadRuns(); runs.unshift(run); saveRuns(runs);
+        setLaunching(false); removeShimmer(); closeModal();
+        renderRuns(); renderSidebar();
+        showToast('\u2713 Swarm run complete!');
+      })
+      .catch(function (e) {
+        var run = {
+          id:        Date.now().toString(),
+          team:      team || 'auto',
+          goal:      goal,
+          status:    'failed',
+          result:    'Error: ' + (e.message || 'Unknown error'),
+          latency:   ((Date.now() - t0) / 1000).toFixed(1),
+          timestamp: new Date().toISOString(),
+          backend:   'ollama'
+        };
+        var runs = loadRuns(); runs.unshift(run); saveRuns(runs);
+        setLaunching(false); removeShimmer(); closeModal();
+        renderRuns(); renderSidebar();
+        showToast('\u2715 Run failed');
+      });
+  }
+
+  // ── Polling ────────────────────────────────────────────────
+  var refreshCountdown = 10;
+  var countdownTimer   = null;
+
+  function updateCountdownDisplay() {
+    var el2 = qid('countdown-display');
+    if (el2) { setText(el2, 'Refresh in ' + refreshCountdown + 's'); }
+  }
+
+  function startCountdown() {
+    refreshCountdown = 10;
+    updateCountdownDisplay();
+    if (countdownTimer) { clearInterval(countdownTimer); }
+    countdownTimer = setInterval(function () {
+      refreshCountdown--;
+      updateCountdownDisplay();
+      if (refreshCountdown <= 0) {
+        fetchHealth(); renderRuns(); renderSidebar(); refreshCountdown = 10;
+      }
+    }, 1000);
+  }
+
+  function manualRefresh() {
+    fetchHealth(); renderRuns(); renderSidebar();
+    refreshCountdown = 10; updateCountdownDisplay();
+    showToast('Refreshed');
+  }
+
+  function fetchHealth() {
+    var opts2 = {};
+    try { if (AbortSignal.timeout) { opts2.signal = AbortSignal.timeout(5000); } } catch (e) {}
+    fetch('/health', opts2)
+      .then(function (r) { return r.json(); })
+      .then(function (d) { renderStatus(d); })
+      .catch(function () { renderStatus(null); });
+  }
+
+  // ── Toast ──────────────────────────────────────────────────
+  var toastTimer = null;
+  function showToast(msg) {
+    var toastEl = qid('toast');
+    if (!toastEl) return;
+    setText(toastEl, msg);
+    toastEl.classList.add('show');
+    if (toastTimer) { clearTimeout(toastTimer); }
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2800);
+  }
+
+  // ── Expose to onclick attributes ───────────────────────────
+  window.openModal      = openModal;
+  window.closeModal     = closeModal;
+  window.backdropClose  = backdropClose;
+  window.launchRun      = launchRun;
+  window.manualRefresh  = manualRefresh;
+
+  // ── Init ───────────────────────────────────────────────────
+  renderStatus(null);
+  renderRuns();
+  renderSidebar();
+  fetchHealth();
+  startCountdown();
+
+  document.addEventListener('keydown', function (e) {
+    var tag = document.activeElement ? document.activeElement.tagName : '';
+    if (e.key === 'n' && !e.ctrlKey && !e.metaKey && !e.altKey && tag !== 'TEXTAREA' && tag !== 'INPUT') {
+      openModal();
+    }
+    if (e.key === 'Escape') { closeModal(); }
+  });
+
+}());
+</script>
+</body>
+</html>

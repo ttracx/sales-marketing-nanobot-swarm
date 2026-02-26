@@ -12,6 +12,9 @@ import os
 import time
 import json as _json
 import re
+import hashlib
+import secrets
+from datetime import datetime, timedelta
 import httpx
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -1000,6 +1003,205 @@ async def get_swarm_team(team_name: str):
             "explicit": f"POST /swarm/run with team='{team_name}' and your goal",
         },
     }
+
+
+@app.get("/swarm/stats")
+async def swarm_stats():
+    """Public stats endpoint for the live progress dashboard."""
+    return {
+        "status": "ok",
+        "service": "Sales & Marketing Nanobot Swarm",
+        "version": "1.0.0",
+        "teams_available": len(PRECONFIGURED_TEAMS),
+        "team_names": list(PRECONFIGURED_TEAMS.keys()),
+        "backends": {
+            "ollama": bool(OLLAMA_API_KEY),
+            "nvidia_nim": bool(NVIDIA_API_KEY),
+        },
+        "powered_by": "VibeCaaS.com / NeuralQuantum.ai LLC",
+        "timestamp": time.time(),
+    }
+
+
+class BatchRunRequest(BaseModel):
+    runs: list[SwarmRunRequest] = Field(..., min_length=1, max_length=5, description="Up to 5 swarm runs")
+
+@app.post("/swarm/batch")
+async def batch_run(req: BatchRunRequest):
+    """Run up to 5 swarm tasks sequentially. Returns array of results."""
+    results = []
+    for run in req.runs:
+        t0 = time.time()
+        team_name = run.team or _detect_team(run.goal)
+        team_config = PRECONFIGURED_TEAMS.get(team_name, PRECONFIGURED_TEAMS["lead-generation-engine"])
+        context_str = f"\n\n## Additional Context\n{_json.dumps(run.context, indent=2)}" if run.context else ""
+        messages = [
+            {"role": "system", "content": SM_SYSTEM},
+            {"role": "user", "content": f"## Team: {team_name}\n## Goal\n{run.goal}{context_str}"},
+        ]
+        try:
+            content, backend = await _llm_call(messages, temperature=0.1, max_tokens=4096)
+            results.append({
+                "goal": run.goal,
+                "team": team_name,
+                "result": content,
+                "backend": backend,
+                "latency_seconds": round(time.time() - t0, 2),
+                "success": True,
+            })
+        except Exception as e:
+            results.append({
+                "goal": run.goal,
+                "team": team_name,
+                "result": None,
+                "error": str(e),
+                "success": False,
+            })
+    return {
+        "batch_size": len(results),
+        "results": results,
+        "powered_by": "VibeCaaS.com / NeuralQuantum.ai LLC",
+    }
+
+
+class RecommendRequest(BaseModel):
+    goals: list[str] = Field(..., description="List of marketing objectives")
+    company_size: str = Field("smb", description="solo/startup/smb/midmarket/enterprise")
+    industry: str = Field("saas", description="Industry vertical")
+
+@app.post("/swarm/recommend")
+async def recommend_teams(req: RecommendRequest):
+    """Recommend swarm teams based on goals and company profile."""
+    recommended = []
+    seen = set()
+    for goal in req.goals:
+        team = _detect_team(goal)
+        if team not in seen:
+            seen.add(team)
+            cfg = PRECONFIGURED_TEAMS.get(team, {})
+            recommended.append({
+                "team": team,
+                "reason": f"Matched goal: '{goal[:60]}...' " if len(goal) > 60 else f"Matched goal: '{goal}'",
+                "description": cfg.get("description", ""),
+                "mode": cfg.get("mode", "hierarchical"),
+                "kpis": cfg.get("kpis", []),
+                "category": cfg.get("category", ""),
+            })
+    # Add ABM for enterprise
+    if req.company_size == "enterprise" and "abm-orchestrator" not in seen:
+        cfg = PRECONFIGURED_TEAMS.get("abm-orchestrator", {})
+        recommended.append({
+            "team": "abm-orchestrator",
+            "reason": "Recommended for enterprise: account-based marketing",
+            "description": cfg.get("description", ""),
+            "mode": "hierarchical",
+            "kpis": cfg.get("kpis", []),
+            "category": cfg.get("category", ""),
+        })
+    return {
+        "recommendations": recommended[:6],
+        "total": len(recommended),
+        "company_size": req.company_size,
+        "industry": req.industry,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Auth — In-memory user store (demo)
+# ---------------------------------------------------------------------------
+# In production, replace with PostgreSQL/Neon DB
+
+_USERS: dict[str, dict] = {}  # email -> {name, email, password_hash, plan, created_at, token}
+
+
+def _hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+def _make_token() -> str:
+    return secrets.token_urlsafe(32)
+
+
+class RegisterRequest(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    email: str = Field(..., min_length=5, max_length=200)
+    password: str = Field(..., min_length=8, max_length=200)
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class ProfileUpdateRequest(BaseModel):
+    name: str | None = None
+    email: str | None = None
+
+
+@app.post("/auth/register", tags=["Auth"])
+async def register(req: RegisterRequest):
+    """Register a new user account."""
+    email = req.email.lower().strip()
+    if email in _USERS:
+        raise HTTPException(400, "Email already registered")
+    token = _make_token()
+    _USERS[email] = {
+        "name": req.name,
+        "email": email,
+        "password_hash": _hash_password(req.password),
+        "plan": "free",
+        "created_at": datetime.utcnow().isoformat(),
+        "token": token,
+    }
+    user = {k: v for k, v in _USERS[email].items() if k != "password_hash"}
+    return {"token": token, "user": user}
+
+
+@app.post("/auth/login", tags=["Auth"])
+async def login(req: LoginRequest):
+    """Authenticate an existing user and return a fresh token."""
+    email = req.email.lower().strip()
+    user = _USERS.get(email)
+    if not user or user["password_hash"] != _hash_password(req.password):
+        raise HTTPException(401, "Invalid email or password")
+    token = _make_token()
+    _USERS[email]["token"] = token
+    safe_user = {k: v for k, v in user.items() if k != "password_hash"}
+    safe_user["token"] = token
+    return {"token": token, "user": safe_user}
+
+
+@app.get("/auth/me", tags=["Auth"])
+async def get_me(authorization: str | None = Header(None)):
+    """Return the currently authenticated user's profile."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(401, "Not authenticated")
+    token = authorization.removeprefix("Bearer ").strip()
+    for user in _USERS.values():
+        if user.get("token") == token:
+            safe = {k: v for k, v in user.items() if k != "password_hash"}
+            return safe
+    raise HTTPException(401, "Invalid token")
+
+
+@app.patch("/auth/profile", tags=["Auth"])
+async def update_profile(
+    req: ProfileUpdateRequest,
+    authorization: str | None = Header(None),
+):
+    """Update the authenticated user's profile name and/or email."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(401, "Not authenticated")
+    token = authorization.removeprefix("Bearer ").strip()
+    for user in _USERS.values():
+        if user.get("token") == token:
+            if req.name:
+                user["name"] = req.name
+            if req.email:
+                user["email"] = req.email.lower()
+            safe = {k: v for k, v in user.items() if k != "password_hash"}
+            return safe
+    raise HTTPException(401, "Invalid token")
 
 
 # ---------------------------------------------------------------------------

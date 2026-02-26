@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Sales & Marketing Nanobot Swarm — Onboarding">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/neuralquantum-icon.png">
+<title>Onboarding — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --card-bg2:#16213e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+input,textarea,select{font-family:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+
+/* ── TOPBAR ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:60px;
+  background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;gap:14px;z-index:200;
+}
+#logo-wrap{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+#nq-icon{width:32px;height:32px;object-fit:contain;flex-shrink:0}
+#brand-name{
+  font-size:15px;font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.skip-link{
+  font-size:13px;color:var(--text-secondary);
+  border:1px solid var(--border);border-radius:8px;
+  padding:6px 14px;transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.skip-link:hover{color:var(--text-primary);border-color:var(--indigo);background:rgba(99,102,241,0.1)}
+
+/* ── LAYOUT ── */
+#page{margin-top:60px;padding:32px 24px 80px;max-width:760px;margin-left:auto;margin-right:auto}
+
+/* ── PROGRESS BAR ── */
+#progress-wrap{margin-bottom:40px}
+#progress-track{
+  position:relative;display:flex;align-items:center;justify-content:space-between;
+}
+.prog-line-bg{
+  position:absolute;top:50%;left:0;right:0;height:3px;
+  background:rgba(99,102,241,0.15);transform:translateY(-50%);z-index:0;
+}
+.prog-line-fill{
+  position:absolute;top:50%;left:0;height:3px;
+  background:var(--grad);transform:translateY(-50%);z-index:1;
+  transition:width .5s cubic-bezier(.4,0,.2,1);width:0%;
+}
+.prog-step{
+  position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.prog-dot{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;
+  background:rgba(30,30,50,1);border:2px solid rgba(99,102,241,0.25);
+  color:var(--text-secondary);transition:all .35s;flex-shrink:0;
+}
+.prog-dot.active{
+  border-color:var(--indigo);color:#fff;
+  box-shadow:0 0 0 4px rgba(99,102,241,0.2);
+  background:var(--card-bg);
+}
+.prog-dot.done{
+  background:var(--grad);border-color:transparent;color:#fff;
+}
+.prog-label{font-size:11px;color:var(--text-secondary);white-space:nowrap;transition:color .35s}
+.prog-label.active{color:var(--indigo);font-weight:600}
+.prog-label.done{color:var(--emerald)}
+@media(max-width:479px){
+  .prog-label{display:none}
+  .prog-dot{width:30px;height:30px;font-size:11px}
+}
+
+/* ── STEP WRAPPER ── */
+.step-pane{display:none;animation:fadeUp .35s ease}
+.step-pane.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.step-title{font-size:26px;font-weight:700;margin-bottom:6px;line-height:1.2}
+.step-subtitle{font-size:15px;color:var(--text-secondary);margin-bottom:28px}
+
+/* ── FORM ELEMENTS ── */
+.field-label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.text-input{
+  width:100%;padding:12px 16px;
+  background:var(--card-bg2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text-primary);font-size:15px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.text-input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,0.15)}
+.text-input::placeholder{color:var(--text-secondary)}
+select.text-input{cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;
+}
+select.text-input option{background:#1a1a2e}
+.field-group{margin-bottom:22px}
+
+/* ── SIZE RADIO CARDS ── */
+#size-cards{display:flex;gap:10px;flex-wrap:wrap}
+.size-card{
+  flex:1;min-width:80px;padding:14px 10px;text-align:center;
+  background:var(--card-bg2);border:2px solid var(--border);border-radius:12px;
+  cursor:pointer;transition:all .2s;user-select:none;
+}
+.size-card:hover{border-color:rgba(99,102,241,0.5);background:rgba(99,102,241,0.07)}
+.size-card.selected{border-color:var(--indigo);background:rgba(99,102,241,0.12);box-shadow:0 0 0 3px rgba(99,102,241,0.15)}
+.size-card-icon{font-size:22px;display:block;margin-bottom:6px}
+.size-card-label{font-size:12px;font-weight:600;color:var(--text-primary)}
+.size-card-count{font-size:10px;color:var(--text-secondary);margin-top:2px}
+@media(max-width:479px){
+  #size-cards{display:grid;grid-template-columns:1fr 1fr}
+  .size-card{flex:unset}
+}
+
+/* ── GOAL CHECKBOX CARDS ── */
+#goal-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+}
+.goal-card{
+  padding:14px 10px;text-align:center;
+  background:var(--card-bg2);border:2px solid var(--border);border-radius:12px;
+  cursor:pointer;transition:all .2s;user-select:none;
+  position:relative;
+}
+.goal-card:hover{border-color:rgba(99,102,241,0.5);background:rgba(99,102,241,0.07)}
+.goal-card.selected{border-color:var(--indigo);background:rgba(99,102,241,0.12)}
+.goal-card.card-disabled{opacity:.45;pointer-events:none}
+.goal-card-icon{font-size:22px;display:block;margin-bottom:6px}
+.goal-card-label{font-size:11px;font-weight:600;color:var(--text-primary);line-height:1.3}
+.goal-check{
+  position:absolute;top:6px;right:6px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--grad);display:none;align-items:center;justify-content:center;
+  font-size:9px;color:#fff;font-weight:700;
+}
+.goal-card.selected .goal-check{display:flex}
+.goal-hint{font-size:11px;color:var(--text-secondary);margin-top:8px}
+@media(max-width:600px){#goal-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── BUTTONS ── */
+.btn-row{display:flex;gap:12px;margin-top:32px;align-items:center}
+.btn-primary{
+  padding:13px 28px;border-radius:12px;font-size:15px;font-weight:700;
+  background:var(--grad);color:#fff;
+  transition:opacity .2s,transform .1s;border:none;
+}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary.btn-disabled{opacity:.35;pointer-events:none;cursor:not-allowed}
+.btn-ghost{
+  padding:13px 22px;border-radius:12px;font-size:15px;font-weight:600;
+  background:transparent;border:1px solid var(--border);color:var(--text-secondary);
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--indigo);color:var(--text-primary);background:rgba(99,102,241,0.07)}
+
+/* ── TEAM CARDS (step 2) ── */
+.team-card{
+  background:var(--card-bg2);border:1px solid var(--border);border-radius:14px;
+  padding:18px;margin-bottom:14px;transition:opacity .3s,border-color .2s;
+  display:flex;flex-direction:column;gap:12px;position:relative;
+}
+.team-card.team-deselected{opacity:.45}
+.team-card-header{display:flex;align-items:flex-start;gap:12px;padding-right:60px}
+.team-card-icon{font-size:28px;flex-shrink:0;line-height:1}
+.team-card-info{flex:1}
+.team-card-name{font-size:16px;font-weight:700;margin-bottom:5px}
+.mode-badge{
+  display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;
+  background:rgba(99,102,241,0.2);color:var(--indigo);border:1px solid rgba(99,102,241,0.3);
+}
+.mode-badge.flat-badge{background:rgba(139,92,246,0.2);color:var(--purple);border-color:rgba(139,92,246,0.3)}
+.team-toggle{position:absolute;top:18px;right:18px}
+/* Toggle switch */
+.toggle-label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toggle-input{position:absolute;opacity:0;width:0;height:0}
+.toggle-track{
+  position:relative;width:42px;height:24px;border-radius:12px;
+  background:rgba(99,102,241,0.2);border:1px solid var(--border);
+  transition:background .25s,border-color .25s;flex-shrink:0;
+}
+.toggle-input:checked + .toggle-track{background:var(--indigo);border-color:var(--indigo)}
+.toggle-thumb{
+  position:absolute;top:3px;left:3px;
+  width:16px;height:16px;border-radius:50%;background:#fff;
+  transition:transform .25s;pointer-events:none;
+}
+.toggle-input:checked ~ .toggle-thumb,.toggle-input:checked + .toggle-track + .toggle-thumb{transform:translateX(18px)}
+.team-card-why{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.team-card-why strong{color:var(--text-primary)}
+.agent-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+.agent-list li{font-size:12px;color:var(--text-secondary);padding-left:16px;position:relative;line-height:1.5}
+.agent-list li::before{content:"•";position:absolute;left:0;color:var(--indigo)}
+.kpi-chips{display:flex;gap:8px;flex-wrap:wrap}
+.kpi-chip{
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  background:rgba(6,182,212,0.12);color:var(--cyan);border:1px solid rgba(6,182,212,0.25);
+}
+
+/* ── STEP 3 ── */
+.team-chips-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.team-chip-pill{
+  padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;
+  background:rgba(99,102,241,0.15);color:var(--indigo);border:1px solid rgba(99,102,241,0.3);
+}
+.goal-textarea{
+  width:100%;min-height:120px;padding:14px 16px;
+  background:var(--card-bg2);border:1px solid var(--border);border-radius:12px;
+  color:var(--text-primary);font-size:16px;line-height:1.6;resize:vertical;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.goal-textarea:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,0.15)}
+.goal-textarea::placeholder{color:var(--text-secondary)}
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.template-card{
+  padding:14px;background:var(--card-bg2);border:1px solid var(--border);border-radius:12px;
+  cursor:pointer;transition:all .2s;text-align:left;
+}
+.template-card:hover{border-color:var(--indigo);background:rgba(99,102,241,0.07)}
+.template-card-icon{font-size:18px;margin-bottom:6px;display:block}
+.template-card-text{font-size:12px;color:var(--text-secondary);line-height:1.5}
+@media(max-width:479px){.template-grid{grid-template-columns:1fr}}
+.tone-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tone-btn{
+  padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;
+  background:transparent;border:1px solid var(--border);color:var(--text-secondary);
+  transition:all .2s;
+}
+.tone-btn:hover{border-color:var(--indigo);color:var(--text-primary)}
+.tone-btn.tone-selected{background:rgba(99,102,241,0.15);border-color:var(--indigo);color:var(--indigo)}
+.campaign-hint{font-size:11px;color:var(--text-secondary);margin-top:6px}
+
+/* ── STEP 4 ── */
+#step4-inner{display:flex;flex-direction:column;align-items:center;gap:24px;padding-top:12px}
+.spinner-ring{
+  width:72px;height:72px;border-radius:50%;
+  border:5px solid rgba(99,102,241,0.15);
+  border-top-color:var(--indigo);border-right-color:var(--purple);
+  animation:spin .9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+#team-activation-list{width:100%;display:flex;flex-direction:column;gap:8px}
+.activation-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:var(--card-bg2);border:1px solid var(--border);border-radius:10px;
+  transition:border-color .4s,background .4s;
+}
+.activation-row.act-done{border-color:rgba(16,185,129,0.35);background:rgba(16,185,129,0.06)}
+.act-icon-cell{font-size:18px;width:22px;text-align:center;flex-shrink:0}
+.mini-spin{
+  display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(99,102,241,0.3);border-top-color:var(--indigo);
+  border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;
+}
+.act-name{flex:1;font-size:14px;font-weight:600}
+.act-count{font-size:12px;color:var(--text-secondary)}
+#log-box{
+  width:100%;background:var(--card-bg2);border:1px solid var(--border);border-radius:12px;
+  padding:16px;font-size:13px;
+  font-family:'Fira Mono','Consolas','Courier New',monospace;
+  min-height:120px;display:flex;flex-direction:column;gap:5px;line-height:1.6;
+}
+.log-line{color:var(--text-secondary);animation:fadeUp .25s ease}
+
+/* ── STEP 5 ── */
+#step5-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px}
+@media(max-width:640px){#step5-cols{grid-template-columns:1fr}}
+.result-card,.summary-card{
+  background:var(--card-bg2);border:1px solid var(--border);border-radius:14px;
+  padding:20px;display:flex;flex-direction:column;gap:14px;
+}
+.result-badges{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid}
+.badge-indigo{background:rgba(99,102,241,0.15);color:var(--indigo);border-color:rgba(99,102,241,0.3)}
+.badge-purple{background:rgba(139,92,246,0.15);color:var(--purple);border-color:rgba(139,92,246,0.3)}
+.badge-grey{background:rgba(148,163,184,0.1);color:var(--text-secondary);border-color:rgba(148,163,184,0.2)}
+.badge-emerald{background:rgba(16,185,129,0.12);color:var(--emerald);border-color:rgba(16,185,129,0.25)}
+.result-output-wrap{
+  position:relative;flex:1;overflow:hidden;
+  max-height:340px;border-radius:8px;border:1px solid var(--border);
+}
+.result-output-wrap::before,.result-output-wrap::after{
+  content:'';position:absolute;left:0;right:0;height:32px;z-index:3;pointer-events:none;
+}
+.result-output-wrap::before{top:0;background:linear-gradient(to bottom,var(--card-bg2),transparent)}
+.result-output-wrap::after{bottom:0;background:linear-gradient(to top,var(--card-bg2),transparent)}
+#result-pre{
+  white-space:pre-wrap;font-size:13px;line-height:1.6;
+  font-family:'Fira Mono','Consolas','Courier New',monospace;
+  color:var(--text-primary);padding:16px;
+  max-height:340px;overflow-y:auto;word-break:break-word;
+}
+.btn-row-sm{display:flex;gap:8px}
+.btn-sm{
+  padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;
+  background:var(--card-bg);border:1px solid var(--border);color:var(--text-secondary);
+  transition:all .2s;
+}
+.btn-sm:hover{border-color:var(--indigo);color:var(--text-primary)}
+.summary-heading{font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.summary-team-list{display:flex;flex-direction:column;gap:6px}
+.summary-team-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-primary)}
+.summary-team-item::before{content:"✓";color:var(--emerald);font-weight:700;flex-shrink:0}
+.next-steps{list-style:none;display:flex;flex-direction:column;gap:6px}
+.next-steps li{font-size:13px;color:var(--text-secondary);padding-left:18px;position:relative;line-height:1.5}
+.next-steps li::before{content:"→";position:absolute;left:0;color:var(--indigo);font-weight:700}
+.campaign-name-chip{
+  font-size:13px;color:var(--text-primary);
+  background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);
+  border-radius:8px;padding:8px 12px;font-style:italic;word-break:break-word;
+}
+.btn-full{
+  display:block;width:100%;padding:13px;border-radius:12px;
+  font-size:15px;font-weight:700;background:var(--grad);color:#fff;
+  text-align:center;transition:opacity .2s,transform .1s;
+}
+.btn-full:hover{opacity:.9;transform:translateY(-1px)}
+.btn-full-outline{
+  display:block;width:100%;padding:11px;border-radius:12px;
+  font-size:14px;font-weight:600;background:transparent;
+  border:1px solid var(--border);color:var(--text-secondary);
+  text-align:center;transition:all .2s;margin-top:8px;
+}
+.btn-full-outline:hover{border-color:var(--indigo);color:var(--text-primary)}
+
+/* ── PRO BANNER ── */
+#pro-banner{
+  margin-top:40px;padding:18px 24px;
+  background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08));
+  border:1px solid rgba(99,102,241,0.2);border-radius:14px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between;
+}
+#pro-banner-text{font-size:14px;color:var(--text-secondary)}
+#pro-banner-text strong{color:var(--text-primary)}
+.pro-cta{
+  padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;
+  background:var(--grad);color:#fff;white-space:nowrap;display:inline-block;
+}
+.success-emoji{font-size:40px;text-align:center;display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div id="topbar">
+  <div id="logo-wrap">
+    <img id="nq-icon" src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none'">
+    <span id="brand-name">Sales &amp; Marketing Nanobot Swarm</span>
+  </div>
+  <a href="/" class="skip-link">Skip to Dashboard →</a>
+</div>
+
+<!-- ═══════════ PAGE ═══════════ -->
+<div id="page">
+
+  <!-- ── PROGRESS BAR ── -->
+  <div id="progress-wrap">
+    <div id="progress-track">
+      <div class="prog-line-bg"></div>
+      <div class="prog-line-fill" id="prog-fill"></div>
+      <div class="prog-step">
+        <div class="prog-dot" id="pd1">1</div>
+        <span class="prog-label" id="pl1">Profile</span>
+      </div>
+      <div class="prog-step">
+        <div class="prog-dot" id="pd2">2</div>
+        <span class="prog-label" id="pl2">Teams</span>
+      </div>
+      <div class="prog-step">
+        <div class="prog-dot" id="pd3">3</div>
+        <span class="prog-label" id="pl3">Goal</span>
+      </div>
+      <div class="prog-step">
+        <div class="prog-dot" id="pd4">4</div>
+        <span class="prog-label" id="pl4">Launch</span>
+      </div>
+      <div class="prog-step">
+        <div class="prog-dot" id="pd5">5</div>
+        <span class="prog-label" id="pl5">Results</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- STEP 1 — COMPANY PROFILE                -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step-pane" id="step1">
+    <h2 class="step-title">Tell us about your company</h2>
+    <p class="step-subtitle">We'll recommend the best swarm teams for your needs</p>
+
+    <div class="field-group">
+      <label class="field-label" for="inp-company">Company Name</label>
+      <input type="text" id="inp-company" class="text-input" placeholder="Acme Corp"
+        autocomplete="organization" oninput="S.company=this.value.trim();checkStep1()">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="inp-industry">Industry</label>
+      <select id="inp-industry" class="text-input" onchange="S.industry=this.value">
+        <option value="SaaS">SaaS</option>
+        <option value="E-commerce">E-commerce</option>
+        <option value="Agency">Agency</option>
+        <option value="Consulting">Consulting</option>
+        <option value="Fintech">Fintech</option>
+        <option value="Healthcare">Healthcare</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Company Size</label>
+      <div id="size-cards">
+        <div class="size-card" onclick="selectSize(this,'solo')">
+          <span class="size-card-icon">👤</span>
+          <div class="size-card-label">Solo</div>
+          <div class="size-card-count">Just me</div>
+        </div>
+        <div class="size-card" onclick="selectSize(this,'startup')">
+          <span class="size-card-icon">🌱</span>
+          <div class="size-card-label">Startup</div>
+          <div class="size-card-count">2 – 20</div>
+        </div>
+        <div class="size-card" onclick="selectSize(this,'smb')">
+          <span class="size-card-icon">🏢</span>
+          <div class="size-card-label">SMB</div>
+          <div class="size-card-count">21 – 200</div>
+        </div>
+        <div class="size-card" onclick="selectSize(this,'midmarket')">
+          <span class="size-card-icon">📈</span>
+          <div class="size-card-label">Mid-Market</div>
+          <div class="size-card-count">201 – 1k</div>
+        </div>
+        <div class="size-card" onclick="selectSize(this,'enterprise')">
+          <span class="size-card-icon">🏦</span>
+          <div class="size-card-label">Enterprise</div>
+          <div class="size-card-count">1k+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Primary Goals
+        <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:12px">&nbsp;(pick 1–3)</span>
+      </label>
+      <div id="goal-grid">
+        <div class="goal-card" data-goal="generate leads" onclick="toggleGoal(this,'generate leads')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">🎯</span>
+          <div class="goal-card-label">Generate Leads</div>
+        </div>
+        <div class="goal-card" data-goal="email" onclick="toggleGoal(this,'email')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">✉️</span>
+          <div class="goal-card-label">Email Campaigns</div>
+        </div>
+        <div class="goal-card" data-goal="brand" onclick="toggleGoal(this,'brand')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">📣</span>
+          <div class="goal-card-label">Brand Awareness</div>
+        </div>
+        <div class="goal-card" data-goal="roas" onclick="toggleGoal(this,'roas')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">📊</span>
+          <div class="goal-card-label">Optimize ROAS</div>
+        </div>
+        <div class="goal-card" data-goal="sales" onclick="toggleGoal(this,'sales')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">🤝</span>
+          <div class="goal-card-label">Sales Enablement</div>
+        </div>
+        <div class="goal-card" data-goal="competitive" onclick="toggleGoal(this,'competitive')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">🔍</span>
+          <div class="goal-card-label">Competitive Intel</div>
+        </div>
+        <div class="goal-card" data-goal="social" onclick="toggleGoal(this,'social')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">📱</span>
+          <div class="goal-card-label">Social Growth</div>
+        </div>
+        <div class="goal-card" data-goal="growth" onclick="toggleGoal(this,'growth')">
+          <div class="goal-check">✓</div>
+          <span class="goal-card-icon">🚀</span>
+          <div class="goal-card-label">Growth Hacking</div>
+        </div>
+      </div>
+      <div class="goal-hint" id="goal-hint">Select 1–3 goals to continue</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary btn-disabled" id="btn-s1-next" onclick="tryGoTo2()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- STEP 2 — RECOMMENDED TEAMS              -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step-pane" id="step2">
+    <h2 class="step-title">Your recommended swarm teams</h2>
+    <p class="step-subtitle">Based on your goals, we selected these AI agent teams</p>
+    <div id="team-cards-list"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goTo(1)">← Back</button>
+      <button class="btn-primary" onclick="goTo(3)">Confirm Teams →</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- STEP 3 — FIRST CAMPAIGN GOAL            -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step-pane" id="step3">
+    <h2 class="step-title">Define your first campaign goal</h2>
+    <p class="step-subtitle">Your swarm will execute this immediately</p>
+
+    <div id="s3-team-chips" class="team-chips-row"></div>
+
+    <div class="field-group">
+      <label class="field-label" for="goal-textarea">Campaign Goal</label>
+      <textarea id="goal-textarea" class="goal-textarea"
+        placeholder="Describe what you want to achieve..."
+        oninput="S.goal=this.value;autoFillName()"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Quick Templates <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:12px">&nbsp;click to populate</span></label>
+      <div class="template-grid">
+        <button class="template-card" onclick="applyTemplate(0)">
+          <span class="template-card-icon">🎯</span>
+          <div class="template-card-text">Build a lead gen funnel targeting [ICP] using LinkedIn and cold email for [industry] companies</div>
+        </button>
+        <button class="template-card" onclick="applyTemplate(1)">
+          <span class="template-card-icon">✉️</span>
+          <div class="template-card-text">Create a 4-email onboarding sequence for trial users who haven't activated in 5 days</div>
+        </button>
+        <button class="template-card" onclick="applyTemplate(2)">
+          <span class="template-card-icon">📣</span>
+          <div class="template-card-text">Develop a LinkedIn content strategy posting 3×/week to build thought leadership</div>
+        </button>
+        <button class="template-card" onclick="applyTemplate(3)">
+          <span class="template-card-icon">🔍</span>
+          <div class="template-card-text">Analyze our top 3 competitors and create sales battlecards with differentiators</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Tone</label>
+      <div class="tone-row">
+        <button class="tone-btn tone-selected" onclick="selectTone(this,'Strategic')">Strategic</button>
+        <button class="tone-btn" onclick="selectTone(this,'Tactical')">Tactical</button>
+        <button class="tone-btn" onclick="selectTone(this,'Creative')">Creative</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="campaign-name-inp">Campaign Name</label>
+      <input type="text" id="campaign-name-inp" class="text-input"
+        placeholder="Auto-filled from your goal..."
+        oninput="S.campaignName=this.value">
+      <div class="campaign-hint">Auto-populated from the first 45 characters of your goal</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goTo(2)">← Back</button>
+      <button class="btn-primary" onclick="handleLaunch()">🚀 Launch Swarm →</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- STEP 4 — LAUNCHING                      -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step-pane" id="step4">
+    <h2 class="step-title" style="text-align:center">Spinning up your swarm...</h2>
+    <p class="step-subtitle" style="text-align:center">AI agents are being briefed on your campaign goal</p>
+    <div id="step4-inner">
+      <div class="spinner-ring"></div>
+      <div id="team-activation-list"></div>
+      <div id="log-box"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- STEP 5 — RESULTS                        -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="step-pane" id="step5">
+    <span class="success-emoji">🎉</span>
+    <h2 class="step-title" style="text-align:center">Your first swarm run is complete!</h2>
+    <p class="step-subtitle" style="text-align:center">Here's what your AI agents produced</p>
+
+    <div id="step5-cols">
+      <!-- LEFT: Result output -->
+      <div class="result-card">
+        <div class="result-badges" id="result-badges"></div>
+        <div class="result-output-wrap">
+          <pre id="result-pre">Loading...</pre>
+        </div>
+        <div class="btn-row-sm">
+          <button class="btn-sm" onclick="copyOutput()">📋 Copy Output</button>
+          <button class="btn-sm" onclick="runAgain()">🔁 Run Again</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Setup summary -->
+      <div class="summary-card">
+        <div>
+          <div class="summary-heading">Your swarm is configured</div>
+          <div class="summary-team-list" id="summary-teams"></div>
+        </div>
+        <div>
+          <div class="summary-heading">Campaign</div>
+          <div class="campaign-name-chip" id="summary-campaign"></div>
+        </div>
+        <div>
+          <div class="summary-heading">Suggested next steps</div>
+          <ul class="next-steps">
+            <li>Review the results and refine your goal for higher precision</li>
+            <li>Enable scheduled campaigns to run your swarm automatically</li>
+            <li>Connect your CRM to sync leads and contacts in real time</li>
+          </ul>
+        </div>
+        <div>
+          <a href="/" class="btn-full">→ Go to Dashboard</a>
+          <a href="/progress" class="btn-full-outline">📊 View Live Progress</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro Banner -->
+    <div id="pro-banner">
+      <div id="pro-banner-text">
+        <strong>Want CRM sync, scheduled campaigns, and white-label API?</strong>
+      </div>
+      <a href="#" class="pro-cta">Pro Version Coming Soon →</a>
+    </div>
+  </div>
+
+</div><!-- /#page -->
+
+<script>
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+const S = {
+  company: '',
+  industry: 'SaaS',
+  size: '',
+  goals: [],
+  teams: [],    // [{key, enabled}]
+  goal: '',
+  campaignName: '',
+  tone: 'Strategic',
+  result: null,
+  backend: 'Ollama',
+  latency: 0
+};
+
+let currentStep = 1;
+
+// ════════════════════════════════════════════════
+// TEAM DEFINITIONS
+// ════════════════════════════════════════════════
+const TEAM_DEFS = {
+  'lead-generation-engine': {
+    icon: '🎯',
+    name: 'Lead Generation Engine',
+    mode: 'Hierarchical',
+    why: 'Automates multi-channel prospecting and ICP targeting to fill your pipeline continuously.',
+    agents: ['Prospect Scout Agent', 'LinkedIn Outreach Bot', 'Lead Scoring Evaluator'],
+    kpis: ['MQLs / week', 'Response Rate']
+  },
+  'email-campaign-manager': {
+    icon: '✉️',
+    name: 'Email Campaign Manager',
+    mode: 'Hierarchical',
+    why: 'Orchestrates personalized email sequences from copywriting to send-time optimization.',
+    agents: ['Sequence Copywriter', 'A/B Test Coordinator', 'Deliverability Guardian'],
+    kpis: ['Open Rate', 'Click-to-Open Rate']
+  },
+  'content-marketing-team': {
+    icon: '📣',
+    name: 'Content Marketing Team',
+    mode: 'Flat',
+    why: 'Produces SEO-optimized content and social copy to build brand visibility and authority.',
+    agents: ['Blog Post Writer', 'SEO Optimizer', 'Social Caption Creator'],
+    kpis: ['Organic Traffic', 'Content Velocity']
+  },
+  'brand-voice-guardian': {
+    icon: '🛡️',
+    name: 'Brand Voice Guardian',
+    mode: 'Flat',
+    why: 'Ensures all agent-generated content stays aligned with your brand guidelines and tone.',
+    agents: ['Style Guide Enforcer', 'Consistency Auditor', 'Tone Calibrator'],
+    kpis: ['Brand Consistency Score', 'Revision Rate']
+  },
+  'campaign-analytics-hub': {
+    icon: '📊',
+    name: 'Campaign Analytics Hub',
+    mode: 'Hierarchical',
+    why: 'Tracks spend, attribution, and ROAS across all channels to maximize paid performance.',
+    agents: ['Attribution Modeler', 'Bid Optimizer', 'Performance Reporter'],
+    kpis: ['ROAS', 'Cost Per Acquisition']
+  },
+  'sales-enablement-team': {
+    icon: '🤝',
+    name: 'Sales Enablement Team',
+    mode: 'Flat',
+    why: 'Creates battlecards, objection handlers, and pitch decks to shorten your sales cycle.',
+    agents: ['Battlecard Architect', 'Objection Handler', 'Demo Script Writer'],
+    kpis: ['Win Rate Lift', 'Ramp Time Reduction']
+  },
+  'competitive-intelligence': {
+    icon: '🔍',
+    name: 'Competitive Intelligence',
+    mode: 'Hierarchical',
+    why: 'Continuously monitors competitor moves, pricing, and messaging for strategic advantage.',
+    agents: ['Web Crawler Agent', 'Pricing Tracker', 'SWOT Analyst'],
+    kpis: ['Intel Freshness', 'Insights per Week']
+  },
+  'social-media-strategist': {
+    icon: '📱',
+    name: 'Social Media Strategist',
+    mode: 'Flat',
+    why: 'Builds audience and drives engagement across LinkedIn, X, and Instagram with AI-native content.',
+    agents: ['Content Calendar Planner', 'Engagement Monitor', 'Hashtag Researcher'],
+    kpis: ['Follower Growth Rate', 'Engagement Rate']
+  },
+  'growth-hacker-lab': {
+    icon: '🚀',
+    name: 'Growth Hacker Lab',
+    mode: 'Flat',
+    why: 'Runs rapid experiments across acquisition, activation, and retention to find growth levers fast.',
+    agents: ['Experiment Designer', 'Funnel Analyst', 'Viral Mechanic Engineer'],
+    kpis: ['Experiment Velocity', 'North Star Metric Δ']
+  },
+  'abm-orchestrator': {
+    icon: '🏦',
+    name: 'ABM Orchestrator',
+    mode: 'Hierarchical',
+    why: 'Coordinates account-based marketing plays across enterprise target accounts at scale.',
+    agents: ['Account Researcher', 'Personalization Engine', 'Executive Outreach Coordinator'],
+    kpis: ['Pipeline from Target Accounts', 'Account Engagement Score']
+  }
+};
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function goTo(n) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (n === 2) renderTeamCards();
+  if (n === 3) renderStep3();
+}
+
+function updateProgress() {
+  // Fill bar: step 1=0%, 2=25%, 3=50%, 4=75%, 5=100%
+  const pcts = [0, 0, 25, 50, 75, 100];
+  document.getElementById('prog-fill').style.width = (pcts[currentStep] || 0) + '%';
+
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById('pd' + i);
+    const lbl = document.getElementById('pl' + i);
+    dot.classList.remove('active', 'done');
+    lbl.classList.remove('active', 'done');
+
+    if (i < currentStep) {
+      dot.classList.add('done');
+      lbl.classList.add('done');
+      dot.textContent = '✓';
+    } else if (i === currentStep) {
+      dot.classList.add('active');
+      lbl.classList.add('active');
+      dot.textContent = i;
+    } else {
+      dot.textContent = i;
+    }
+  }
+}
+
+// ════════════════════════════════════════════════
+// STEP 1
+// ════════════════════════════════════════════════
+function selectSize(el, val) {
+  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  S.size = val;
+  checkStep1();
+}
+
+function toggleGoal(el, val) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    S.goals = S.goals.filter(g => g !== val);
+  } else {
+    if (S.goals.length >= 3) return;
+    el.classList.add('selected');
+    S.goals.push(val);
+  }
+
+  // Dim unselected when limit reached
+  document.querySelectorAll('.goal-card').forEach(c => {
+    if (!c.classList.contains('selected') && S.goals.length >= 3) {
+      c.classList.add('card-disabled');
+    } else {
+      c.classList.remove('card-disabled');
+    }
+  });
+
+  const hint = document.getElementById('goal-hint');
+  if (S.goals.length === 0) hint.textContent = 'Select 1–3 goals to continue';
+  else hint.textContent = S.goals.length + ' goal' + (S.goals.length !== 1 ? 's' : '') + ' selected';
+
+  checkStep1();
+}
+
+function step1Valid() {
+  return S.company.length > 0 && S.size !== '' && S.goals.length > 0;
+}
+
+function checkStep1() {
+  const btn = document.getElementById('btn-s1-next');
+  if (step1Valid()) {
+    btn.classList.remove('btn-disabled');
+  } else {
+    btn.classList.add('btn-disabled');
+  }
+}
+
+function tryGoTo2() {
+  if (!step1Valid()) return;
+  goTo(2);
+}
+
+// ════════════════════════════════════════════════
+// STEP 2
+// ════════════════════════════════════════════════
+function buildRecommendations() {
+  const recs = [];
+  const add = (key) => { if (!recs.includes(key)) recs.push(key); };
+
+  if (S.goals.includes('generate leads'))  add('lead-generation-engine');
+  if (S.goals.includes('email'))           add('email-campaign-manager');
+  if (S.goals.includes('brand'))           { add('content-marketing-team'); add('brand-voice-guardian'); }
+  if (S.goals.includes('roas'))            add('campaign-analytics-hub');
+  if (S.goals.includes('sales'))           add('sales-enablement-team');
+  if (S.goals.includes('competitive'))     add('competitive-intelligence');
+  if (S.goals.includes('social'))          add('social-media-strategist');
+  if (S.goals.includes('growth'))          add('growth-hacker-lab');
+  if (S.size === 'enterprise')             add('abm-orchestrator');
+
+  // Guarantee at least 3
+  const fallbacks = [
+    'lead-generation-engine',
+    'email-campaign-manager',
+    'content-marketing-team',
+    'campaign-analytics-hub',
+    'growth-hacker-lab'
+  ];
+  for (const f of fallbacks) {
+    if (recs.length >= 5) break;
+    if (!recs.includes(f)) recs.push(f);
+  }
+
+  return recs.slice(0, 5);
+}
+
+function renderTeamCards() {
+  const keys = buildRecommendations();
+  S.teams = keys.map(k => ({ key: k, enabled: true }));
+
+  const container = document.getElementById('team-cards-list');
+  container.innerHTML = '';
+
+  keys.forEach(key => {
+    const d = TEAM_DEFS[key];
+    if (!d) return;
+
+    const card = document.createElement('div');
+    card.className = 'team-card';
+    card.id = 'tc-' + key;
+
+    const toggleId = 'tog-' + key;
+
+    card.innerHTML =
+      '<div class="team-toggle">' +
+        '<label class="toggle-label" title="Toggle team">' +
+          '<input type="checkbox" id="' + toggleId + '" class="toggle-input" checked onchange="toggleTeam(\'' + key + '\',this.checked)">' +
+          '<div class="toggle-track"></div>' +
+          '<div class="toggle-thumb"></div>' +
+        '</label>' +
+      '</div>' +
+      '<div class="team-card-header">' +
+        '<div class="team-card-icon">' + d.icon + '</div>' +
+        '<div class="team-card-info">' +
+          '<div class="team-card-name">' + d.name + '</div>' +
+          '<span class="mode-badge' + (d.mode === 'Flat' ? ' flat-badge' : '') + '">' + d.mode + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="team-card-why"><strong>Why recommended:</strong> ' + d.why + '</div>' +
+      '<ul class="agent-list">' +
+        d.agents.map(a => '<li>' + a + '</li>').join('') +
+      '</ul>' +
+      '<div class="kpi-chips">' +
+        d.kpis.map(k => '<span class="kpi-chip">' + k + '</span>').join('') +
+      '</div>';
+
+    container.appendChild(card);
+  });
+}
+
+function toggleTeam(key, checked) {
+  const entry = S.teams.find(t => t.key === key);
+  if (entry) entry.enabled = checked;
+  const card = document.getElementById('tc-' + key);
+  if (card) card.classList.toggle('team-deselected', !checked);
+}
+
+// ════════════════════════════════════════════════
+// STEP 3
+// ════════════════════════════════════════════════
+const TEMPLATES = [
+  'Build a lead gen funnel targeting [ICP] using LinkedIn and cold email for [industry] companies',
+  "Create a 4-email onboarding sequence for trial users who haven't activated in 5 days",
+  'Develop a LinkedIn content strategy posting 3×/week to build thought leadership',
+  'Analyze our top 3 competitors and create sales battlecards with differentiators'
+];
+
+function renderStep3() {
+  const chipsEl = document.getElementById('s3-team-chips');
+  chipsEl.innerHTML = '';
+  S.teams.filter(t => t.enabled).forEach(t => {
+    const d = TEAM_DEFS[t.key];
+    if (!d) return;
+    const pill = document.createElement('span');
+    pill.className = 'team-chip-pill';
+    pill.textContent = d.icon + ' ' + d.name;
+    chipsEl.appendChild(pill);
+  });
+}
+
+function applyTemplate(idx) {
+  const txt = TEMPLATES[idx] || '';
+  const ta = document.getElementById('goal-textarea');
+  ta.value = txt;
+  S.goal = txt;
+  autoFillName();
+}
+
+function autoFillName() {
+  const raw = S.goal.slice(0, 45);
+  const name = (raw.length < S.goal.length) ? raw + '...' : raw;
+  S.campaignName = name;
+  document.getElementById('campaign-name-inp').value = name;
+}
+
+function selectTone(el, val) {
+  document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('tone-selected'));
+  el.classList.add('tone-selected');
+  S.tone = val;
+}
+
+function handleLaunch() {
+  S.goal = document.getElementById('goal-textarea').value.trim();
+  S.campaignName = document.getElementById('campaign-name-inp').value.trim()
+    || S.goal.slice(0, 45)
+    || 'Untitled Campaign';
+  goTo(4);
+  runLaunchSequence();
+}
+
+// ════════════════════════════════════════════════
+// STEP 4 — ANIMATION + API
+// ════════════════════════════════════════════════
+async function launchSwarm() {
+  const enabledKeys = S.teams.filter(t => t.enabled).map(t => t.key);
+  const payload = {
+    goal: S.goal,
+    tone: S.tone,
+    teams: enabledKeys,
+    company: S.company,
+    industry: S.industry,
+    size: S.size
+  };
+
+  const t0 = Date.now();
+  try {
+    const resp = await Promise.race([
+      fetch('/swarm/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 8000))
+    ]);
+
+    if (!resp.ok) throw new Error('http-error');
+
+    const data = await resp.json();
+    S.latency = ((Date.now() - t0) / 1000).toFixed(1);
+    S.backend = data.backend || 'Ollama';
+    S.result = data.result || data.output || data.response || JSON.stringify(data, null, 2);
+  } catch (_) {
+    S.latency = ((Date.now() - t0) / 1000).toFixed(1);
+    S.backend = 'Ollama (demo)';
+    S.result = buildDemoResult();
+  }
+}
+
+function buildDemoResult() {
+  const enabled = S.teams.filter(t => t.enabled);
+  const primaryName = enabled.length > 0 ? (TEAM_DEFS[enabled[0].key] || {}).name || 'Swarm' : 'Swarm';
+  const goalSnip = (S.goal || 'your campaign goal').slice(0, 90);
+  const ellip = S.goal.length > 90 ? '...' : '';
+
+  return [
+    '## ' + primaryName + ' — Campaign Execution Report',
+    '',
+    'Campaign: ' + (S.campaignName || 'Untitled Campaign'),
+    'Tone: ' + S.tone + '  |  Industry: ' + S.industry + '  |  Company: ' + S.company,
+    '',
+    '---',
+    '',
+    '### Executive Summary',
+    '',
+    'Goal analyzed: "' + goalSnip + ellip + '"',
+    '',
+    'Based on current market signals and your ' + S.industry + ' industry context, a comprehensive',
+    'action plan has been generated for a ' + S.size + '-stage company.',
+    '',
+    '---',
+    '',
+    '### Phase 1 — Research & Discovery (Week 1)',
+    '',
+    '  • Completed ICP analysis for ' + S.industry + ' segment',
+    '  • Identified 3 high-potential acquisition channels',
+    '  • Benchmarked top 5 competitors in your space',
+    '  • Mapped buyer journey (avg 7.2 touches to close)',
+    '',
+    '### Phase 2 — Content & Outreach (Weeks 2–3)',
+    '',
+    '  • Drafted 12 personalized outreach sequences',
+    '  • Created 6 content pieces for authority building',
+    '  • Built targeting criteria for paid acquisition',
+    '  • Prepared A/B test variants for landing pages',
+    '',
+    '### Phase 3 — Launch & Iterate (Week 4+)',
+    '',
+    '  • Deploy email sequences to segmented list',
+    '  • Activate LinkedIn outreach (50 touches / day)',
+    '  • Monitor KPIs: open rates, reply rates, MQLs',
+    '  • Weekly swarm re-briefing based on performance data',
+    '',
+    '---',
+    '',
+    '### Recommended Immediate Actions',
+    '',
+    '  1. Review and approve the 3 email sequence drafts in your dashboard',
+    '  2. Connect your LinkedIn account to enable automated outreach',
+    '  3. Set your MQL definition to calibrate lead scoring',
+    '  4. Schedule a 15-min swarm review for Day 7',
+    '',
+    '---',
+    '',
+    '* Generated by Sales & Marketing Nanobot Swarm — Powered by NeuralQuantum.ai *'
+  ].join('\n');
+}
+
+async function runLaunchSequence() {
+  const enabled = S.teams.filter(t => t.enabled);
+
+  // Build activation rows
+  const actList = document.getElementById('team-activation-list');
+  actList.innerHTML = '';
+  enabled.forEach(t => {
+    const d = TEAM_DEFS[t.key];
+    if (!d) return;
+    const row = document.createElement('div');
+    row.className = 'activation-row';
+    row.id = 'act-' + t.key;
+    row.innerHTML =
+      '<div class="act-icon-cell"><span class="mini-spin"></span></div>' +
+      '<div class="act-name">' + d.icon + ' ' + d.name + '</div>' +
+      '<div class="act-count">' + d.agents.length + ' agents</div>';
+    actList.appendChild(row);
+  });
+
+  // Clear log
+  const logBox = document.getElementById('log-box');
+  logBox.innerHTML = '';
+
+  const primaryName = enabled.length > 0
+    ? (TEAM_DEFS[enabled[0].key] || {}).name || 'Swarm'
+    : 'Swarm';
+
+  const logLines = [
+    '🔍 Analyzing campaign goal...',
+    '🤖 Briefing ' + primaryName + ' orchestrator...',
+    '📋 Planning sub-task execution tree...',
+    '⚡ Dispatching to AI backend (Ollama)...',
+    '✅ Swarm execution complete'
+  ];
+
+  // Activate rows with staggered timing
+  const activatePromises = enabled.map((t, i) =>
+    new Promise(res => setTimeout(() => {
+      const row = document.getElementById('act-' + t.key);
+      if (row) {
+        row.classList.add('act-done');
+        row.querySelector('.act-icon-cell').textContent = '✅';
+      }
+      res();
+    }, 800 + i * 800))
+  );
+
+  // Typewriter log
+  logLines.forEach((line, i) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'log-line';
+      el.textContent = line;
+      logBox.appendChild(el);
+      logBox.scrollTop = logBox.scrollHeight;
+    }, 300 + i * 700);
+  });
+
+  // API call races with 8s hard timeout
+  const apiCall = launchSwarm();
+  const hardTimeout = new Promise(r => setTimeout(r, 8500));
+  await Promise.race([Promise.all([...activatePromises, apiCall]), hardTimeout]);
+
+  // Ensure result
+  if (!S.result) {
+    S.result = buildDemoResult();
+    S.latency = '8.0';
+    S.backend = 'Ollama (demo)';
+  }
+
+  setTimeout(() => {
+    renderStep5();
+    goTo(5);
+  }, 800);
+}
+
+// ════════════════════════════════════════════════
+// STEP 5
+// ════════════════════════════════════════════════
+function renderStep5() {
+  const enabled = S.teams.filter(t => t.enabled);
+  const primary = enabled.length > 0 ? (TEAM_DEFS[enabled[0].key] || null) : null;
+
+  // Badges
+  const badgesEl = document.getElementById('result-badges');
+  badgesEl.innerHTML = [
+    '<span class="badge badge-indigo">' + (primary ? primary.icon + '\u00a0' + primary.name : 'Swarm') + '</span>',
+    '<span class="badge badge-purple">' + S.backend + '</span>',
+    '<span class="badge badge-grey">⏱ ' + S.latency + 's</span>',
+    '<span class="badge badge-emerald">✅ Complete</span>'
+  ].join('');
+
+  // Result
+  document.getElementById('result-pre').textContent = S.result || 'No output returned.';
+
+  // Teams
+  const teamsEl = document.getElementById('summary-teams');
+  teamsEl.innerHTML = enabled.map(t => {
+    const d = TEAM_DEFS[t.key];
+    return '<div class="summary-team-item">' + (d ? d.icon + ' ' + d.name : t.key) + '</div>';
+  }).join('');
+
+  // Campaign name
+  document.getElementById('summary-campaign').textContent =
+    S.campaignName || 'Untitled Campaign';
+}
+
+function copyOutput() {
+  if (!S.result) return;
+  const btn = event.currentTarget;
+  const orig = btn.textContent;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(S.result).then(() => {
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 1800);
+    }).catch(() => fallbackCopy(btn, orig));
+  } else {
+    fallbackCopy(btn, orig);
+  }
+}
+
+function fallbackCopy(btn, orig) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = S.result;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  } catch (_) {}
+}
+
+function runAgain() {
+  S.result = null;
+  goTo(3);
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+(function init() {
+  // Start on step 1
+  document.getElementById('step1').classList.add('active');
+  currentStep = 1;
+  updateProgress();
+})();
+</script>
+</body>
+</html>

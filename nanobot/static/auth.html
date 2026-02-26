@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Sign in or create your Sales & Marketing Nanobot Swarm account.">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/neuralquantum-icon.png">
+<title>Sign In — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --card-bg2:#16213e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --grad-h:linear-gradient(135deg,#818cf8,#a78bfa,#f472b6);
+}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+input{font-family:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:100}
+.logo-icon-small{width:32px;height:32px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+#nq-icon-top{width:32px;height:32px;object-fit:contain;border-radius:8px;flex-shrink:0}
+#topbar-brand{font-size:14px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#topbar-back{margin-left:auto;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s}
+#topbar-back:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+
+/* PAGE LAYOUT */
+#page{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px 40px;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(99,102,241,0.08) 0%,transparent 70%)}
+
+/* AUTH CARD */
+.auth-card{width:100%;max-width:440px;background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:36px}
+
+/* TAB SWITCHER */
+.tab-row{display:flex;background:rgba(0,0,0,0.3);border-radius:10px;padding:4px;margin-bottom:28px}
+.tab-btn{flex:1;padding:9px;border-radius:8px;font-size:14px;font-weight:600;color:var(--text-secondary);background:transparent;transition:all .2s;text-align:center}
+.tab-btn.active{background:var(--card-bg);color:var(--text-primary);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+
+/* FORM */
+.form-panel{display:none;flex-direction:column;gap:0}
+.form-panel.active{display:flex}
+
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.form-label{font-size:13px;font-weight:500;color:var(--text-secondary)}
+.form-input-wrap{position:relative}
+.form-input{width:100%;padding:11px 14px;border-radius:9px;background:#0f0f1a;border:1px solid var(--border);color:var(--text-primary);font-size:14px;transition:border-color .2s,box-shadow .2s;outline:none}
+.form-input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,0.12)}
+.form-input.invalid{border-color:var(--red)}
+.form-input::placeholder{color:var(--text-secondary);opacity:.7}
+.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-secondary);cursor:pointer;font-size:16px;padding:4px;line-height:1;transition:color .2s}
+.pw-toggle:hover{color:var(--text-primary)}
+.pw-input{padding-right:42px}
+
+.forgot-row{display:flex;justify-content:flex-end;margin-top:-8px;margin-bottom:16px}
+.forgot-link{font-size:12px;color:var(--text-secondary);transition:color .2s}
+.forgot-link:hover{color:var(--indigo)}
+
+/* STRENGTH BAR */
+.strength-wrap{margin-top:6px}
+.strength-bar{height:4px;border-radius:2px;background:#1e293b;overflow:hidden;margin-bottom:4px}
+.strength-fill{height:100%;border-radius:2px;width:0;transition:width .3s,background .3s}
+.strength-label{font-size:11px;color:var(--text-secondary)}
+
+/* ERROR */
+.form-error{font-size:13px;color:var(--red);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px 14px;display:none}
+.form-error.show{display:block}
+
+/* SUBMIT BTN */
+.submit-btn{width:100%;padding:13px;border-radius:10px;font-size:15px;font-weight:700;background:var(--grad);color:#fff;transition:all .2s;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:hover:not(:disabled){background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.spinner.show{display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* DIVIDER */
+.or-divider{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:12px;color:var(--text-secondary)}
+.or-line{flex:1;height:1px;background:var(--border)}
+
+/* OAUTH BTN */
+.oauth-btn{width:100%;padding:11px;border-radius:10px;font-size:14px;font-weight:500;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-primary);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-bottom:20px}
+.oauth-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(99,102,241,0.4)}
+
+/* BOTTOM SWITCH */
+.bottom-switch{font-size:13px;color:var(--text-secondary);text-align:center}
+.switch-link{color:var(--indigo);font-weight:600;cursor:pointer;transition:color .2s}
+.switch-link:hover{color:var(--purple)}
+
+/* CHECKBOX ROW */
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--indigo);flex-shrink:0;cursor:pointer}
+.checkbox-label{font-size:13px;color:var(--text-secondary);line-height:1.5}
+.checkbox-label a{color:var(--indigo)}
+.checkbox-label a:hover{text-decoration:underline}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:14px;color:var(--text-primary);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <img id="nq-icon-top" src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <div class="logo-icon-small" style="display:none">NQ</div>
+  <span id="topbar-brand">Sales &amp; Marketing Nanobot Swarm</span>
+  <a href="/" id="topbar-back">&#8592; Dashboard</a>
+</div>
+
+<!-- PAGE -->
+<div id="page">
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="tab-row">
+      <button class="tab-btn active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+      <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+
+    <!-- SIGN IN FORM -->
+    <div class="form-panel active" id="panel-signin">
+
+      <div id="signin-error" class="form-error"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="si-email">Email</label>
+        <input class="form-input" type="email" id="si-email" placeholder="you@company.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="si-password">Password</label>
+        <div class="form-input-wrap">
+          <input class="form-input pw-input" type="password" id="si-password" placeholder="Your password" autocomplete="current-password" required>
+          <button class="pw-toggle" type="button" onclick="togglePw('si-password','si-pw-eye')" id="si-pw-eye" aria-label="Show password">&#128065;</button>
+        </div>
+      </div>
+
+      <div class="forgot-row">
+        <a href="#" class="forgot-link" onclick="showToast('Password reset coming soon!')">Forgot password?</a>
+      </div>
+
+      <button class="submit-btn" id="signin-btn" onclick="submitSignIn()">
+        <span class="spinner" id="signin-spinner"></span>
+        <span id="signin-btn-text">Sign In &#8594;</span>
+      </button>
+
+      <div class="or-divider">
+        <div class="or-line"></div>
+        <span>or continue with</span>
+        <div class="or-line"></div>
+      </div>
+
+      <button class="oauth-btn" onclick="showToast('Google OAuth \u2014 Coming soon!')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="bottom-switch">
+        Don't have an account? <span class="switch-link" onclick="switchTab('signup')">Create one &#8594;</span>
+      </div>
+
+    </div><!-- /panel-signin -->
+
+    <!-- SIGN UP FORM -->
+    <div class="form-panel" id="panel-signup">
+
+      <div id="signup-error" class="form-error"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-name">Full Name</label>
+        <input class="form-input" type="text" id="su-name" placeholder="Tommy Xaypanya" autocomplete="name" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-email">Email</label>
+        <input class="form-input" type="email" id="su-email" placeholder="you@company.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-password">Password</label>
+        <div class="form-input-wrap">
+          <input class="form-input pw-input" type="password" id="su-password" placeholder="Min. 8 characters" autocomplete="new-password" required oninput="checkStrength(this.value)">
+          <button class="pw-toggle" type="button" onclick="togglePw('su-password','su-pw-eye')" id="su-pw-eye" aria-label="Show password">&#128065;</button>
+        </div>
+        <div class="strength-wrap">
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <div class="strength-label" id="strength-label"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="su-confirm">Confirm Password</label>
+        <div class="form-input-wrap">
+          <input class="form-input pw-input" type="password" id="su-confirm" placeholder="Repeat your password" autocomplete="new-password" required>
+          <button class="pw-toggle" type="button" onclick="togglePw('su-confirm','su-confirm-eye')" id="su-confirm-eye" aria-label="Show password">&#128065;</button>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="su-terms" required>
+        <label class="checkbox-label" for="su-terms">
+          I agree to the <a href="/docs#terms" target="_blank">Terms of Service</a> and <a href="/docs#privacy" target="_blank">Privacy Policy</a>
+        </label>
+      </div>
+
+      <button class="submit-btn" id="signup-btn" onclick="submitSignUp()">
+        <span class="spinner" id="signup-spinner"></span>
+        <span id="signup-btn-text">Create Account &#8594;</span>
+      </button>
+
+      <div class="bottom-switch">
+        Already have an account? <span class="switch-link" onclick="switchTab('signin')">Sign in &#8594;</span>
+      </div>
+
+    </div><!-- /panel-signup -->
+
+  </div><!-- /auth-card -->
+</div><!-- /page -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── Tab switching ──────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('panel-signin').classList.toggle('active', tab === 'signin');
+  document.getElementById('panel-signup').classList.toggle('active', tab === 'signup');
+  document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  clearErrors();
+  if (history.replaceState) {
+    history.replaceState(null, '', tab === 'signup' ? '#signup' : '#signin');
+  }
+}
+
+// On load, check hash
+(function() {
+  if (window.location.hash === '#signup') { switchTab('signup'); }
+})();
+
+// ── Show/hide password ─────────────────────────────────────────────────────
+function togglePw(inputId, btnId) {
+  var inp = document.getElementById(inputId);
+  var btn = document.getElementById(btnId);
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.textContent = '\uD83D\uDEAB'; // crossed eye substitute
+    btn.style.fontSize = '14px';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '\uD83D\uDC41';
+    btn.style.fontSize = '16px';
+  }
+}
+
+// ── Password strength ──────────────────────────────────────────────────────
+function checkStrength(pw) {
+  var fill  = document.getElementById('strength-fill');
+  var label = document.getElementById('strength-label');
+  if (!pw) { fill.style.width = '0'; fill.style.background = ''; label.textContent = ''; return; }
+  var score = 0;
+  if (pw.length >= 8)       { score += 1; }
+  if (/[A-Z]/.test(pw))    { score += 1; }
+  if (/[0-9]/.test(pw))    { score += 1; }
+  if (/[^A-Za-z0-9]/.test(pw)) { score += 1; }
+  var pct = [25, 50, 75, 100][score - 1] || 0;
+  var color = score <= 1 ? 'var(--red)' : score === 2 ? 'var(--amber)' : score === 3 ? 'var(--amber)' : 'var(--emerald)';
+  var text  = score <= 1 ? 'Weak' : score === 2 ? 'Fair' : score === 3 ? 'Good' : 'Strong';
+  fill.style.width = pct + '%';
+  fill.style.background = color;
+  label.textContent = pct > 0 ? ('Strength: ' + text) : '';
+  label.style.color = color;
+}
+
+// ── Validation helpers ─────────────────────────────────────────────────────
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+function showError(panelId, msg) {
+  var el = document.getElementById(panelId + '-error');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearErrors() {
+  document.querySelectorAll('.form-error').forEach(function(el) {
+    el.classList.remove('show');
+    el.textContent = '';
+  });
+  document.querySelectorAll('.form-input').forEach(function(el) {
+    el.classList.remove('invalid');
+  });
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3200);
+}
+
+// ── Button loading state ───────────────────────────────────────────────────
+function setLoading(btnId, spinnerId, textId, loading) {
+  var btn  = document.getElementById(btnId);
+  var spn  = document.getElementById(spinnerId);
+  var txt  = document.getElementById(textId);
+  btn.disabled = loading;
+  spn.classList.toggle('show', loading);
+  txt.style.display = loading ? 'none' : '';
+}
+
+// ── Sign In ────────────────────────────────────────────────────────────────
+function submitSignIn() {
+  clearErrors();
+  var email = document.getElementById('si-email').value.trim();
+  var pw    = document.getElementById('si-password').value;
+
+  if (!email) {
+    document.getElementById('si-email').classList.add('invalid');
+    showError('signin', 'Email is required.');
+    return;
+  }
+  if (!isValidEmail(email)) {
+    document.getElementById('si-email').classList.add('invalid');
+    showError('signin', 'Please enter a valid email address.');
+    return;
+  }
+  if (!pw) {
+    document.getElementById('si-password').classList.add('invalid');
+    showError('signin', 'Password is required.');
+    return;
+  }
+
+  setLoading('signin-btn', 'signin-spinner', 'signin-btn-text', true);
+
+  fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email, password: pw })
+  })
+  .then(function(res) {
+    return res.json().then(function(data) { return { status: res.status, data: data }; });
+  })
+  .then(function(r) {
+    setLoading('signin-btn', 'signin-spinner', 'signin-btn-text', false);
+    if (r.status === 200) {
+      localStorage.setItem('sm_auth_token', r.data.token);
+      localStorage.setItem('sm_user', JSON.stringify(r.data.user));
+      window.location.href = '/profile';
+    } else {
+      var msg = (r.data && r.data.detail) ? r.data.detail : 'Sign in failed. Please try again.';
+      showError('signin', msg);
+    }
+  })
+  .catch(function(err) {
+    setLoading('signin-btn', 'signin-spinner', 'signin-btn-text', false);
+    showError('signin', 'Network error. Please check your connection and try again.');
+  });
+}
+
+// ── Sign Up ────────────────────────────────────────────────────────────────
+function submitSignUp() {
+  clearErrors();
+  var name    = document.getElementById('su-name').value.trim();
+  var email   = document.getElementById('su-email').value.trim();
+  var pw      = document.getElementById('su-password').value;
+  var confirm = document.getElementById('su-confirm').value;
+  var terms   = document.getElementById('su-terms').checked;
+
+  if (!name) {
+    document.getElementById('su-name').classList.add('invalid');
+    showError('signup', 'Full name is required.');
+    return;
+  }
+  if (!email || !isValidEmail(email)) {
+    document.getElementById('su-email').classList.add('invalid');
+    showError('signup', 'Please enter a valid email address.');
+    return;
+  }
+  if (pw.length < 8) {
+    document.getElementById('su-password').classList.add('invalid');
+    showError('signup', 'Password must be at least 8 characters.');
+    return;
+  }
+  if (pw !== confirm) {
+    document.getElementById('su-confirm').classList.add('invalid');
+    showError('signup', 'Passwords do not match.');
+    return;
+  }
+  if (!terms) {
+    showError('signup', 'Please agree to the Terms of Service and Privacy Policy.');
+    return;
+  }
+
+  setLoading('signup-btn', 'signup-spinner', 'signup-btn-text', true);
+
+  fetch('/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name, email: email, password: pw })
+  })
+  .then(function(res) {
+    return res.json().then(function(data) { return { status: res.status, data: data }; });
+  })
+  .then(function(r) {
+    setLoading('signup-btn', 'signup-spinner', 'signup-btn-text', false);
+    if (r.status === 200) {
+      localStorage.setItem('sm_auth_token', r.data.token);
+      localStorage.setItem('sm_user', JSON.stringify(r.data.user));
+      window.location.href = '/profile';
+    } else {
+      var msg = (r.data && r.data.detail) ? r.data.detail : 'Registration failed. Please try again.';
+      showError('signup', msg);
+    }
+  })
+  .catch(function(err) {
+    setLoading('signup-btn', 'signup-spinner', 'signup-btn-text', false);
+    showError('signup', 'Network error. Please check your connection and try again.');
+  });
+}
+
+// ── Enter key support ──────────────────────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    var active = document.querySelector('.form-panel.active');
+    if (!active) { return; }
+    if (active.id === 'panel-signin') { submitSignIn(); }
+    else { submitSignUp(); }
+  }
+});
+</script>
+</body>
+</html>

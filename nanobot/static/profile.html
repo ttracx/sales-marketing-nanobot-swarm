@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Your Sales & Marketing Nanobot Swarm profile and subscription settings.">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/neuralquantum-icon.png">
+<title>Profile — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --card-bg2:#16213e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --grad-h:linear-gradient(135deg,#818cf8,#a78bfa,#f472b6);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+input{font-family:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:14px;z-index:100}
+.logo-icon-small{width:32px;height:32px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+#nq-icon-top{width:32px;height:32px;object-fit:contain;border-radius:8px;flex-shrink:0}
+#topbar-brand{font-size:14px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#topbar-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.topbar-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
+.topbar-link:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+.signout-btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--red);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);transition:all .2s}
+.signout-btn:hover{background:rgba(239,68,68,0.15)}
+
+/* LAYOUT */
+#main{margin-top:60px;padding:32px 24px;max-width:1200px;margin-left:auto;margin-right:auto}
+.profile-layout{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start}
+@media(max-width:900px){.profile-layout{grid-template-columns:1fr}}
+
+/* SIDEBAR */
+.sidebar-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:28px 24px;position:sticky;top:80px}
+.avatar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:24px;gap:12px}
+.avatar-circle{width:80px;height:80px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px;flex-shrink:0}
+.user-name-display{font-size:17px;font-weight:700;text-align:center}
+.user-email-display{font-size:13px;color:var(--text-secondary);text-align:center;word-break:break-all}
+.member-since{font-size:12px;color:var(--text-secondary);text-align:center}
+.plan-pill{display:inline-flex;align-items:center;gap:6px;background:var(--grad);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;margin:4px auto}
+.sidebar-divider{height:1px;background:var(--border);margin:16px 0}
+.upgrade-btn{display:block;text-align:center;padding:10px;border-radius:9px;font-size:13px;font-weight:600;background:rgba(99,102,241,0.12);color:var(--indigo);border:1px solid rgba(99,102,241,0.3);transition:all .2s}
+.upgrade-btn:hover{background:rgba(99,102,241,0.2);border-color:var(--indigo)}
+
+/* MAIN CONTENT */
+.content-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+
+/* TABS */
+.content-tabs{display:flex;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.2)}
+.content-tab{padding:14px 20px;font-size:14px;font-weight:600;color:var(--text-secondary);background:transparent;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.content-tab.active{color:var(--indigo);border-bottom-color:var(--indigo);background:rgba(99,102,241,0.05)}
+.content-tab:hover:not(.active){color:var(--text-primary);background:rgba(99,102,241,0.05)}
+
+/* TAB PANELS */
+.tab-panel{display:none;padding:28px}
+.tab-panel.active{display:block}
+
+/* FORM ELEMENTS */
+.settings-section{margin-bottom:28px}
+.settings-section:last-child{margin-bottom:0}
+.settings-section-title{font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:13px;font-weight:500;color:var(--text-secondary)}
+.form-input{width:100%;padding:10px 14px;border-radius:9px;background:#0f0f1a;border:1px solid var(--border);color:var(--text-primary);font-size:14px;transition:border-color .2s,box-shadow .2s;outline:none}
+.form-input:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(99,102,241,0.1)}
+.form-input:disabled,.form-input[readonly]{opacity:.6;cursor:not-allowed}
+.form-hint{font-size:12px;color:var(--text-secondary)}
+
+/* BUTTONS */
+.btn{padding:10px 20px;border-radius:9px;font-size:13px;font-weight:600;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--grad);color:#fff}
+.btn-primary:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,0.4)}
+.btn-secondary{background:rgba(99,102,241,0.1);color:var(--indigo);border:1px solid rgba(99,102,241,0.3)}
+.btn-secondary:hover{background:rgba(99,102,241,0.2)}
+.btn-danger{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+.btn-danger:hover{background:rgba(239,68,68,0.2)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+/* PLAN CARD */
+.plan-card{background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:20px;margin-bottom:20px}
+.plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.plan-name-row{display:flex;align-items:center;gap:10px}
+.plan-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:var(--grad);color:#fff}
+.plan-status-dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);box-shadow:0 0 6px var(--emerald)}
+.plan-status-label{font-size:13px;font-weight:600;color:var(--emerald)}
+.plan-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.plan-meta-item{display:flex;flex-direction:column;gap:3px}
+.plan-meta-label{font-size:11px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.plan-meta-value{font-size:14px;font-weight:600}
+
+/* FEATURES LIST */
+.feature-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.feature-bullets li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-secondary)}
+.feature-bullets li::before{content:'\2713';color:var(--emerald);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* BILLING TABLE */
+.billing-table{width:100%;border-collapse:collapse}
+.billing-table th{text-align:left;padding:10px 14px;font-size:12px;color:var(--text-secondary);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
+.billing-table td{padding:12px 14px;font-size:13px;border-bottom:1px solid rgba(99,102,241,0.06)}
+.billing-table tr:last-child td{border-bottom:none}
+.billing-table tr:hover td{background:rgba(99,102,241,0.04)}
+.status-pill{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.status-paid{background:rgba(16,185,129,0.15);color:var(--emerald)}
+.status-pending{background:rgba(245,158,11,0.15);color:var(--amber)}
+
+/* PAYMENT CARD */
+.payment-card{background:var(--card-bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.payment-info{display:flex;align-items:center;gap:12px}
+.card-icon{width:40px;height:28px;background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;letter-spacing:.5px}
+.card-details{display:flex;flex-direction:column;gap:2px}
+.card-number{font-size:14px;font-weight:600;letter-spacing:1px}
+.card-expiry{font-size:12px;color:var(--text-secondary)}
+
+/* USAGE PROGRESS */
+.usage-card{background:var(--card-bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.usage-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.usage-title{font-size:14px;font-weight:600}
+.usage-count{font-size:22px;font-weight:800}
+.usage-count span{font-size:14px;font-weight:500;color:var(--text-secondary)}
+.progress-track{height:10px;background:rgba(99,102,241,0.12);border-radius:5px;overflow:hidden;margin:10px 0}
+.progress-fill{height:100%;border-radius:5px;background:var(--grad);transition:width .6s ease}
+.usage-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary)}
+
+/* CONFIRMATION MODAL */
+#confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+#confirm-modal.show{display:flex}
+.modal-box{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:400px;width:100%}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:10px}
+.modal-body{font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:14px;color:var(--text-primary);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:999;opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.toast-success{border-color:rgba(16,185,129,0.4)}
+#toast.toast-error{border-color:rgba(239,68,68,0.4)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <img id="nq-icon-top" src="/images/neuralquantum-icon.png" alt="NQ" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+  <div class="logo-icon-small" style="display:none">NQ</div>
+  <span id="topbar-brand">Sales &amp; Marketing Nanobot Swarm</span>
+  <div id="topbar-right">
+    <a href="/" class="topbar-link">&#8592; Dashboard</a>
+    <button class="signout-btn" onclick="signOut()">Sign Out</button>
+  </div>
+</div>
+
+<div id="main">
+  <div class="profile-layout">
+
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="sidebar-card">
+        <div class="avatar-wrap">
+          <div class="avatar-circle" id="avatar-initials">??</div>
+          <div class="user-name-display" id="sidebar-name">Loading...</div>
+          <div class="user-email-display" id="sidebar-email"></div>
+          <div class="member-since" id="sidebar-since"></div>
+          <div class="plan-pill" id="sidebar-plan">Free</div>
+        </div>
+        <div class="sidebar-divider"></div>
+        <a href="/pricing" class="upgrade-btn">Upgrade Plan &#8594;</a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <div class="content-card">
+
+        <!-- TABS -->
+        <div class="content-tabs">
+          <button class="content-tab active" onclick="switchTab('account')">Account Settings</button>
+          <button class="content-tab" onclick="switchTab('billing')">Subscription &amp; Billing</button>
+          <button class="content-tab" onclick="switchTab('usage')">Usage &amp; Runs</button>
+        </div>
+
+        <!-- TAB 1: ACCOUNT SETTINGS -->
+        <div class="tab-panel active" id="panel-account">
+
+          <div class="settings-section">
+            <div class="settings-section-title">Profile Information</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="acc-name">Full Name</label>
+                <input class="form-input" type="text" id="acc-name" placeholder="Your full name">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="acc-email">Email Address</label>
+                <input class="form-input" type="email" id="acc-email" placeholder="you@example.com">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+            </div>
+          </div>
+
+          <div class="sidebar-divider"></div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Change Password</div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label" for="acc-cur-pw">Current Password</label>
+                <input class="form-input" type="password" id="acc-cur-pw" placeholder="Current password">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="acc-new-pw">New Password</label>
+                <input class="form-input" type="password" id="acc-new-pw" placeholder="Min. 8 characters">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="acc-confirm-pw">Confirm New Password</label>
+                <input class="form-input" type="password" id="acc-confirm-pw" placeholder="Repeat new password">
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-secondary" onclick="showToast('Password change coming soon!', '')">Update Password</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: SUBSCRIPTION & BILLING -->
+        <div class="tab-panel" id="panel-billing">
+
+          <div class="settings-section">
+            <div class="settings-section-title">Current Plan</div>
+            <div class="plan-card">
+              <div class="plan-header">
+                <div class="plan-name-row">
+                  <span class="plan-badge" id="bill-plan-badge">Free</span>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <div class="plan-status-dot"></div>
+                    <span class="plan-status-label">Active</span>
+                  </div>
+                </div>
+              </div>
+              <div class="plan-meta">
+                <div class="plan-meta-item">
+                  <div class="plan-meta-label">Plan</div>
+                  <div class="plan-meta-value" id="bill-plan-name">Free Tier</div>
+                </div>
+                <div class="plan-meta-item">
+                  <div class="plan-meta-label">Next Billing</div>
+                  <div class="plan-meta-value" id="bill-next-date">&#8212;</div>
+                </div>
+                <div class="plan-meta-item">
+                  <div class="plan-meta-label">Amount</div>
+                  <div class="plan-meta-value" id="bill-amount">$0</div>
+                </div>
+                <div class="plan-meta-item">
+                  <div class="plan-meta-label">Status</div>
+                  <div class="plan-meta-value" id="bill-status">Active</div>
+                </div>
+              </div>
+              <ul class="feature-bullets" id="bill-features">
+                <li>Free public demo access</li>
+                <li>All 10 agent teams (limited runs)</li>
+                <li>Basic campaign output</li>
+              </ul>
+            </div>
+
+            <div class="btn-row">
+              <a href="https://billing.stripe.com/p/login/test_billing_portal" target="_blank" rel="noopener" class="btn btn-secondary">Manage Billing &#8594;</a>
+              <a href="/pricing" class="btn btn-primary">Upgrade Plan &#8594;</a>
+              <button class="btn btn-danger" onclick="showCancelModal()">Cancel Subscription</button>
+            </div>
+          </div>
+
+          <div class="sidebar-divider"></div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Payment Method</div>
+            <div class="payment-card">
+              <div class="payment-info">
+                <div class="card-icon">VISA</div>
+                <div class="card-details">
+                  <div class="card-number">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242</div>
+                  <div class="card-expiry">Expires 12/26</div>
+                </div>
+              </div>
+              <button class="btn btn-secondary" onclick="showToast('Redirecting to payment portal...', '')">Update Payment &#8594;</button>
+            </div>
+          </div>
+
+          <div class="sidebar-divider"></div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Billing History</div>
+            <div style="overflow-x:auto;border-radius:10px;border:1px solid var(--border)">
+              <table class="billing-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Jan 1, 2026</td>
+                    <td>Growth Monthly &#8212; January</td>
+                    <td>$69.00</td>
+                    <td><span class="status-pill status-paid">Paid</span></td>
+                  </tr>
+                  <tr>
+                    <td>Dec 1, 2025</td>
+                    <td>Growth Monthly &#8212; December</td>
+                    <td>$69.00</td>
+                    <td><span class="status-pill status-paid">Paid</span></td>
+                  </tr>
+                  <tr>
+                    <td>Nov 1, 2025</td>
+                    <td>Campaign Pack &#8212; One-Time</td>
+                    <td>$29.00</td>
+                    <td><span class="status-pill status-paid">Paid</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 3: USAGE & RUNS -->
+        <div class="tab-panel" id="panel-usage">
+
+          <div class="settings-section">
+            <div class="settings-section-title">Runs This Period</div>
+            <div class="usage-card">
+              <div class="usage-header">
+                <div class="usage-title">Swarm Runs Used</div>
+                <div class="usage-count" id="usage-count">18 <span>/ 25</span></div>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="usage-bar" style="width:72%"></div>
+              </div>
+              <div class="usage-meta">
+                <span id="usage-remaining">7 runs remaining</span>
+                <span id="usage-reset">Resets Feb 28, 2026</span>
+              </div>
+            </div>
+
+            <div class="form-grid" style="margin-top:16px">
+              <div class="plan-meta-item">
+                <div class="plan-meta-label">Plan</div>
+                <div class="plan-meta-value" id="usage-plan-name">Starter Weekly</div>
+              </div>
+              <div class="plan-meta-item">
+                <div class="plan-meta-label">Period</div>
+                <div class="plan-meta-value">Feb 21 &#8212; Feb 28, 2026</div>
+              </div>
+              <div class="plan-meta-item">
+                <div class="plan-meta-label">Runs Used</div>
+                <div class="plan-meta-value" id="usage-used">18</div>
+              </div>
+              <div class="plan-meta-item">
+                <div class="plan-meta-label">Runs Limit</div>
+                <div class="plan-meta-value" id="usage-limit">25</div>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <a href="/progress" class="btn btn-secondary">View Full Run History &#8594;</a>
+              <a href="/pricing" class="btn btn-primary">Increase Limit &#8594;</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /content-card -->
+    </main>
+
+  </div><!-- /profile-layout -->
+</div><!-- /main -->
+
+<!-- CANCEL CONFIRMATION MODAL -->
+<div id="confirm-modal">
+  <div class="modal-box">
+    <div class="modal-title">Cancel Subscription?</div>
+    <div class="modal-body">
+      Are you sure you want to cancel your subscription? You will retain access until the end of your current billing period. This action cannot be undone.
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="hideCancelModal()">Keep Subscription</button>
+      <button class="btn btn-danger" onclick="confirmCancel()">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── Auth Guard ─────────────────────────────────────────────────────────────
+(function() {
+  var token = localStorage.getItem('sm_auth_token');
+  if (!token) { window.location.href = '/auth'; }
+})();
+
+// ── Load User ──────────────────────────────────────────────────────────────
+var currentUser = null;
+
+function loadUser() {
+  try {
+    var raw = localStorage.getItem('sm_user');
+    currentUser = raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    currentUser = null;
+  }
+  if (!currentUser) {
+    window.location.href = '/auth';
+    return;
+  }
+  renderUser();
+  fetchLatestUser();
+}
+
+function getInitials(name) {
+  if (!name) { return '??'; }
+  var parts = name.trim().split(/\s+/);
+  if (parts.length === 1) { return parts[0].substring(0, 2).toUpperCase(); }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function renderUser() {
+  var u = currentUser;
+  if (!u) { return; }
+
+  var initials = getInitials(u.name || '');
+  document.getElementById('avatar-initials').textContent = initials;
+  document.getElementById('sidebar-name').textContent = u.name || 'User';
+  document.getElementById('sidebar-email').textContent = u.email || '';
+
+  var since = u.created_at ? new Date(u.created_at).toLocaleDateString('en-US', {year:'numeric',month:'long'}) : 'N/A';
+  document.getElementById('sidebar-since').textContent = 'Member since ' + since;
+
+  var plan = u.plan || 'free';
+  var planDisplay = plan.charAt(0).toUpperCase() + plan.slice(1);
+  document.getElementById('sidebar-plan').textContent = planDisplay;
+  document.getElementById('bill-plan-badge').textContent = planDisplay;
+  document.getElementById('bill-plan-name').textContent = planDisplay + ' Plan';
+  document.getElementById('usage-plan-name').textContent = planDisplay + ' Plan';
+
+  // Profile form
+  document.getElementById('acc-name').value = u.name || '';
+  document.getElementById('acc-email').value = u.email || '';
+}
+
+function fetchLatestUser() {
+  var token = localStorage.getItem('sm_auth_token');
+  if (!token) { return; }
+  fetch('/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(res) {
+    if (res.status === 200) {
+      return res.json();
+    }
+    if (res.status === 401) {
+      localStorage.removeItem('sm_auth_token');
+      localStorage.removeItem('sm_user');
+      window.location.href = '/auth';
+    }
+    return null;
+  })
+  .then(function(data) {
+    if (data) {
+      currentUser = data;
+      localStorage.setItem('sm_user', JSON.stringify(data));
+      renderUser();
+    }
+  })
+  .catch(function() {
+    // Silently fail — use cached data
+  });
+}
+
+// ── Tab Switching ──────────────────────────────────────────────────────────
+var tabs = ['account', 'billing', 'usage'];
+
+function switchTab(name) {
+  tabs.forEach(function(t) {
+    document.getElementById('panel-' + t).classList.toggle('active', t === name);
+  });
+  document.querySelectorAll('.content-tab').forEach(function(btn, i) {
+    btn.classList.toggle('active', tabs[i] === name);
+  });
+}
+
+document.querySelectorAll('.content-tab').forEach(function(btn, i) {
+  btn.addEventListener('click', function() { switchTab(tabs[i]); });
+});
+
+// ── Save Profile ───────────────────────────────────────────────────────────
+function saveProfile() {
+  var token = localStorage.getItem('sm_auth_token');
+  if (!token) { return; }
+
+  var name  = document.getElementById('acc-name').value.trim();
+  var email = document.getElementById('acc-email').value.trim();
+
+  if (!name || !email) {
+    showToast('Name and email are required.', 'error');
+    return;
+  }
+
+  var payload = {};
+  if (name)  { payload.name  = name; }
+  if (email) { payload.email = email; }
+
+  fetch('/auth/profile', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) {
+    return res.json().then(function(d) { return {status:res.status, data:d}; });
+  })
+  .then(function(r) {
+    if (r.status === 200) {
+      currentUser = r.data;
+      localStorage.setItem('sm_user', JSON.stringify(r.data));
+      renderUser();
+      showToast('Profile saved successfully!', 'success');
+    } else {
+      var msg = (r.data && r.data.detail) ? r.data.detail : 'Save failed.';
+      showToast(msg, 'error');
+    }
+  })
+  .catch(function() {
+    showToast('Network error. Please try again.', 'error');
+  });
+}
+
+// ── Sign Out ───────────────────────────────────────────────────────────────
+function signOut() {
+  localStorage.removeItem('sm_auth_token');
+  localStorage.removeItem('sm_user');
+  window.location.href = '/';
+}
+
+// ── Cancel Modal ───────────────────────────────────────────────────────────
+function showCancelModal() {
+  document.getElementById('confirm-modal').classList.add('show');
+}
+
+function hideCancelModal() {
+  document.getElementById('confirm-modal').classList.remove('show');
+}
+
+function confirmCancel() {
+  hideCancelModal();
+  showToast('Subscription cancellation request sent. You retain access until end of period.', '');
+}
+
+// Close modal on backdrop click
+document.getElementById('confirm-modal').addEventListener('click', function(e) {
+  if (e.target === this) { hideCancelModal(); }
+});
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' toast-' + type : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.className = t.className.replace('show', '').trim(); }, 3500);
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+loadUser();
+</script>
+</body>
+</html>

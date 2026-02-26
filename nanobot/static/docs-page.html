@@ -1,998 +1,1321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Documentation — Sales & Marketing Nanobot Swarm</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-primary:   #0a0e1a;
-      --bg-secondary: #0f1629;
-      --bg-card:      #111827;
-      --bg-card-hover:#161f35;
-      --bg-sidebar:   #0d1424;
-      --border:       #1e2d4a;
-      --border-light: #2a3f6a;
-      --indigo-400:   #818cf8;
-      --indigo-500:   #6366f1;
-      --indigo-600:   #4f46e5;
-      --purple-400:   #c084fc;
-      --purple-500:   #a855f7;
-      --cyan-400:     #22d3ee;
-      --green-400:    #4ade80;
-      --yellow-400:   #facc15;
-      --orange-400:   #fb923c;
-      --red-400:      #f87171;
-      --text-primary: #f1f5f9;
-      --text-secondary:#94a3b8;
-      --text-muted:   #64748b;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* ── Header ── */
-    header {
-      background: linear-gradient(135deg, #0f1629 0%, #1a1040 50%, #0f1629 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      position: sticky; top: 0; z-index: 100;
-    }
-    .header-inner {
-      max-width: 1440px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
-    }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); }
-    .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--indigo-500), var(--purple-500)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .logo-text { font-weight: 700; font-size: 1.1rem; }
-    .logo-text span { color: var(--indigo-400); }
-    nav { display: flex; gap: 6px; }
-    nav a { color: var(--text-secondary); text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 0.875rem; transition: all 0.2s; }
-    nav a:hover { color: var(--text-primary); background: rgba(99,102,241,0.15); }
-    nav a.active { color: var(--indigo-400); background: rgba(99,102,241,0.2); }
-
-    /* ── Layout ── */
-    .layout { display: flex; max-width: 1440px; margin: 0 auto; min-height: calc(100vh - 64px); }
-
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 260px; flex-shrink: 0;
-      background: var(--bg-sidebar);
-      border-right: 1px solid var(--border);
-      position: sticky; top: 64px; height: calc(100vh - 64px);
-      overflow-y: auto; padding: 1.5rem 0;
-    }
-    .sidebar::-webkit-scrollbar { width: 4px; }
-    .sidebar::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
-    .sidebar-section { margin-bottom: 1.5rem; }
-    .sidebar-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); padding: 0 1.25rem; margin-bottom: 0.5rem; }
-    .sidebar a { display: block; padding: 6px 1.25rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; transition: all 0.15s; border-left: 2px solid transparent; }
-    .sidebar a:hover { color: var(--text-primary); background: rgba(99,102,241,0.08); border-left-color: var(--border-light); }
-    .sidebar a.active { color: var(--indigo-400); background: rgba(99,102,241,0.12); border-left-color: var(--indigo-500); }
-
-    /* ── Content ── */
-    .content { flex: 1; padding: 2.5rem 3rem; max-width: 900px; overflow-x: hidden; }
-
-    /* ── Section ── */
-    .doc-section { margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border); }
-    .doc-section:last-child { border-bottom: none; }
-
-    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
-    .section-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--indigo-600), var(--purple-500)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    h2 { font-size: 1.5rem; font-weight: 700; }
-    h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 1.75rem 0 0.75rem; }
-    h4 { font-size: 0.95rem; font-weight: 600; color: var(--indigo-400); margin: 1.25rem 0 0.5rem; }
-
-    p { color: var(--text-secondary); margin-bottom: 0.75rem; font-size: 0.93rem; }
-    p:last-child { margin-bottom: 0; }
-
-    ul, ol { padding-left: 1.4rem; color: var(--text-secondary); font-size: 0.93rem; }
-    li { margin-bottom: 0.4rem; }
-
-    /* ── Code blocks ── */
-    pre {
-      background: #070b14;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      overflow-x: auto;
-      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: #cbd5e1;
-      margin: 1rem 0;
-      position: relative;
-    }
-    pre .kw  { color: var(--purple-400); }
-    pre .str { color: var(--green-400); }
-    pre .num { color: var(--cyan-400); }
-    pre .key { color: var(--indigo-400); }
-    pre .cmt { color: var(--text-muted); font-style: italic; }
-    pre .url { color: var(--cyan-400); }
-    pre .val { color: var(--yellow-400); }
-
-    code {
-      background: rgba(99,102,241,0.15);
-      color: var(--indigo-400);
-      padding: 1px 6px; border-radius: 4px;
-      font-family: 'Cascadia Code', 'Fira Code', monospace;
-      font-size: 0.85em;
-    }
-
-    pre code { background: none; color: inherit; padding: 0; }
-
-    /* ── Copy button ── */
-    .code-wrap { position: relative; }
-    .copy-btn {
-      position: absolute; top: 8px; right: 8px;
-      background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3);
-      color: var(--indigo-400); border-radius: 5px;
-      padding: 3px 10px; font-size: 0.72rem; cursor: pointer;
-      transition: all 0.2s;
-    }
-    .copy-btn:hover { background: rgba(99,102,241,0.35); }
-
-    /* ── Method badges ── */
-    .method {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px; border-radius: 6px;
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em;
-      font-family: monospace; margin-right: 8px;
-    }
-    .method-get    { background: rgba(74,222,128,0.15); color: var(--green-400); border: 1px solid rgba(74,222,128,0.3); }
-    .method-post   { background: rgba(99,102,241,0.15); color: var(--indigo-400); border: 1px solid rgba(99,102,241,0.3); }
-    .method-delete { background: rgba(248,113,113,0.15); color: var(--red-400); border: 1px solid rgba(248,113,113,0.3); }
-
-    /* ── Endpoint card ── */
-    .endpoint-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-    }
-    .endpoint-header {
-      display: flex; align-items: center; gap: 10px;
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      background: rgba(15,22,41,0.6);
-    }
-    .endpoint-path { font-family: monospace; font-size: 0.9rem; color: var(--text-primary); font-weight: 600; }
-    .endpoint-desc { font-size: 0.82rem; color: var(--text-muted); margin-left: auto; }
-    .endpoint-body { padding: 1.25rem; }
-
-    /* ── Tables ── */
-    .table-wrap { overflow-x: auto; margin: 1rem 0; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th { background: rgba(15,22,41,0.8); color: var(--text-secondary); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-    td { padding: 10px 14px; border-bottom: 1px solid rgba(30,45,74,0.5); color: var(--text-secondary); vertical-align: top; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(99,102,241,0.05); }
-    td code { font-size: 0.8rem; }
-
-    /* ── Step boxes ── */
-    .steps { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
-    .step { display: flex; gap: 1rem; align-items: flex-start; }
-    .step-num { width: 32px; height: 32px; flex-shrink: 0; background: linear-gradient(135deg, var(--indigo-600), var(--purple-500)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: #fff; }
-    .step-content { flex: 1; }
-    .step-content h4 { margin: 2px 0 4px; font-size: 0.93rem; }
-    .step-content p { font-size: 0.88rem; margin-bottom: 0; }
-
-    /* ── ASCII diagram ── */
-    .ascii-diagram {
-      background: #050810;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      overflow-x: auto;
-      font-family: 'Cascadia Code', 'Fira Code', monospace;
-      font-size: 0.8rem;
-      color: var(--indigo-400);
-      line-height: 1.4;
-      margin: 1rem 0;
-    }
-
-    /* ── Info / warning boxes ── */
-    .info-box, .warn-box, .tip-box {
-      border-radius: 8px; padding: 0.75rem 1rem;
-      font-size: 0.875rem; margin: 1rem 0; display: flex; gap: 10px;
-    }
-    .info-box { background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.25); color: var(--cyan-400); }
-    .warn-box { background: rgba(250,204,21,0.08); border: 1px solid rgba(250,204,21,0.25); color: var(--yellow-400); }
-    .tip-box  { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25); color: var(--green-400); }
-
-    /* ── Badge ── */
-    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-    .badge-pro  { background: rgba(250,204,21,0.15); color: var(--yellow-400); border: 1px solid rgba(250,204,21,0.3); }
-    .badge-free { background: rgba(74,222,128,0.1); color: var(--green-400); border: 1px solid rgba(74,222,128,0.25); }
-    .badge-req  { background: rgba(248,113,113,0.1); color: var(--red-400); border: 1px solid rgba(248,113,113,0.25); }
-    .badge-opt  { background: rgba(99,102,241,0.1); color: var(--indigo-400); border: 1px solid rgba(99,102,241,0.25); }
-
-    /* ── Comparison table ── */
-    .compare-check { color: var(--green-400); font-size: 1.1rem; }
-    .compare-x     { color: var(--red-400); font-size: 1.1rem; }
-    .compare-partial { color: var(--yellow-400); font-size: 1.1rem; }
-
-    /* ── Footer ── */
-    footer { background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.82rem; }
-    footer a { color: var(--indigo-400); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 0.75rem; }
-
-    @media (max-width: 900px) {
-      .sidebar { display: none; }
-      .content { padding: 1.5rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f1a">
+<meta name="description" content="Sales & Marketing Nanobot Swarm — Complete Documentation">
+<title>Documentation — Sales &amp; Marketing Nanobot Swarm</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f1a;
+  --card-bg:#1a1a2e;
+  --indigo:#6366f1;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --text-primary:#e2e8f0;
+  --text-secondary:#94a3b8;
+  --border:rgba(99,102,241,0.2);
+  --grad:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  --grad-h:linear-gradient(135deg,#818cf8,#a78bfa,#f472b6);
+  --sidebar-w:260px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--card-bg)}
+::-webkit-scrollbar-thumb{background:var(--indigo);border-radius:3px}
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(15,15,26,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:200}
+#logo-wrap{display:flex;align-items:center;gap:12px;flex-shrink:0}
+#logo-wrap svg{width:38px;height:38px}
+#brand-text{display:flex;flex-direction:column}
+#brand-name{font-size:15px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+#brand-sub{font-size:10px;color:var(--text-secondary);white-space:nowrap}
+#topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.back-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;background:rgba(99,102,241,0.12);color:var(--indigo);border:1px solid var(--border);transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.back-btn:hover{background:rgba(99,102,241,0.22)}
+.doc-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(6,182,212,0.15);color:var(--cyan);border:1px solid rgba(6,182,212,0.3)}
+/* LAYOUT */
+#layout{display:flex;margin-top:60px;min-height:calc(100vh - 60px)}
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);flex-shrink:0;position:fixed;top:60px;left:0;bottom:0;overflow-y:auto;background:rgba(15,15,26,0.95);border-right:1px solid var(--border);padding:24px 0;z-index:100}
+#sidebar-inner{padding:0 16px}
+.toc-title{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;padding:0 8px;margin-bottom:12px}
+.toc-link{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:7px;font-size:13px;color:var(--text-secondary);transition:all .2s;margin-bottom:2px;cursor:pointer;user-select:none}
+.toc-link:hover{color:var(--text-primary);background:rgba(99,102,241,0.1)}
+.toc-link.active{color:var(--indigo);background:rgba(99,102,241,0.15);font-weight:600}
+.toc-num{width:20px;height:20px;border-radius:5px;background:rgba(99,102,241,0.15);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--indigo);flex-shrink:0}
+.toc-link.active .toc-num{background:var(--indigo);color:#fff}
+.toc-divider{height:1px;background:var(--border);margin:12px 8px}
+/* CONTENT */
+#content{margin-left:var(--sidebar-w);flex:1;padding:40px 48px;max-width:960px}
+.doc-section{margin-bottom:80px;scroll-margin-top:80px}
+.section-header{margin-bottom:28px}
+.section-number{font-size:11px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px}
+.section-title{font-size:28px;font-weight:800;line-height:1.2;margin-bottom:8px}
+.section-desc{font-size:15px;color:var(--text-secondary);line-height:1.7}
+/* CARDS */
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px}
+/* TYPOGRAPHY */
+h3{font-size:18px;font-weight:700;margin-bottom:12px}
+h4{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text-primary)}
+p{font-size:14px;color:var(--text-secondary);line-height:1.8;margin-bottom:12px}
+p:last-child{margin-bottom:0}
+ul,ol{padding-left:20px;margin-bottom:12px}
+li{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:4px}
+li strong{color:var(--text-primary)}
+/* CODE */
+code{font-family:'JetBrains Mono','Fira Code','Courier New',monospace;font-size:12px;background:rgba(99,102,241,0.12);color:var(--cyan);padding:2px 6px;border-radius:4px}
+pre{background:#0a0a14;border:1px solid var(--border);border-radius:10px;padding:20px;overflow-x:auto;margin:12px 0;position:relative}
+pre code{background:none;padding:0;color:var(--text-primary);font-size:13px;line-height:1.7}
+.copy-btn{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(99,102,241,0.15);color:var(--indigo);border:1px solid var(--border);cursor:pointer;transition:all .2s;opacity:0}
+pre:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:rgba(99,102,241,0.3)}
+.copy-btn.copied{color:var(--emerald);border-color:var(--emerald)}
+/* ASCII DIAGRAM */
+.ascii-diagram{background:#0a0a14;border:1px solid var(--border);border-radius:10px;padding:20px;font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;line-height:1.6;color:var(--cyan);overflow-x:auto;white-space:pre}
+/* TABLES */
+.doc-table-wrap{overflow-x:auto;margin:12px 0}
+.doc-table{width:100%;border-collapse:collapse;font-size:13px}
+.doc-table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid var(--border);white-space:nowrap}
+.doc-table td{padding:11px 14px;border-bottom:1px solid rgba(99,102,241,0.07);vertical-align:top;line-height:1.5}
+.doc-table tr:hover td{background:rgba(99,102,241,0.04)}
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+.badge-get{background:rgba(16,185,129,0.15);color:var(--emerald)}
+.badge-post{background:rgba(99,102,241,0.15);color:var(--indigo)}
+.badge-hier{background:rgba(139,92,246,0.15);color:var(--purple)}
+.badge-flat{background:rgba(6,182,212,0.15);color:var(--cyan)}
+.badge-pro{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.badge-req{background:rgba(239,68,68,0.15);color:var(--red)}
+.badge-opt{background:rgba(100,116,139,0.15);color:var(--text-secondary)}
+/* TABS */
+.tab-nav{display:flex;gap:4px;background:rgba(0,0,0,0.3);border-radius:10px;padding:4px;width:fit-content;margin-bottom:20px;flex-wrap:wrap}
+.tab-btn{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;color:var(--text-secondary);background:transparent;transition:all .2s;white-space:nowrap}
+.tab-btn.active{background:var(--card-bg);color:var(--text-primary);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* ENDPOINT CARDS */
+.endpoint-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.endpoint-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .2s;user-select:none}
+.endpoint-header:hover{background:rgba(99,102,241,0.05)}
+.endpoint-path{font-family:'JetBrains Mono','Courier New',monospace;font-size:14px;font-weight:600;color:var(--text-primary)}
+.endpoint-meta{font-size:12px;color:var(--text-secondary);margin-left:auto;padding-right:8px}
+.endpoint-toggle{font-size:18px;color:var(--text-secondary);line-height:1;min-width:16px;text-align:center}
+.endpoint-body{padding:20px;display:none;border-top:1px solid var(--border)}
+.endpoint-body.open{display:block}
+.ep-label{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;margin-top:16px}
+.ep-label:first-child{margin-top:0}
+/* TEAM CARDS */
+.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.team-doc-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s}
+.team-doc-card:hover{border-color:rgba(99,102,241,0.4);transform:translateY(-2px)}
+.team-d-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.team-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.team-info{flex:1}
+.team-name-d{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:4px}
+.team-agents-d{font-size:11px;color:var(--text-secondary);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.team-desc-d{font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px}
+.team-kpis{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.kpi-chip{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(99,102,241,0.1);color:var(--indigo)}
+.team-uc{font-size:11px;color:var(--text-secondary);border-top:1px solid var(--border);padding-top:10px;margin-top:10px}
+.team-uc strong{color:var(--text-primary);display:block;margin-bottom:4px;font-size:11px}
+.trigger-kw{margin-top:8px;font-size:11px;color:var(--text-secondary)}
+/* TOOL CARDS */
+.tool-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.tool-name{font-size:14px;font-weight:700;font-family:'JetBrains Mono','Courier New',monospace;color:var(--cyan);margin-bottom:6px}
+.tool-desc{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.calc-types{display:flex;flex-wrap:wrap;gap:4px}
+.calc-chip{padding:2px 8px;border-radius:4px;font-size:10px;background:rgba(6,182,212,0.1);color:var(--cyan);font-weight:600}
+/* FEATURE COMPARE */
+.compare-wrap{overflow-x:auto}
+.compare-table{width:100%;border-collapse:collapse;min-width:580px}
+.compare-table th{padding:12px 16px;font-size:13px;font-weight:700;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table th.col-free{background:rgba(99,102,241,0.08)}
+.compare-table th.col-pro{background:rgba(139,92,246,0.12)}
+.compare-table td{padding:11px 16px;font-size:13px;border-bottom:1px solid rgba(99,102,241,0.07);vertical-align:middle}
+.compare-table td.col-free{background:rgba(99,102,241,0.04)}
+.compare-table td.col-pro{background:rgba(139,92,246,0.06)}
+.check{color:var(--emerald)}
+.cross{color:var(--red)}
+/* DEPLOY STEPS */
+.deploy-step{display:flex;gap:16px;margin-bottom:16px}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px}
+.step-content{flex:1}
+.step-title{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--text-primary)}
+.step-desc{font-size:13px;color:var(--text-secondary);line-height:1.6}
+/* ALERTS */
+.alert{padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.6;margin:12px 0;display:flex;gap:10px;align-items:flex-start}
+.alert-info{background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:var(--cyan)}
+.alert-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber)}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+/* CTA */
+.cta-block{background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.12),rgba(236,72,153,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:16px;padding:40px;text-align:center;margin-top:24px}
+.cta-title{font-size:24px;font-weight:800;margin-bottom:8px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-desc{font-size:14px;color:var(--text-secondary);margin-bottom:24px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto}
+.cta-btn{display:inline-block;padding:14px 36px;border-radius:10px;font-size:15px;font-weight:700;background:var(--grad);color:#fff;transition:all .2s;cursor:pointer;border:none}
+.cta-btn:hover{background:var(--grad-h);transform:translateY(-2px);box-shadow:0 8px 32px rgba(99,102,241,0.4)}
+/* DEPLOY BTN */
+.deploy-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;background:var(--grad);color:#fff;transition:all .2s}
+.deploy-btn:hover{background:var(--grad-h);transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+/* FOOTER */
+#footer{border-top:1px solid var(--border);padding:24px;text-align:center;margin-top:40px}
+.footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-bottom:12px}
+.footer-links a{font-size:13px;color:var(--text-secondary);transition:color .2s}
+.footer-links a:hover{color:var(--indigo)}
+.footer-copy{font-size:12px;color:#4b5563}
+.footer-badge{display:inline-block;margin-top:10px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(99,102,241,0.15);color:var(--indigo);border:1px solid var(--border)}
+/* MOBILE TOC */
+#mobile-toc-btn{display:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;background:rgba(99,102,241,0.12);color:var(--indigo);border:1px solid var(--border);align-items:center;gap:6px;margin-bottom:20px}
+#mobile-toc-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px)}
+#mobile-toc-panel{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--bg);border-right:1px solid var(--border);padding:60px 16px 24px;overflow-y:auto}
+#mobile-toc-overlay.open{display:block}
+#mobile-toc-close-btn{position:absolute;top:16px;right:16px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;background:rgba(239,68,68,0.15);color:var(--red);border:none;cursor:pointer}
+/* RESPONSIVE */
+@media(max-width:1024px){
+  #sidebar{display:none}
+  #content{margin-left:0;padding:28px 24px}
+  #mobile-toc-btn{display:flex}
+}
+@media(max-width:768px){
+  #content{padding:20px 16px}
+  .teams-grid{grid-template-columns:1fr}
+  .section-title{font-size:22px}
+  .tab-nav{overflow-x:auto}
+}
+@media(max-width:480px){
+  #topbar{padding:0 12px}
+  #brand-sub{display:none}
+  #brand-name{font-size:13px}
+  #content{padding:16px 12px}
+}
+</style>
 </head>
 <body>
 
-<!-- ═══════════════════ HEADER ═══════════════════ -->
-<header>
-  <div class="header-inner">
-    <a href="/nanobot/static/index.html" class="logo">
-      <div class="logo-icon">🤖</div>
-      <span class="logo-text">SM <span>Nanobot</span> Swarm</span>
-    </a>
-    <nav>
-      <a href="/nanobot/static/index.html">Dashboard</a>
-      <a href="/nanobot/static/docs-page.html" class="active">Docs</a>
-      <a href="/nanobot/static/faq.html">FAQ</a>
-    </nav>
+<header id="topbar">
+  <div id="logo-wrap">
+    <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="50%" stop-color="#8b5cf6"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <circle cx="19" cy="19" r="18" fill="url(#lg1)" opacity="0.15"/>
+      <circle cx="19" cy="19" r="4" fill="url(#lg1)"/>
+      <circle cx="8" cy="12" r="2.5" fill="#6366f1"/>
+      <circle cx="30" cy="12" r="2.5" fill="#ec4899"/>
+      <circle cx="8" cy="26" r="2.5" fill="#8b5cf6"/>
+      <circle cx="30" cy="26" r="2.5" fill="#6366f1"/>
+      <circle cx="19" cy="6" r="2" fill="#ec4899"/>
+      <circle cx="19" cy="32" r="2" fill="#8b5cf6"/>
+      <line x1="8" y1="12" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="30" y1="12" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="8" y1="26" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="30" y1="26" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="19" y1="6" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="19" y1="32" x2="19" y2="19" stroke="url(#lg1)" stroke-width="1" opacity="0.6"/>
+      <line x1="8" y1="12" x2="8" y2="26" stroke="#6366f1" stroke-width="0.8" opacity="0.4"/>
+      <line x1="30" y1="12" x2="30" y2="26" stroke="#ec4899" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+    <div id="brand-text">
+      <div id="brand-name">Sales &amp; Marketing Nanobot Swarm</div>
+      <div id="brand-sub">AI-Powered Autonomous Marketing Intelligence</div>
+    </div>
+  </div>
+  <div id="topbar-right">
+    <span class="doc-badge">Docs v1.0</span>
+    <a href="/" class="back-btn">&#8592; Back to Dashboard</a>
   </div>
 </header>
 
-<!-- ═══════════════════ BODY ═══════════════════ -->
-<div class="layout">
+<!-- MOBILE TOC OVERLAY -->
+<div id="mobile-toc-overlay" onclick="closeMobileTocOverlay(event)">
+  <div id="mobile-toc-panel">
+    <button id="mobile-toc-close-btn" onclick="closeMobileToc()">Close &#10005;</button>
+    <div class="toc-title" style="margin-top:0">Documentation</div>
+    <div class="toc-link" onclick="scrollToSection('s1')"><span class="toc-num">1</span>Overview</div>
+    <div class="toc-link" onclick="scrollToSection('s2')"><span class="toc-num">2</span>Quick Start</div>
+    <div class="toc-link" onclick="scrollToSection('s3')"><span class="toc-num">3</span>API Reference</div>
+    <div class="toc-link" onclick="scrollToSection('s4')"><span class="toc-num">4</span>Agent Teams</div>
+    <div class="toc-link" onclick="scrollToSection('s5')"><span class="toc-num">5</span>Marketing Tools</div>
+    <div class="toc-link" onclick="scrollToSection('s6')"><span class="toc-num">6</span>Deployment Guides</div>
+    <div class="toc-link" onclick="scrollToSection('s7')"><span class="toc-num">7</span>Environment Variables</div>
+    <div class="toc-link" onclick="scrollToSection('s8')"><span class="toc-num">8</span>Pro Version</div>
+    <div class="toc-divider"></div>
+    <div class="toc-link" onclick="window.open('https://github.com/ttracx/sales-marketing-nanobot-swarm','_blank')">GitHub</div>
+    <div class="toc-link" onclick="window.location.href='faq.html'">FAQ &amp; Support</div>
+  </div>
+</div>
 
-  <!-- ── Sidebar ── -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Introduction</div>
-      <a href="#overview" class="active">Overview</a>
-      <a href="#quickstart">Quick Start</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">API Reference</div>
-      <a href="#api-reference">Endpoints</a>
-      <a href="#api-swarm-run">POST /swarm/run</a>
-      <a href="#api-chat">POST /v1/chat/completions</a>
-      <a href="#api-models">GET /v1/models</a>
-      <a href="#api-teams">GET /swarm/teams</a>
-      <a href="#api-agent-build">POST /agent/build</a>
-      <a href="#api-team-build">POST /team/build</a>
-      <a href="#api-health">GET /health</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Reference</div>
-      <a href="#agent-teams">Agent Teams</a>
-      <a href="#tools">Tools Reference</a>
-      <a href="#env-vars">Environment Variables</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Deployment</div>
-      <a href="#deployment">Deployment Guides</a>
-      <a href="#deploy-vercel">Vercel</a>
-      <a href="#deploy-render">Render</a>
-      <a href="#deploy-railway">Railway</a>
-      <a href="#deploy-docker">Docker</a>
-      <a href="#deploy-codespaces">Codespaces</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Pro</div>
-      <a href="#pro-version">Pro Version</a>
+<div id="layout">
+  <aside id="sidebar">
+    <div id="sidebar-inner">
+      <div class="toc-title">Documentation</div>
+      <div class="toc-link active" onclick="scrollToSection('s1')" id="tl-s1"><span class="toc-num">1</span>Overview</div>
+      <div class="toc-link" onclick="scrollToSection('s2')" id="tl-s2"><span class="toc-num">2</span>Quick Start</div>
+      <div class="toc-link" onclick="scrollToSection('s3')" id="tl-s3"><span class="toc-num">3</span>API Reference</div>
+      <div class="toc-link" onclick="scrollToSection('s4')" id="tl-s4"><span class="toc-num">4</span>Agent Teams</div>
+      <div class="toc-link" onclick="scrollToSection('s5')" id="tl-s5"><span class="toc-num">5</span>Marketing Tools</div>
+      <div class="toc-link" onclick="scrollToSection('s6')" id="tl-s6"><span class="toc-num">6</span>Deployment Guides</div>
+      <div class="toc-link" onclick="scrollToSection('s7')" id="tl-s7"><span class="toc-num">7</span>Environment Variables</div>
+      <div class="toc-link" onclick="scrollToSection('s8')" id="tl-s8"><span class="toc-num">8</span>Pro Version</div>
+      <div class="toc-divider"></div>
+      <div class="toc-link" onclick="window.open('https://github.com/ttracx/sales-marketing-nanobot-swarm','_blank')">GitHub</div>
+      <div class="toc-link" onclick="window.location.href='faq.html'">FAQ &amp; Support</div>
     </div>
   </aside>
 
-  <!-- ── Content ── -->
-  <main class="content">
+  <main id="content">
+    <button id="mobile-toc-btn" onclick="openMobileToc()">&#9776; Table of Contents</button>
 
-    <!-- ═══ OVERVIEW ═══ -->
-    <section class="doc-section" id="overview">
+    <!-- SECTION 1: OVERVIEW -->
+    <section class="doc-section" id="s1">
       <div class="section-header">
-        <div class="section-icon">🏗️</div>
-        <h2>Overview</h2>
+        <div class="section-number">Section 01</div>
+        <h2 class="section-title">Overview</h2>
+        <p class="section-desc">What the Sales &amp; Marketing Nanobot Swarm is, how it works, and why it exists.</p>
       </div>
 
-      <p>The <strong>Sales &amp; Marketing Nanobot Swarm</strong> is a hierarchical AI agent platform that orchestrates specialized sub-agents to execute complex marketing and sales workflows autonomously. Built on FastAPI with OpenAI-compatible LLM backends (Ollama / NVIDIA NIM / OpenAI), it exposes both a rich REST API and a web dashboard.</p>
-
-      <h3>Architecture Diagram</h3>
-      <div class="ascii-diagram">┌─────────────────────────────────────────────────────────────────────────┐
-│                    SM NANOBOT SWARM PLATFORM                            │
-│                   (FastAPI · Python 3.11+)                              │
-└──────────────────────────┬──────────────────────────────────────────────┘
-                           │ REST / WebSocket
-              ┌────────────┴────────────┐
-              │                         │
-    ┌─────────▼──────────┐   ┌──────────▼────────────┐
-    │   Dashboard UI      │   │   External Callers    │
-    │  /static/index.html │   │  (cURL, SDK, Zapier)  │
-    └────────────────────┘   └───────────────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │    SWARM ORCHESTRATOR   │  ← POST /swarm/run
-              │   (Director Agent)      │
-              └────┬──────┬──────┬─────┘
-                   │      │      │   (parallel dispatch)
-          ┌────────┘  ┌───┘  ┌──┘
-          ▼           ▼      ▼
-   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
-   │ Agent 1  │ │ Agent 2  │ │ Agent 3  │ │ Agent N  │
-   │ SEO Spec.│ │ Copy Wtr │ │ Analytics│ │  ...     │
-   └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘
-        │            │            │             │
-   ┌────▼──────────────────────────────────────▼─────┐
-   │              TOOL EXECUTION LAYER               │
-   │  HubSpot · Salesforce · GA4 · Social · Calc     │
-   └─────────────────────────────────────────────────┘
-        │
-   ┌────▼────────────────────────┐
-   │       LLM BACKEND           │
-   │  Ollama · NVIDIA NIM · OAI  │
-   └─────────────────────────────┘</div>
-
-      <h3>Key Concepts</h3>
-      <ul>
-        <li><strong>Swarm</strong> — a coordinated run of multiple agents working toward a single goal</li>
-        <li><strong>Director</strong> — the orchestrator agent that decomposes the task and synthesizes results</li>
-        <li><strong>Agent</strong> — a single LLM call with a specialized system prompt and tool set</li>
-        <li><strong>Team</strong> — a named, reusable collection of agents with a shared directive</li>
-        <li><strong>Tool</strong> — a Python function exposed to agents for API calls or calculations</li>
-      </ul>
-    </section>
-
-    <!-- ═══ QUICK START ═══ -->
-    <section class="doc-section" id="quickstart">
-      <div class="section-header">
-        <div class="section-icon">🚀</div>
-        <h2>Quick Start</h2>
+      <div class="card">
+        <h3>What is the Sales &amp; Marketing Nanobot Swarm?</h3>
+        <p>The Sales &amp; Marketing Nanobot Swarm is an autonomous AI agent platform designed to execute complex sales and marketing tasks without manual intervention. Rather than a single large model generating a monolithic response, the swarm decomposes every incoming goal into specialized sub-tasks and routes each task to one of ten purpose-built agent teams — each staffed with domain-expert AI agents that collaborate in real time using either hierarchical orchestration or flat peer collaboration.</p>
+        <p>At its core, the system is a goal-first API. You provide a plain-English marketing objective — "Generate 50 qualified leads in the enterprise SaaS segment using BANT criteria" or "Write a 5-email nurture sequence for mid-market prospects" — and the swarm autonomously selects the best team, configures the agents, executes the pipeline, and returns a structured, actionable result. The entire loop runs in 10–25 seconds on standard hardware and scales horizontally on serverless infrastructure.</p>
+        <p>Built on FastAPI and powered by Ollama Cloud (primary) and NVIDIA NIM (fallback), the Nanobot Swarm is infrastructure-agnostic and deployable in minutes to Vercel, Render, Railway, Docker, or GitHub Codespaces. It exposes both a native REST API and a fully OpenAI-compatible endpoint, making it a drop-in AI backend for any existing marketing tech stack. The platform is open-source under the MIT license, with a Pro tier launching soon for teams requiring CRM integrations, white-label branding, and advanced analytics.</p>
       </div>
 
-      <p>Get the swarm running in under 5 minutes.</p>
+      <div class="card">
+        <h3>Architecture Diagram</h3>
+        <div class="ascii-diagram">+------------------------------------------------------------------+
+|        SALES &amp; MARKETING NANOBOT SWARM                         |
+|               Architecture Overview                             |
++------------------------------------------------------------------+
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4>Get an LLM Backend</h4>
-            <p>Install Ollama for local inference (free) or set up an OpenAI API key.</p>
-            <div class="code-wrap">
-              <pre><code><span class="cmt"># Option A: Local Ollama (macOS)</span>
-brew install ollama
-ollama pull llama3.3
-ollama serve
-
-<span class="cmt"># Option B: Use your OpenAI key (set in .env later)</span>
-<span class="cmt"># AI_API_BASE_URL=https://api.openai.com/v1</span>
-<span class="cmt"># AI_API_KEY=sk-...</span></code></pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4>Clone &amp; Install</h4>
-            <div class="code-wrap">
-              <pre><code>git clone https://github.com/ttracx/sales-marketing-nanobot-swarm.git
-cd sales-marketing-nanobot-swarm
-./scripts/setup.sh
-
-<span class="cmt"># Edit your environment variables</span>
-cp .env.example .env
-nano .env</code></pre>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4>Run Your First Swarm</h4>
-            <div class="code-wrap">
-              <pre><code><span class="cmt"># Start the server</span>
-./scripts/launch.sh
-<span class="cmt"># → Running on http://localhost:8200</span>
-
-<span class="cmt"># Run a swarm task</span>
-curl -X POST http://localhost:8200/swarm/run \
-  -H <span class="str">"Content-Type: application/json"</span> \
-  -d <span class="str">'{
-    "task": "Write a LinkedIn content calendar for a B2B SaaS company",
-    "team": "content_creation"
-  }'</span></code></pre>
-            </div>
-          </div>
-        </div>
+   USER GOAL  (plain-English marketing objective)
+        |
+        v
++-------------------+
+|  FastAPI Gateway  |   POST /swarm/run
+|   (Python 3.12)   |   POST /v1/chat/completions
++--------+----------+
+         |
+         v
++-------------------+
+|   Team Router     |   Keyword + semantic matching
+|   (auto-detect)   |   or explicit team override
++--------+----------+
+         |
+   +-----+--------------------------------------------+
+   |          10 SPECIALIZED TEAMS                    |
+   +---------------------------------------------------+
+   |  1. lead-generation-engine  (Hierarchical, 7 ag) |
+   |  2. content-marketing-team  (Hierarchical, 6 ag) |
+   |  3. email-campaign-manager  (Hierarchical, 6 ag) |
+   |  4. social-media-strategist (Flat,         5 ag) |
+   |  5. campaign-analytics-hub  (Hierarchical, 6 ag) |
+   |  6. competitive-intelligence(Hierarchical, 6 ag) |
+   |  7. sales-enablement-team   (Hierarchical, 6 ag) |
+   |  8. abm-orchestrator        (Hierarchical, 6 ag) |
+   |  9. brand-voice-guardian    (Flat,         4 ag) |
+   | 10. growth-hacker-lab       (Hierarchical, 6 ag) |
+   +---------------------------------------------------+
+         |
+         v
++-------------------------------------+
+|          LLM BACKENDS               |
+|  Primary:  Ollama Cloud             |
+|            ministral-3b:8b          |
+|  Fallback: NVIDIA NIM               |
+|            llama-3.3-70b-instruct   |
++-------------------------------------+
+         |
+         v
+   STRUCTURED JSON RESULT
+   (content, recommendations,
+    analytics, action items)</div>
       </div>
 
-      <div class="tip-box">
-        <span>✓</span>
-        <span>Visit <code>http://localhost:8200/nanobot/static/index.html</code> for the interactive dashboard after starting the server.</span>
+      <div class="card">
+        <h3>Key Features</h3>
+        <ul>
+          <li><strong>10 Specialized Agent Teams</strong> — Each team is a pre-built collection of AI agents with domain expertise, purpose-built tools, and optimized prompts for a specific marketing function.</li>
+          <li><strong>Intelligent Auto-Routing</strong> — The Team Router analyzes your goal text and automatically selects the most appropriate team using keyword extraction and semantic similarity matching.</li>
+          <li><strong>Dual LLM Backend</strong> — Runs Ollama Cloud (ministral-3b:8b) as primary with automatic failover to NVIDIA NIM (llama-3.3-70b-instruct) for high-stakes or complex tasks.</li>
+          <li><strong>OpenAI-Compatible API</strong> — Drop-in replacement for OpenAI's chat completions endpoint; works with any OpenAI SDK by changing one URL.</li>
+          <li><strong>Hierarchical and Flat Modes</strong> — Hierarchical teams use an orchestrator agent to delegate sub-tasks; Flat teams use peer collaboration with no single point of authority.</li>
+          <li><strong>7 Marketing Calculation Tools</strong> — Built-in utilities for lead scoring, campaign analytics, SEO analysis, email optimization, market segmentation, and ROI calculation.</li>
+          <li><strong>Serverless-First Architecture</strong> — Stateless, horizontally scalable, deploys to Vercel Edge in under 2 minutes with zero configuration needed.</li>
+          <li><strong>Dynamic Agent and Team Builder</strong> — POST /agent/build and POST /team/build let you create custom agents and teams at runtime via the API.</li>
+          <li><strong>Full Structured Logging</strong> — Every swarm run emits structured logs with agent decisions, tool calls, token counts, and latency breakdowns for debugging and auditing.</li>
+          <li><strong>MIT Licensed, Open Source</strong> — Fork it, extend it, self-host it. The Pro tier adds CRM integrations, white-labeling, and team scheduling on top of the open-source core.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Tech Stack</h3>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td>API Framework</td><td>FastAPI</td><td>0.115+</td><td>High-performance async Python API gateway</td></tr>
+              <tr><td>Primary LLM</td><td>Ollama Cloud</td><td>Latest</td><td>ministral-3b:8b inference endpoint</td></tr>
+              <tr><td>Fallback LLM</td><td>NVIDIA NIM</td><td>Latest</td><td>llama-3.3-70b-instruct, high-accuracy runs</td></tr>
+              <tr><td>Agent Framework</td><td>Swarms SDK</td><td>7.x</td><td>Multi-agent orchestration and team management</td></tr>
+              <tr><td>Runtime</td><td>Python</td><td>3.12</td><td>Application runtime with full type safety</td></tr>
+              <tr><td>Primary Hosting</td><td>Vercel</td><td>—</td><td>Serverless edge deployment, zero config</td></tr>
+              <tr><td>Alt. Hosting</td><td>Render / Railway</td><td>—</td><td>Container-based always-on deployment</td></tr>
+              <tr><td>Containerization</td><td>Docker</td><td>24+</td><td>Self-hosted and on-premises deployment</td></tr>
+              <tr><td>Validation</td><td>Pydantic v2</td><td>2.x</td><td>Request/response schema validation and parsing</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- ═══ API REFERENCE ═══ -->
-    <section class="doc-section" id="api-reference">
+    <!-- SECTION 2: QUICK START -->
+    <section class="doc-section" id="s2">
       <div class="section-header">
-        <div class="section-icon">📡</div>
-        <h2>API Reference</h2>
+        <div class="section-number">Section 02</div>
+        <h2 class="section-title">Quick Start</h2>
+        <p class="section-desc">Get a live swarm endpoint in under 5 minutes. Choose your preferred deployment method below.</p>
       </div>
 
-      <p>The swarm exposes a RESTful JSON API. All endpoints return <code>application/json</code>. Authentication is via Bearer token when <code>API_SECRET_KEY</code> is set.</p>
-
-      <div class="info-box">
-        <span>ℹ️</span>
-        <span>Interactive API docs are available at <code>/docs</code> (Swagger UI) and <code>/redoc</code> (ReDoc) when the server is running.</span>
+      <div class="tab-nav" id="qs-tabs">
+        <button class="tab-btn active" onclick="switchTab('qs','vercel',this)">Vercel</button>
+        <button class="tab-btn" onclick="switchTab('qs','docker',this)">Docker</button>
+        <button class="tab-btn" onclick="switchTab('qs','api',this)">API-Only</button>
       </div>
 
-      <!-- POST /swarm/run -->
-      <h3 id="api-swarm-run">POST /swarm/run</h3>
-      <p>Execute a multi-agent swarm run against a specified team.</p>
-
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-post">POST</span>
-          <span class="endpoint-path">/swarm/run</span>
-          <span class="endpoint-desc">Dispatch a task to an agent team</span>
-        </div>
-        <div class="endpoint-body">
-          <h4>Request Body</h4>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <div class="tab-panel active" id="qs-vercel">
+        <div class="card">
+          <h3>Deploy to Vercel in 1 Click</h3>
+          <p>The fastest way to get a live production endpoint. Click the button below, connect your GitHub account, set your API key, and your swarm is live in approximately 2 minutes with zero server management.</p>
+          <div style="margin:20px 0;text-align:center">
+            <a href="https://vercel.com/new/clone?repository-url=https://github.com/ttracx/sales-marketing-nanobot-swarm" target="_blank" rel="noopener noreferrer" class="deploy-btn">
+              <svg width="16" height="16" viewBox="0 0 76 65" fill="currentColor"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
+              Deploy to Vercel
+            </a>
+          </div>
+          <h4 style="margin-top:20px;margin-bottom:10px">Required Environment Variables</h4>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
               <tbody>
-                <tr><td><code>task</code></td><td>string</td><td><span class="badge badge-req">Required</span></td><td>Natural language task description</td></tr>
-                <tr><td><code>team</code></td><td>string</td><td><span class="badge badge-opt">Optional</span></td><td>Team name (default: <code>full_funnel</code>)</td></tr>
-                <tr><td><code>context</code></td><td>object</td><td><span class="badge badge-opt">Optional</span></td><td>Key-value context injected into agent prompts</td></tr>
-                <tr><td><code>async</code></td><td>boolean</td><td><span class="badge badge-opt">Optional</span></td><td>Return run_id immediately for polling (default: false)</td></tr>
-                <tr><td><code>max_agents</code></td><td>integer</td><td><span class="badge badge-opt">Optional</span></td><td>Override concurrent agent limit for this run</td></tr>
-                <tr><td><code>thread_id</code></td><td>string</td><td><span class="badge badge-opt">Optional</span></td><td>Session ID for persistent conversation context</td></tr>
+                <tr><td><code>OLLAMA_API_KEY</code></td><td><span class="badge badge-req">Required</span></td><td>Ollama Cloud API key — primary LLM backend</td></tr>
+                <tr><td><code>NVIDIA_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>NVIDIA NIM key for fallback and higher accuracy tasks</td></tr>
+                <tr><td><code>GATEWAY_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>Secure your endpoint — clients must pass this in the Authorization header</td></tr>
               </tbody>
             </table>
           </div>
-
-          <h4>Example Request</h4>
-          <div class="code-wrap">
-            <pre><code>{
-  <span class="key">"task"</span>: <span class="str">"Create a 6-email drip sequence for enterprise SaaS prospects"</span>,
-  <span class="key">"team"</span>: <span class="str">"email_marketing"</span>,
-  <span class="key">"context"</span>: {
-    <span class="key">"company_name"</span>: <span class="str">"Acme Corp"</span>,
-    <span class="key">"product"</span>: <span class="str">"project management SaaS"</span>,
-    <span class="key">"icp"</span>: <span class="str">"VP Engineering at 50-500 person tech companies"</span>,
-    <span class="key">"tone"</span>: <span class="str">"professional, consultative"</span>
-  }
-}</code></pre>
-          </div>
-
-          <h4>Example Response</h4>
-          <div class="code-wrap">
-            <pre><code>{
-  <span class="key">"run_id"</span>: <span class="str">"run_7f3c9a12e4b8"</span>,
-  <span class="key">"status"</span>: <span class="str">"completed"</span>,
-  <span class="key">"team"</span>: <span class="str">"email_marketing"</span>,
-  <span class="key">"duration_ms"</span>: <span class="num">4823</span>,
-  <span class="key">"agents_used"</span>: <span class="num">4</span>,
-  <span class="key">"result"</span>: {
-    <span class="key">"summary"</span>: <span class="str">"6-email drip sequence targeting VP Engineering..."</span>,
-    <span class="key">"deliverables"</span>: [ <span class="str">"email_1.md"</span>, <span class="str">"email_2.md"</span>, <span class="str">"..."</span> ],
-    <span class="key">"agent_outputs"</span>: {
-      <span class="key">"subject_line_writer"</span>: { <span class="key">"output"</span>: <span class="str">"..."</span>, <span class="key">"tokens_used"</span>: <span class="num">312</span> },
-      <span class="key">"copy_writer"</span>: { <span class="key">"output"</span>: <span class="str">"..."</span>, <span class="key">"tokens_used"</span>: <span class="num">1847</span> }
-    },
-    <span class="key">"recommendations"</span>: []
-  },
-  <span class="key">"cost_estimate_usd"</span>: <span class="num">0.0142</span>
-}</code></pre>
-          </div>
+          <div class="alert alert-info"><span class="alert-icon">&#9432;</span>After deploying, visit <code>https://your-project.vercel.app/health</code> to confirm the swarm is online and the LLM backend is reachable.</div>
         </div>
       </div>
 
-      <!-- POST /v1/chat/completions -->
-      <h3 id="api-chat">POST /v1/chat/completions</h3>
-      <p>OpenAI-compatible chat completions endpoint. Drop-in replacement for any OpenAI client by changing the base URL.</p>
+      <div class="tab-panel" id="qs-docker">
+        <div class="card">
+          <h3>Docker Compose (Self-Hosted)</h3>
+          <p>Full-control deployment on your own infrastructure. Requires Docker 24+ and Docker Compose v2.</p>
+          <div class="ep-label">docker-compose.yml</div>
+          <pre><code>version: "3.9"
+services:
+  swarm-api:
+    image: ghcr.io/ttracx/sales-marketing-nanobot-swarm:latest
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_API_KEY: ${OLLAMA_API_KEY}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY}
+      GATEWAY_API_KEY: ${GATEWAY_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">Start commands</div>
+          <pre><code>git clone https://github.com/ttracx/sales-marketing-nanobot-swarm.git
+cd sales-marketing-nanobot-swarm
+cp .env.example .env   # then add your OLLAMA_API_KEY
+docker-compose up -d
+curl http://localhost:8000/health</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="qs-api">
+        <div class="card">
+          <h3>API-Only (Live Demo Endpoint)</h3>
+          <p>Hit the public demo endpoint immediately with no sign-up required. Shared rate limits apply — for production, deploy your own instance.</p>
+          <div class="alert alert-warn"><span class="alert-icon">&#9888;</span>The public demo endpoint has a shared rate limit. For production workloads, deploy your own instance using Vercel or Docker.</div>
+          <div class="ep-label">Your first swarm run</div>
+          <pre><code>curl -X POST \
+  https://sales-marketing-nanobot-swarm.vibecaas.app/swarm/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "goal": "Generate 10 qualified B2B leads for a SaaS CRM tool targeting mid-market companies using BANT qualification",
+    "model_name": "ministral-3b:8b",
+    "num_loops": 2,
+    "stream": false
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">Expected response (abbreviated)</div>
+          <pre><code>{
+  "success": true,
+  "team_used": "lead-generation-engine",
+  "auto_detected": true,
+  "result": "## Lead Generation Report\n\n### Qualified Prospects...",
+  "agents_used": ["Lead Research Analyst","BANT Qualifier","Prospect Profiler"],
+  "tokens_used": 1847,
+  "duration_seconds": 12.4,
+  "model": "ministral-3b:8b"
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: API REFERENCE -->
+    <section class="doc-section" id="s3">
+      <div class="section-header">
+        <div class="section-number">Section 03</div>
+        <h2 class="section-title">API Reference</h2>
+        <p class="section-desc">Complete reference for all REST endpoints. Click any endpoint header to expand request schema, response schema, and curl examples.</p>
+      </div>
+
       <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-post">POST</span>
-          <span class="endpoint-path">/v1/chat/completions</span>
-          <span class="endpoint-desc">OpenAI-compatible completions</span>
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-get">GET</span>
+          <span class="endpoint-path">/health</span>
+          <span class="endpoint-meta">Service health check</span>
+          <span class="endpoint-toggle">+</span>
         </div>
         <div class="endpoint-body">
-          <p>Accepts the full OpenAI chat completions request schema. The <code>model</code> field is forwarded to your configured LLM backend. Use <code>swarm/&lt;team_name&gt;</code> as the model name to route through the swarm orchestrator.</p>
-          <div class="code-wrap">
-            <pre><code><span class="cmt"># Use with any OpenAI client</span>
-from openai import OpenAI
+          <p>Returns the current health status of the API, active LLM backend, and swarm configuration. Use this as your readiness probe in container orchestration or Vercel health checks.</p>
+          <div class="ep-label">Response 200</div>
+          <pre><code>{
+  "status": "healthy",
+  "service": "sales-marketing-nanobot-swarm",
+  "version": "1.0.0",
+  "teams_available": 10,
+  "llm_backend": "ollama",
+  "model": "ministral-3b:8b",
+  "uptime_seconds": 3824
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">curl</div>
+          <pre><code>curl https://sales-marketing-nanobot-swarm.vibecaas.app/health</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-post">POST</span>
+          <span class="endpoint-path">/swarm/run</span>
+          <span class="endpoint-meta">Execute a swarm task — primary endpoint</span>
+          <span class="endpoint-toggle">+</span>
+        </div>
+        <div class="endpoint-body">
+          <p>The primary endpoint. Submit a plain-English marketing goal; the swarm auto-detects the best team (or uses the team you specify), runs all agents, and returns a structured result.</p>
+          <div class="ep-label">Request Body Schema</div>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>goal</code></td><td>string</td><td><span class="badge badge-req">Yes</span></td><td>—</td><td>Plain-English marketing objective to execute</td></tr>
+                <tr><td><code>model_name</code></td><td>string</td><td><span class="badge badge-opt">No</span></td><td>ministral-3b:8b</td><td>LLM model identifier to use for this run</td></tr>
+                <tr><td><code>team</code></td><td>string</td><td><span class="badge badge-opt">No</span></td><td>auto-detect</td><td>Force a specific team slug (e.g. abm-orchestrator)</td></tr>
+                <tr><td><code>num_loops</code></td><td>integer</td><td><span class="badge badge-opt">No</span></td><td>1</td><td>Agent reasoning iterations, range 1 to 5</td></tr>
+                <tr><td><code>stream</code></td><td>boolean</td><td><span class="badge badge-opt">No</span></td><td>false</td><td>Enable streaming Server-Sent Events response</td></tr>
+                <tr><td><code>context</code></td><td>string</td><td><span class="badge badge-opt">No</span></td><td>—</td><td>Additional background context for the agents</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ep-label">Full curl example — ABM campaign</div>
+          <pre><code>curl -X POST \
+  https://sales-marketing-nanobot-swarm.vibecaas.app/swarm/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_GATEWAY_API_KEY" \
+  -d '{
+    "goal": "Create a complete ABM campaign for Salesforce targeting CFOs at Fortune 500 manufacturing companies. Include ICP definition, messaging pillars, 3-touch email sequence, and LinkedIn ad copy.",
+    "team": "abm-orchestrator",
+    "model_name": "ministral-3b:8b",
+    "num_loops": 3,
+    "stream": false,
+    "context": "Our product is an AI-powered financial forecasting tool priced at $50K/year ARR."
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">Response 200</div>
+          <pre><code>{
+  "success": true,
+  "team_used": "abm-orchestrator",
+  "auto_detected": false,
+  "result": "## ABM Campaign: Salesforce CFO Targeting\n\n### ICP Definition\n...",
+  "agents_used": [
+    "ABM Strategist",
+    "Account Research Agent",
+    "Personalization Engine",
+    "Campaign Orchestrator"
+  ],
+  "tokens_used": 4291,
+  "duration_seconds": 18.7,
+  "model": "ministral-3b:8b",
+  "metadata": {
+    "team_mode": "hierarchical",
+    "num_loops": 3,
+    "context_provided": true
+  }
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-get">GET</span>
+          <span class="endpoint-path">/swarm/teams</span>
+          <span class="endpoint-meta">List all available agent teams</span>
+          <span class="endpoint-toggle">+</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the full list of all 10 agent teams including names, slugs, modes, agent counts, descriptions, and trigger keywords used by the auto-router.</p>
+          <div class="ep-label">curl</div>
+          <pre><code>curl https://sales-marketing-nanobot-swarm.vibecaas.app/swarm/teams</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">Response 200 (abbreviated)</div>
+          <pre><code>{
+  "teams": [
+    {
+      "name": "lead-generation-engine",
+      "display_name": "Lead Generation Engine",
+      "mode": "hierarchical",
+      "agent_count": 7,
+      "description": "Full-funnel lead generation with ICP, BANT, and MEDDIC qualification",
+      "trigger_keywords": ["lead","prospect","ICP","BANT","qualify"]
+    }
+  ],
+  "total": 10
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-get">GET</span>
+          <span class="endpoint-path">/swarm/teams/{name}</span>
+          <span class="endpoint-meta">Get detailed info for a specific team</span>
+          <span class="endpoint-toggle">+</span>
+        </div>
+        <div class="endpoint-body">
+          <div class="ep-label">Path Parameters</div>
+          <div class="doc-table-wrap">
+            <table class="doc-table"><thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody><tr><td><code>name</code></td><td>string</td><td>Team slug, e.g. <code>lead-generation-engine</code> or <code>abm-orchestrator</code></td></tr></tbody></table>
+          </div>
+          <div class="ep-label">curl</div>
+          <pre><code>curl https://sales-marketing-nanobot-swarm.vibecaas.app/swarm/teams/content-marketing-team</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">Response 200</div>
+          <pre><code>{
+  "name": "content-marketing-team",
+  "mode": "hierarchical",
+  "agents": [
+    "Content Strategist (orchestrator)",
+    "SEO Specialist","Long-Form Writer",
+    "Editor","Distribution Agent","Keyword Researcher"
+  ],
+  "tools": ["seo_analyzer","content_optimizer"],
+  "kpis": ["Organic Traffic","Keyword Rankings","Content Velocity"],
+  "trigger_keywords": ["content","blog","SEO","article","write"]
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-post">POST</span>
+          <span class="endpoint-path">/agent/build</span>
+          <span class="endpoint-meta">Dynamically build a custom agent</span>
+          <span class="endpoint-toggle">+</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Create a custom AI agent with a specified role, goal, tools, and model configuration. Returns the agent definition as JSON — useful for testing configurations before assembling them into a team.</p>
+          <div class="ep-label">Request Body</div>
+          <pre><code>{
+  "agent_name": "Partner Revenue Analyst",
+  "system_prompt": "You are an expert channel partner revenue analyst specializing in co-sell motions and joint GTM planning.",
+  "model_name": "ministral-3b:8b",
+  "tools": ["roi_calculator", "market_segmentation"],
+  "max_loops": 2
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">curl</div>
+          <pre><code>curl -X POST \
+  https://sales-marketing-nanobot-swarm.vibecaas.app/agent/build \
+  -H "Content-Type: application/json" \
+  -d '{"agent_name":"Partner Revenue Analyst","system_prompt":"...","model_name":"ministral-3b:8b"}'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-post">POST</span>
+          <span class="endpoint-path">/team/build</span>
+          <span class="endpoint-meta">Build a custom agent team at runtime</span>
+          <span class="endpoint-toggle">+</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Compose a new multi-agent team from scratch by specifying the team name, collaboration mode (hierarchical or flat), agent definitions, and a task to execute. Teams are ephemeral by default; Pro users can persist named teams.</p>
+          <div class="ep-label">Request Body</div>
+          <pre><code>{
+  "team_name": "partner-marketing-squad",
+  "mode": "hierarchical",
+  "task": "Design a co-marketing campaign for AWS Marketplace listing targeting DevOps teams",
+  "agents": [
+    {"name": "Partner Strategist", "system_prompt": "You specialize in co-marketing and partner GTM strategy."},
+    {"name": "Content Creator",    "system_prompt": "You write compelling partner solution briefs."},
+    {"name": "Campaign Analyst",   "system_prompt": "You measure partner campaign ROI and attribution."}
+  ],
+  "model_name": "ministral-3b:8b"
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+
+      <div class="endpoint-card">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-post">POST</span>
+          <span class="endpoint-path">/v1/chat/completions</span>
+          <span class="endpoint-meta">OpenAI-compatible chat completions</span>
+          <span class="endpoint-toggle">+</span>
+        </div>
+        <div class="endpoint-body">
+          <p>A drop-in replacement for OpenAI's chat completions API. Change only your base_url — all other OpenAI SDK code works as-is. The swarm auto-detects the best agent team from the user message content and routes accordingly.</p>
+          <div class="ep-label">Python — openai SDK</div>
+          <pre><code>from openai import OpenAI
 
 client = OpenAI(
-    base_url=<span class="str">"http://localhost:8200/v1"</span>,
-    api_key=<span class="str">"your-secret-key"</span>
+    base_url="https://sales-marketing-nanobot-swarm.vibecaas.app/v1",
+    api_key="your-gateway-api-key"  # or "none" for the public demo
 )
 
 response = client.chat.completions.create(
-    model=<span class="str">"swarm/full_funnel"</span>,   <span class="cmt"># routes to Full Funnel Swarm</span>
-    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Plan a product launch campaign"</span>}]
-)</code></pre>
-          </div>
+    model="ministral-3b:8b",
+    messages=[{
+        "role": "user",
+        "content": "Write a 3-email cold outreach sequence targeting VP of Sales at Series B SaaS companies"
+    }]
+)
+print(response.choices[0].message.content)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">curl</div>
+          <pre><code>curl -X POST \
+  https://sales-marketing-nanobot-swarm.vibecaas.app/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "ministral-3b:8b",
+    "messages": [{"role":"user","content":"Generate a competitive battlecard vs HubSpot for a mid-market CRM sale"}]
+  }'</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
         </div>
       </div>
 
-      <!-- GET /v1/models -->
-      <h3 id="api-models">GET /v1/models</h3>
       <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-get">GET</span>
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+          <span class="badge badge-get">GET</span>
           <span class="endpoint-path">/v1/models</span>
-          <span class="endpoint-desc">List available models &amp; swarm teams</span>
+          <span class="endpoint-meta">List available models (OpenAI-compatible)</span>
+          <span class="endpoint-toggle">+</span>
         </div>
         <div class="endpoint-body">
-          <p>Returns all available models in OpenAI format. Swarm teams are prefixed with <code>swarm/</code>.</p>
-          <div class="code-wrap">
-            <pre><code>{
-  <span class="key">"object"</span>: <span class="str">"list"</span>,
-  <span class="key">"data"</span>: [
-    { <span class="key">"id"</span>: <span class="str">"swarm/full_funnel"</span>,        <span class="key">"object"</span>: <span class="str">"model"</span> },
-    { <span class="key">"id"</span>: <span class="str">"swarm/seo_research"</span>,       <span class="key">"object"</span>: <span class="str">"model"</span> },
-    { <span class="key">"id"</span>: <span class="str">"swarm/email_marketing"</span>,    <span class="key">"object"</span>: <span class="str">"model"</span> },
-    { <span class="key">"id"</span>: <span class="str">"llama3.3"</span>,               <span class="key">"object"</span>: <span class="str">"model"</span> }
+          <p>Returns available model IDs in OpenAI-compatible format. Use this to populate model pickers in UI integrations or to confirm which backends are configured.</p>
+          <div class="ep-label">curl</div>
+          <pre><code>curl https://sales-marketing-nanobot-swarm.vibecaas.app/v1/models</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+          <div class="ep-label">Response 200</div>
+          <pre><code>{
+  "object": "list",
+  "data": [
+    {"id": "ministral-3b:8b",        "object": "model", "owned_by": "ollama"},
+    {"id": "llama-3.3-70b-instruct", "object": "model", "owned_by": "nvidia-nim"},
+    {"id": "sales-marketing-swarm",  "object": "model", "owned_by": "neuralquantum"}
   ]
-}</code></pre>
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: AGENT TEAMS -->
+    <section class="doc-section" id="s4">
+      <div class="section-header">
+        <div class="section-number">Section 04</div>
+        <h2 class="section-title">Agent Teams</h2>
+        <p class="section-desc">All 10 specialized agent teams — collaboration modes, agent rosters, built-in tools, KPIs, use cases, and trigger keywords.</p>
+      </div>
+
+      <div class="card" style="padding:16px;margin-bottom:24px">
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>#</th><th>Team Slug</th><th>Mode</th><th>Agents</th><th>Focus Area</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><code>lead-generation-engine</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>7</td><td>ICP definition, BANT, MEDDIC qualification</td></tr>
+              <tr><td>2</td><td><code>content-marketing-team</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>SEO content creation, editorial planning</td></tr>
+              <tr><td>3</td><td><code>email-campaign-manager</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>Email sequences, A/B test generation</td></tr>
+              <tr><td>4</td><td><code>social-media-strategist</code></td><td><span class="badge badge-flat">Flat</span></td><td>5</td><td>LinkedIn, Twitter/X, Instagram content</td></tr>
+              <tr><td>5</td><td><code>campaign-analytics-hub</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>CAC, LTV, ROAS, attribution modeling</td></tr>
+              <tr><td>6</td><td><code>competitive-intelligence</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>Battlecards, win/loss, positioning</td></tr>
+              <tr><td>7</td><td><code>sales-enablement-team</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>Objection handling, playbooks, coaching</td></tr>
+              <tr><td>8</td><td><code>abm-orchestrator</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>Account-based marketing, enterprise GTM</td></tr>
+              <tr><td>9</td><td><code>brand-voice-guardian</code></td><td><span class="badge badge-flat">Flat</span></td><td>4</td><td>Messaging consistency, tone-of-voice</td></tr>
+              <tr><td>10</td><td><code>growth-hacker-lab</code></td><td><span class="badge badge-hier">Hierarchical</span></td><td>6</td><td>Viral loops, PLG, growth experiments</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="teams-grid">
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(99,102,241,0.15)">&#127919;</div>
+            <div class="team-info">
+              <div class="team-name-d">Lead Generation Engine</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 7 agents</div>
+            </div>
           </div>
+          <div class="team-desc-d">Full-funnel lead generation with ICP definition, prospect research, and multi-framework qualification (BANT, MEDDIC, SPIN). Orchestrator delegates to specialist agents for research, scoring, and outreach drafting.</div>
+          <div class="team-kpis"><span class="kpi-chip">ICP Match Score</span><span class="kpi-chip">BANT Qualified</span><span class="kpi-chip">Lead Quality Index</span><span class="kpi-chip">Pipeline Value</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Build targeted prospect lists using ICP criteria. BANT-qualify inbound leads. MEDDIC enterprise account scoring. Generate personalized outreach openers based on firmographics.</div>
+          <div class="trigger-kw">Trigger: <code>lead, prospect, qualify, ICP, BANT, MEDDIC</code></div>
         </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(6,182,212,0.15)">&#9997;</div>
+            <div class="team-info">
+              <div class="team-name-d">Content Marketing Team</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">SEO-optimized content creation with editorial planning, keyword research, long-form writing, and distribution strategy. Content Strategist orchestrates Writer, SEO Specialist, Editor, and Distribution Agent.</div>
+          <div class="team-kpis"><span class="kpi-chip">Organic Traffic</span><span class="kpi-chip">Keyword Rankings</span><span class="kpi-chip">Content Velocity</span><span class="kpi-chip">Engagement Rate</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Write SEO blog posts with full keyword research. Build quarterly content calendars. Repurpose long-form into social snippets. Optimize existing content for search.</div>
+          <div class="trigger-kw">Trigger: <code>content, blog, SEO, article, write, editorial</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(16,185,129,0.15)">&#128140;</div>
+            <div class="team-info">
+              <div class="team-name-d">Email Campaign Manager</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">End-to-end email campaign orchestration: sequence design, copywriting, A/B test variant generation, subject line optimization, and send-time analysis. Campaign Director manages Copy, A/B, and Analytics agents.</div>
+          <div class="team-kpis"><span class="kpi-chip">Open Rate</span><span class="kpi-chip">CTR</span><span class="kpi-chip">Reply Rate</span><span class="kpi-chip">Conversion Rate</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Create multi-touch cold outreach sequences. Design nurture email flows. Generate A/B test variants for subject lines. Optimize preview text and CTAs for conversion.</div>
+          <div class="trigger-kw">Trigger: <code>email, sequence, newsletter, outreach, nurture</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(139,92,246,0.15)">&#128241;</div>
+            <div class="team-info">
+              <div class="team-name-d">Social Media Strategist</div>
+              <div class="team-agents-d"><span class="badge badge-flat">Flat</span> 5 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Peer-collaborative social content creation spanning LinkedIn, Twitter/X, and Instagram. Platform specialists collaborate as equals to develop channel-native content, hashtag strategies, and engagement tactics — no single orchestrator.</div>
+          <div class="team-kpis"><span class="kpi-chip">Impressions</span><span class="kpi-chip">Engagement Rate</span><span class="kpi-chip">Follower Growth</span><span class="kpi-chip">Share of Voice</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Create LinkedIn thought leadership posts. Design Twitter/X growth campaigns. Instagram content strategy. Cross-platform content calendar with platform-native formatting.</div>
+          <div class="trigger-kw">Trigger: <code>social, LinkedIn, Twitter, Instagram, post, hashtag</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(245,158,11,0.15)">&#128200;</div>
+            <div class="team-info">
+              <div class="team-name-d">Campaign Analytics Hub</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Deep marketing analytics: CAC calculation, LTV modeling, ROAS optimization, funnel analysis, attribution modeling, and performance forecasting. Analytics Director coordinates Measurement, Attribution, and Forecast agents.</div>
+          <div class="team-kpis"><span class="kpi-chip">CAC</span><span class="kpi-chip">LTV</span><span class="kpi-chip">ROAS</span><span class="kpi-chip">MQL-to-SQL Rate</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Calculate campaign ROI and payback period. Build multi-touch attribution models. Forecast pipeline from current funnel data. CAC-to-LTV ratio analysis and optimization.</div>
+          <div class="trigger-kw">Trigger: <code>analytics, ROAS, CAC, LTV, performance, measure, attribution</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(236,72,153,0.15)">&#128270;</div>
+            <div class="team-info">
+              <div class="team-name-d">Competitive Intelligence</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Automated competitive research, battlecard creation, win/loss pattern analysis, and positioning strategy. Intelligence Director orchestrates Market Analyst, Battlecard Writer, Win/Loss Analyst, and Positioning agents.</div>
+          <div class="team-kpis"><span class="kpi-chip">Win Rate</span><span class="kpi-chip">Battlecard Coverage</span><span class="kpi-chip">Competitor Gaps</span><span class="kpi-chip">Differentiation Score</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Build competitive battlecards for sales reps. Analyze competitor pricing and packaging. Identify market positioning gaps. Quarterly competitive landscape reports for leadership.</div>
+          <div class="trigger-kw">Trigger: <code>competitor, battlecard, market, positioning, vs, intelligence</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(99,102,241,0.15)">&#128101;</div>
+            <div class="team-info">
+              <div class="team-name-d">Sales Enablement Team</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Sales rep enablement: objection handling libraries, sales playbooks, demo scripts, ROI calculators, discovery question frameworks, and deal coaching guidance. Enablement Director manages Playbook, Objection, Demo, and Coaching agents.</div>
+          <div class="team-kpis"><span class="kpi-chip">Win Rate</span><span class="kpi-chip">Objection Resolution %</span><span class="kpi-chip">Ramp Time</span><span class="kpi-chip">Deal Velocity</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Create objection handling scripts by persona. Build territory-specific sales playbooks. Design discovery question frameworks. Generate deal coaching recommendations from CRM data.</div>
+          <div class="trigger-kw">Trigger: <code>sales, objection, playbook, enablement, demo, pitch, coaching</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(6,182,212,0.15)">&#127963;</div>
+            <div class="team-info">
+              <div class="team-name-d">ABM Orchestrator</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Enterprise account-based marketing: target account selection, intent signal analysis, personalized messaging at scale, multi-channel campaign coordination, and executive engagement strategies for complex buying committees.</div>
+          <div class="team-kpis"><span class="kpi-chip">Account Engagement</span><span class="kpi-chip">Pipeline from ABM</span><span class="kpi-chip">Deal Size</span><span class="kpi-chip">Sales Cycle Length</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Design end-to-end ABM campaigns for named accounts. Personalize messaging by persona and buying stage. Multi-channel account touch coordination. Executive engagement strategies for enterprise deals.</div>
+          <div class="trigger-kw">Trigger: <code>ABM, account-based, enterprise, target account, named account</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(16,185,129,0.15)">&#128684;</div>
+            <div class="team-info">
+              <div class="team-name-d">Brand Voice Guardian</div>
+              <div class="team-agents-d"><span class="badge badge-flat">Flat</span> 4 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Peer-collaborative brand consistency enforcement: messaging framework development, tone-of-voice guidelines, copy auditing against brand standards, and style guide creation. Four agents collaborate as peers with no orchestrator.</div>
+          <div class="team-kpis"><span class="kpi-chip">Brand Consistency Score</span><span class="kpi-chip">Message Clarity</span><span class="kpi-chip">Copy Approval Rate</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Audit copy for brand voice consistency. Create messaging frameworks and positioning statements. Define tone-of-voice guidelines. Brand style guide creation and enforcement.</div>
+          <div class="trigger-kw">Trigger: <code>brand, voice, tone, messaging, style, guidelines, audit</code></div>
+        </div>
+
+        <div class="team-doc-card">
+          <div class="team-d-header">
+            <div class="team-icon" style="background:rgba(239,68,68,0.15)">&#9889;</div>
+            <div class="team-info">
+              <div class="team-name-d">Growth Hacker Lab</div>
+              <div class="team-agents-d"><span class="badge badge-hier">Hierarchical</span> 6 agents</div>
+            </div>
+          </div>
+          <div class="team-desc-d">Rapid experimentation and growth engineering: viral loop design, referral program construction, product-led growth frameworks, CRO hypothesis generation, and growth metric modeling for compounding acquisition effects.</div>
+          <div class="team-kpis"><span class="kpi-chip">Viral Coefficient</span><span class="kpi-chip">Activation Rate</span><span class="kpi-chip">Referral Conversion</span><span class="kpi-chip">Growth Rate</span></div>
+          <div class="team-uc"><strong>Use Cases</strong>Design viral referral programs with reward mechanics. Build PLG onboarding experiment hypotheses. CRO A/B test idea generation. Growth model and projection building for investor decks.</div>
+          <div class="trigger-kw">Trigger: <code>growth, viral, referral, PLG, experiment, CRO, hack, activation</code></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 5: MARKETING TOOLS -->
+    <section class="doc-section" id="s5">
+      <div class="section-header">
+        <div class="section-number">Section 05</div>
+        <h2 class="section-title">Marketing Tools</h2>
+        <p class="section-desc">Seven built-in calculation and analysis tools available to all agent teams. These tools are automatically injected into agent contexts during swarm runs to enable quantitative reasoning alongside creative output.</p>
       </div>
 
-      <!-- GET /swarm/teams -->
-      <h3 id="api-teams">GET /swarm/teams &amp; GET /swarm/teams/{name}</h3>
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-get">GET</span>
-          <span class="endpoint-path">/swarm/teams</span>
-          <span class="endpoint-desc">List all registered teams</span>
-        </div>
-        <div class="endpoint-body">
-          <p>Returns metadata for all available agent teams including name, description, agent count, and example prompts.</p>
-          <p>Append <code>/{team_name}</code> to get full detail including the team's agent roster, tool list, and configuration parameters.</p>
-        </div>
+      <div class="doc-table-wrap" style="margin-bottom:24px">
+        <table class="doc-table">
+          <thead><tr><th>Tool Name</th><th>Description</th><th>Calculation Types</th></tr></thead>
+          <tbody>
+            <tr><td><code>lead_scoring_calc</code></td><td>Calculates lead scores using BANT, MEDDIC, firmographic, and behavioral criteria</td><td>bant_score, meddic_score, behavioral_score, composite_score</td></tr>
+            <tr><td><code>campaign_analytics_calc</code></td><td>Computes core campaign performance metrics including CAC, LTV, ROAS, CPL</td><td>cac, ltv, roas, cpl, ctr, conversion_rate, mrr_impact</td></tr>
+            <tr><td><code>content_optimizer</code></td><td>Scores content quality, readability, messaging alignment, and engagement prediction</td><td>readability_score, seo_score, cta_strength, engagement_prediction</td></tr>
+            <tr><td><code>seo_analyzer</code></td><td>Keyword difficulty, search volume estimation, and on-page SEO scoring</td><td>keyword_difficulty, volume_estimate, title_score, meta_score, heading_analysis</td></tr>
+            <tr><td><code>email_campaign_manager</code></td><td>Email performance optimization: subject line scoring, deliverability, spam risk</td><td>subject_line_score, preview_text_score, deliverability_risk, spam_score</td></tr>
+            <tr><td><code>market_segmentation</code></td><td>ICP segment matching and total addressable market estimation by persona</td><td>icp_match, tam_estimate, segment_priority, persona_fit</td></tr>
+            <tr><td><code>roi_calculator</code></td><td>Marketing investment ROI, payback period, NPV, and IRR calculation</td><td>roi_percent, payback_months, npv, irr, break_even</td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- POST /agent/build -->
-      <h3 id="api-agent-build">POST /agent/build</h3>
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-post">POST</span>
-          <span class="endpoint-path">/agent/build</span>
-          <span class="endpoint-desc">Create a custom agent at runtime</span>
-        </div>
-        <div class="endpoint-body">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <h3 style="margin-bottom:16px">Tool Call Examples</h3>
+
+      <div class="tool-card">
+        <div class="tool-name">lead_scoring_calc</div>
+        <div class="tool-desc">Score a prospect against BANT and MEDDIC criteria to prioritize outreach. Used internally by the lead-generation-engine team.</div>
+        <div class="calc-types"><span class="calc-chip">bant_score</span><span class="calc-chip">meddic_score</span><span class="calc-chip">composite_score</span></div>
+        <pre style="margin-top:10px"><code>{
+  "tool": "lead_scoring_calc",
+  "calc_type": "composite_score",
+  "inputs": {
+    "budget_confirmed": true,
+    "authority_level": "VP",
+    "need_urgency": "high",
+    "timeline_months": 3,
+    "annual_revenue": 50000000,
+    "employee_count": 250
+  }
+}
+// Returns: { "composite_score": 87, "grade": "A", "recommended_action": "fast-track" }</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">roi_calculator</div>
+        <div class="tool-desc">Calculate marketing campaign ROI, payback period, and net present value. Used by the campaign-analytics-hub and sales-enablement-team.</div>
+        <div class="calc-types"><span class="calc-chip">roi_percent</span><span class="calc-chip">payback_months</span><span class="calc-chip">npv</span><span class="calc-chip">irr</span></div>
+        <pre style="margin-top:10px"><code>{
+  "tool": "roi_calculator",
+  "calc_type": "roi_percent",
+  "inputs": {
+    "investment": 25000,
+    "revenue_generated": 180000,
+    "time_period_months": 6,
+    "discount_rate": 0.10
+  }
+}
+// Returns: { "roi_percent": 620, "payback_months": 0.83, "npv": 142500 }</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">campaign_analytics_calc</div>
+        <div class="tool-desc">Compute CAC, LTV, ROAS, and pipeline impact for any campaign. Core tool for the campaign-analytics-hub team.</div>
+        <div class="calc-types"><span class="calc-chip">cac</span><span class="calc-chip">ltv</span><span class="calc-chip">roas</span><span class="calc-chip">cpl</span><span class="calc-chip">mrr_impact</span></div>
+        <pre style="margin-top:10px"><code>{
+  "tool": "campaign_analytics_calc",
+  "calc_type": "roas",
+  "inputs": {
+    "ad_spend": 10000,
+    "revenue_attributed": 47000,
+    "attributed_conversions": 23
+  }
+}
+// Returns: { "roas": 4.7, "revenue_per_conversion": 2043.48, "efficiency_grade": "A" }</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-name">market_segmentation</div>
+        <div class="tool-desc">Estimate ICP match scores and total addressable market for a target segment definition. Used by lead-generation-engine and abm-orchestrator.</div>
+        <div class="calc-types"><span class="calc-chip">icp_match</span><span class="calc-chip">tam_estimate</span><span class="calc-chip">segment_priority</span></div>
+        <pre style="margin-top:10px"><code>{
+  "tool": "market_segmentation",
+  "calc_type": "tam_estimate",
+  "inputs": {
+    "target_industry": "SaaS",
+    "employee_range": "50-500",
+    "geography": "North America",
+    "revenue_range": "5M-50M",
+    "buying_signal": "fundraising_recent"
+  }
+}
+// Returns: { "tam_companies": 12400, "reachable_pct": 0.34, "priority_segment": "Series B SaaS" }</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+    </section>
+
+    <!-- SECTION 6: DEPLOYMENT -->
+    <section class="doc-section" id="s6">
+      <div class="section-header">
+        <div class="section-number">Section 06</div>
+        <h2 class="section-title">Deployment Guides</h2>
+        <p class="section-desc">Step-by-step deployment instructions for all supported platforms. Choose the one that matches your infrastructure requirements.</p>
+      </div>
+
+      <div class="tab-nav" id="deploy-tabs">
+        <button class="tab-btn active" onclick="switchTab('deploy','vercel',this)">Vercel</button>
+        <button class="tab-btn" onclick="switchTab('deploy','render',this)">Render</button>
+        <button class="tab-btn" onclick="switchTab('deploy','railway',this)">Railway</button>
+        <button class="tab-btn" onclick="switchTab('deploy','docker',this)">Docker</button>
+        <button class="tab-btn" onclick="switchTab('deploy','codespaces',this)">Codespaces</button>
+      </div>
+
+      <div class="tab-panel active" id="deploy-vercel">
+        <div class="card">
+          <h3>Deploy to Vercel</h3>
+          <p><strong>Best for:</strong> Fastest time to production, zero server management, automatic global CDN, scale to zero.</p>
+          <h4 style="margin:16px 0 10px">Prerequisites</h4>
+          <ul style="margin-bottom:20px">
+            <li>Vercel account (free Hobby tier works)</li>
+            <li>GitHub account with repository access</li>
+            <li>Ollama Cloud API key or NVIDIA NIM API key</li>
+          </ul>
+          <div class="deploy-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Fork the Repository</div><div class="step-desc">Fork <code>github.com/ttracx/sales-marketing-nanobot-swarm</code> to your GitHub account so Vercel can access and deploy it.</div></div></div>
+          <div class="deploy-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Import to Vercel</div><div class="step-desc">In Vercel dashboard, click "Add New Project" and import the forked repository. Vercel auto-detects the Python/FastAPI configuration.</div></div></div>
+          <div class="deploy-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set Environment Variables</div><div class="step-desc">In Vercel project settings under Environment Variables, add the required variables listed in the table below.</div></div></div>
+          <div class="deploy-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Deploy</div><div class="step-desc">Click "Deploy". Vercel builds and publishes the serverless functions in approximately 2 minutes.</div></div></div>
+          <div class="deploy-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Verify Health</div><div class="step-desc">Visit <code>https://your-project.vercel.app/health</code> and expect <code>{"status":"healthy"}</code> with the LLM backend name.</div></div></div>
+          <h4 style="margin:20px 0 10px">Environment Variables</h4>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Variable</th><th>Required</th><th>Description</th></tr></thead>
               <tbody>
-                <tr><td><code>name</code></td><td>string</td><td>Unique identifier for this agent</td></tr>
-                <tr><td><code>role</code></td><td>string</td><td>Short role description (e.g., "Competitive Intelligence Analyst")</td></tr>
-                <tr><td><code>system_prompt</code></td><td>string</td><td>Full system prompt for the agent</td></tr>
-                <tr><td><code>tools</code></td><td>string[]</td><td>Tool names to equip (from tools reference)</td></tr>
-                <tr><td><code>model</code></td><td>string</td><td>Override model for this agent (optional)</td></tr>
-                <tr><td><code>temperature</code></td><td>float</td><td>Sampling temperature 0.0–2.0 (default 0.7)</td></tr>
+                <tr><td><code>OLLAMA_API_KEY</code></td><td><span class="badge badge-req">Required</span></td><td>Primary LLM backend — Ollama Cloud key</td></tr>
+                <tr><td><code>NVIDIA_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>Fallback LLM — NVIDIA NIM API key</td></tr>
+                <tr><td><code>GATEWAY_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>Restricts public access to your endpoint</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- POST /team/build -->
-      <h3 id="api-team-build">POST /team/build</h3>
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-post">POST</span>
-          <span class="endpoint-path">/team/build</span>
-          <span class="endpoint-desc">Assemble a custom agent team at runtime</span>
-        </div>
-        <div class="endpoint-body">
-          <p>Create a named team from a list of agent names (built-in or custom). The team is immediately available via <code>/swarm/run</code> using the team name you specify.</p>
-          <div class="code-wrap">
-            <pre><code>{
-  <span class="key">"name"</span>: <span class="str">"product_launch_swarm"</span>,
-  <span class="key">"description"</span>: <span class="str">"Coordinates PR, content, and paid acquisition for launches"</span>,
-  <span class="key">"director_prompt"</span>: <span class="str">"Orchestrate a cohesive product launch campaign..."</span>,
-  <span class="key">"agents"</span>: [<span class="str">"pr_specialist"</span>, <span class="str">"content_writer"</span>, <span class="str">"paid_ads_strategist"</span>],
-  <span class="key">"persist"</span>: <span class="val">true</span>   <span class="cmt">// save across restarts (requires Redis)</span>
-}</code></pre>
-          </div>
+      <div class="tab-panel" id="deploy-render">
+        <div class="card">
+          <h3>Deploy to Render</h3>
+          <p><strong>Best for:</strong> Always-on services without cold starts, persistent connections, more compute control.</p>
+          <div class="deploy-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Connect GitHub to Render</div><div class="step-desc">In Render dashboard, click "New + Web Service" and connect your GitHub repository.</div></div></div>
+          <div class="deploy-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Configure Build Settings</div><div class="step-desc">Runtime: Python 3.12. Build Command: <code>pip install -r requirements.txt</code>. Start Command: <code>uvicorn nanobot.app:app --host 0.0.0.0 --port $PORT</code></div></div></div>
+          <div class="deploy-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set Environment Variables</div><div class="step-desc">In the Environment tab, add <code>OLLAMA_API_KEY</code>, <code>NVIDIA_API_KEY</code>, and optionally <code>GATEWAY_API_KEY</code>.</div></div></div>
+          <div class="deploy-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Deploy and Monitor</div><div class="step-desc">Click "Create Web Service". Health check URL: <code>https://your-app.onrender.com/health</code></div></div></div>
         </div>
       </div>
 
-      <!-- GET /health -->
-      <h3 id="api-health">GET /health</h3>
-      <div class="endpoint-card">
-        <div class="endpoint-header">
-          <span class="method method-get">GET</span>
-          <span class="endpoint-path">/health</span>
-          <span class="endpoint-desc">Health check &amp; dependency status</span>
+      <div class="tab-panel" id="deploy-railway">
+        <div class="card">
+          <h3>Deploy to Railway</h3>
+          <p><strong>Best for:</strong> Auto-scaling with usage-based billing, easy dev/staging/prod environment separation.</p>
+          <div class="deploy-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Install Railway CLI</div><pre style="margin-top:6px"><code>npm install -g @railway/cli
+railway login</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Initialize Project</div><pre style="margin-top:6px"><code>cd sales-marketing-nanobot-swarm
+railway init</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set Environment Variables</div><pre style="margin-top:6px"><code>railway variables set OLLAMA_API_KEY=your-ollama-key
+railway variables set NVIDIA_API_KEY=your-nvidia-key
+railway variables set GATEWAY_API_KEY=your-gateway-key</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Deploy and Open</div><pre style="margin-top:6px"><code>railway up
+railway open</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
         </div>
-        <div class="endpoint-body">
-          <div class="code-wrap">
-            <pre><code>{
-  <span class="key">"status"</span>: <span class="str">"healthy"</span>,
-  <span class="key">"version"</span>: <span class="str">"1.0.0"</span>,
-  <span class="key">"llm_backend"</span>: { <span class="key">"status"</span>: <span class="str">"connected"</span>, <span class="key">"model"</span>: <span class="str">"llama3.3"</span>, <span class="key">"latency_ms"</span>: <span class="num">42</span> },
-  <span class="key">"redis"</span>: { <span class="key">"status"</span>: <span class="str">"connected"</span> },
-  <span class="key">"integrations"</span>: {
-    <span class="key">"hubspot"</span>: <span class="str">"configured"</span>,
-    <span class="key">"salesforce"</span>: <span class="str">"not_configured"</span>,
-    <span class="key">"ga4"</span>: <span class="str">"configured"</span>
-  },
-  <span class="key">"uptime_seconds"</span>: <span class="num">3847</span>
-}</code></pre>
-          </div>
+      </div>
+
+      <div class="tab-panel" id="deploy-docker">
+        <div class="card">
+          <h3>Self-Hosted Docker</h3>
+          <p><strong>Best for:</strong> Full infrastructure control, on-premises deployment, air-gapped environments.</p>
+          <div class="deploy-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Clone and Build</div><pre style="margin-top:6px"><code>git clone https://github.com/ttracx/sales-marketing-nanobot-swarm.git
+cd sales-marketing-nanobot-swarm
+docker build -t nanobot-swarm .</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Create .env File</div><pre style="margin-top:6px"><code>cp .env.example .env
+nano .env   # Add OLLAMA_API_KEY at minimum</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Run with Docker Compose</div><pre style="margin-top:6px"><code>docker-compose up -d
+docker-compose logs -f swarm-api</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Verify</div><pre style="margin-top:6px"><code>curl http://localhost:8000/health</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="deploy-codespaces">
+        <div class="card">
+          <h3>GitHub Codespaces</h3>
+          <p><strong>Best for:</strong> Development, testing, and demos — full cloud-hosted dev environment with no local setup.</p>
+          <div class="deploy-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Open in Codespaces</div><div class="step-desc">On the GitHub repo page, click "Code" then "Codespaces" then "Create codespace on main". A browser-based IDE opens in seconds.</div></div></div>
+          <div class="deploy-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Install Dependencies</div><pre style="margin-top:6px"><code>pip install -r requirements.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set Codespaces Secrets</div><div class="step-desc">In GitHub Settings under Codespaces Secrets, add <code>OLLAMA_API_KEY</code> and <code>NVIDIA_API_KEY</code> so they load automatically into all Codespaces.</div></div></div>
+          <div class="deploy-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Start the Server</div><pre style="margin-top:6px"><code>uvicorn nanobot.app:app --host 0.0.0.0 --port 8000 --reload</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre></div></div>
+          <div class="deploy-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Open the Dashboard</div><div class="step-desc">Codespaces prompts to forward port 8000. Click "Open in Browser" to see the swarm dashboard and interact with the live API.</div></div></div>
         </div>
       </div>
     </section>
 
-    <!-- ═══ AGENT TEAMS ═══ -->
-    <section class="doc-section" id="agent-teams">
+    <!-- SECTION 7: ENVIRONMENT VARIABLES -->
+    <section class="doc-section" id="s7">
       <div class="section-header">
-        <div class="section-icon">🤖</div>
-        <h2>Agent Teams Reference</h2>
+        <div class="section-number">Section 07</div>
+        <h2 class="section-title">Environment Variables</h2>
+        <p class="section-desc">Complete reference for all environment variables. Start by copying <code>.env.example</code> from the repository root as your template, then fill in your values.</p>
       </div>
 
-      <p>Ten pre-configured teams are included. Pass the <code>team</code> slug to <code>/swarm/run</code>.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Team Name</th>
-              <th>Slug</th>
-              <th>Agents</th>
-              <th>Primary Use Case</th>
-              <th>Key Tools</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>🎯 Full Funnel Swarm</td>
-              <td><code>full_funnel</code></td>
-              <td>6</td>
-              <td>End-to-end campaigns, unknown best approach</td>
-              <td>All tools</td>
-            </tr>
-            <tr>
-              <td>🔍 SEO Research Swarm</td>
-              <td><code>seo_research</code></td>
-              <td>4</td>
-              <td>Keyword research, SERP analysis, content gaps</td>
-              <td>SERP, keyword calc</td>
-            </tr>
-            <tr>
-              <td>📢 Paid Ads Swarm</td>
-              <td><code>paid_ads</code></td>
-              <td>5</td>
-              <td>Google Ads / Meta Ads strategy &amp; copy</td>
-              <td>ROAS calc, ad preview</td>
-            </tr>
-            <tr>
-              <td>✍️ Content Creation Swarm</td>
-              <td><code>content_creation</code></td>
-              <td>4</td>
-              <td>Blog posts, landing pages, email copy, scripts</td>
-              <td>SEO score, readability</td>
-            </tr>
-            <tr>
-              <td>📧 Email Marketing Swarm</td>
-              <td><code>email_marketing</code></td>
-              <td>4</td>
-              <td>Drip sequences, A/B subjects, segmentation</td>
-              <td>HubSpot, deliverability</td>
-            </tr>
-            <tr>
-              <td>📱 Social Media Swarm</td>
-              <td><code>social_media</code></td>
-              <td>5</td>
-              <td>Multi-platform content, scheduling, trends</td>
-              <td>LinkedIn API, X API</td>
-            </tr>
-            <tr>
-              <td>🧪 CRO Swarm</td>
-              <td><code>cro</code></td>
-              <td>4</td>
-              <td>Conversion optimization, A/B hypotheses</td>
-              <td>Conversion calc, GA4</td>
-            </tr>
-            <tr>
-              <td>🤝 Sales Intelligence Swarm</td>
-              <td><code>sales_intelligence</code></td>
-              <td>5</td>
-              <td>ICP profiling, lead scoring, outreach sequences</td>
-              <td>HubSpot, Salesforce</td>
-            </tr>
-            <tr>
-              <td>📊 Analytics &amp; Reporting Swarm</td>
-              <td><code>analytics_reporting</code></td>
-              <td>4</td>
-              <td>KPI dashboards, attribution modeling, exec summaries</td>
-              <td>GA4, LTV calc</td>
-            </tr>
-            <tr>
-              <td>🎨 Brand Strategy Swarm</td>
-              <td><code>brand_strategy</code></td>
-              <td>4</td>
-              <td>Positioning, messaging frameworks, personas</td>
-              <td>Competitive intel</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ═══ TOOLS REFERENCE ═══ -->
-    <section class="doc-section" id="tools">
-      <div class="section-header">
-        <div class="section-icon">🔧</div>
-        <h2>Tools Reference</h2>
-      </div>
-
-      <p>Agents invoke these tools to perform calculations and API calls. Tools are registered in <code>nanobot/tools/</code>.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Tool</th><th>Function</th><th>Inputs</th><th>Used By</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>calculate_roas</code></td>
-              <td>Return on Ad Spend calculator</td>
-              <td>ad_spend, revenue</td>
-              <td>Paid Ads, Analytics</td>
-            </tr>
-            <tr>
-              <td><code>calculate_cac</code></td>
-              <td>Customer Acquisition Cost</td>
-              <td>total_spend, new_customers</td>
-              <td>Full Funnel, Analytics</td>
-            </tr>
-            <tr>
-              <td><code>calculate_ltv</code></td>
-              <td>Customer Lifetime Value (LTV/CAC ratio)</td>
-              <td>avg_order_value, purchase_freq, churn_rate</td>
-              <td>Analytics, Sales Intel</td>
-            </tr>
-            <tr>
-              <td><code>calculate_conversion_rate</code></td>
-              <td>Funnel conversion rate &amp; uplift impact</td>
-              <td>visitors, conversions, baseline_cr</td>
-              <td>CRO, Full Funnel</td>
-            </tr>
-            <tr>
-              <td><code>estimate_email_revenue</code></td>
-              <td>Email campaign revenue projection</td>
-              <td>list_size, open_rate, ctr, conversion_rate, aov</td>
-              <td>Email Marketing</td>
-            </tr>
-            <tr>
-              <td><code>calculate_seo_opportunity</code></td>
-              <td>Organic traffic &amp; revenue opportunity from keyword data</td>
-              <td>search_volume, ctr_estimate, conversion_rate, aov</td>
-              <td>SEO Research</td>
-            </tr>
-            <tr>
-              <td><code>score_content_quality</code></td>
-              <td>Readability + SEO density scoring</td>
-              <td>content_text, target_keyword</td>
-              <td>Content Creation, SEO</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="info-box">
-        <span>ℹ️</span>
-        <span>Add custom tools by creating a Python file in <code>nanobot/tools/</code> and decorating functions with <code>@register_tool</code>. Tools are auto-discovered on startup.</span>
-      </div>
-    </section>
-
-    <!-- ═══ DEPLOYMENT ═══ -->
-    <section class="doc-section" id="deployment">
-      <div class="section-header">
-        <div class="section-icon">☁️</div>
-        <h2>Deployment Guides</h2>
-      </div>
-
-      <h3 id="deploy-vercel">Vercel (1-Click)</h3>
-      <p>The fastest path to production. Requires an external LLM API (Ollama won't work from Vercel — use OpenAI or NIM).</p>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4>Click Deploy</h4>
-            <p>Use the button in the README or go to <code>vercel.com/new/clone?repository-url=https://github.com/ttracx/sales-marketing-nanobot-swarm</code></p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4>Configure Environment Variables</h4>
-            <p>In the Vercel project settings → Environment Variables, add <code>AI_API_KEY</code>, <code>AI_API_BASE_URL</code>, and any integration keys.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4>Deploy</h4>
-            <p>Vercel automatically builds and deploys. Visit your deployment URL + <code>/health</code> to verify.</p>
-          </div>
+      <div class="card">
+        <h3>Core LLM &amp; API Keys</h3>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>OLLAMA_API_KEY</code></td><td><span class="badge badge-req">Required</span></td><td>—</td><td>Ollama Cloud API key. Primary LLM backend for all swarm runs. Obtain from cloud.ollama.ai.</td></tr>
+              <tr><td><code>OLLAMA_BASE_URL</code></td><td><span class="badge badge-opt">Optional</span></td><td>https://api.ollama.ai</td><td>Override the Ollama endpoint. Use for self-hosted Ollama or any OpenAI-compatible API.</td></tr>
+              <tr><td><code>NVIDIA_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>—</td><td>NVIDIA NIM API key. Enables automatic fallback to llama-3.3-70b-instruct for high-accuracy tasks.</td></tr>
+              <tr><td><code>GATEWAY_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>—</td><td>When set, all API requests must include Authorization: Bearer YOUR_KEY. Secures your production endpoint.</td></tr>
+              <tr><td><code>ANTHROPIC_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>—</td><td>Enables Claude as an additional LLM backend option. Pro feature.</td></tr>
+              <tr><td><code>DEFAULT_MODEL</code></td><td><span class="badge badge-opt">Optional</span></td><td>ministral-3b:8b</td><td>Default model used when none is specified in the API request body.</td></tr>
+              <tr><td><code>MAX_LOOPS</code></td><td><span class="badge badge-opt">Optional</span></td><td>3</td><td>Global maximum agent reasoning loops. Caps per-request num_loops to prevent runaway costs.</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <div class="warn-box">
-        <span>⚠️</span>
-        <span>Vercel Hobby plan has a 60-second function timeout. Upgrade to Pro for 300s or use Railway/Docker for long-running swarms.</span>
+
+      <div class="card" style="margin-top:16px">
+        <h3>CRM Integrations <span class="badge badge-pro" style="font-size:10px;vertical-align:middle;margin-left:6px">Pro</span></h3>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>HUBSPOT_API_KEY</code></td><td><span class="badge badge-pro">Pro</span></td><td>—</td><td>HubSpot Private App API key. Enables pushing leads and deals from swarm results directly into HubSpot CRM.</td></tr>
+              <tr><td><code>HUBSPOT_PORTAL_ID</code></td><td><span class="badge badge-pro">Pro</span></td><td>—</td><td>HubSpot portal account ID used for webhook routing and owner assignment.</td></tr>
+              <tr><td><code>SALESFORCE_CLIENT_ID</code></td><td><span class="badge badge-pro">Pro</span></td><td>—</td><td>Salesforce Connected App OAuth 2.0 client ID for the JWT Bearer flow.</td></tr>
+              <tr><td><code>SALESFORCE_CLIENT_SECRET</code></td><td><span class="badge badge-pro">Pro</span></td><td>—</td><td>Salesforce Connected App OAuth 2.0 client secret.</td></tr>
+              <tr><td><code>SALESFORCE_INSTANCE_URL</code></td><td><span class="badge badge-pro">Pro</span></td><td>—</td><td>Your Salesforce org URL, e.g. https://yourorg.salesforce.com</td></tr>
+              <tr><td><code>PIPEDRIVE_API_TOKEN</code></td><td><span class="badge badge-pro">Pro</span></td><td>—</td><td>Pipedrive CRM API token for creating persons, organizations, and deals from swarm output.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <h3 id="deploy-render">Render</h3>
-      <div class="code-wrap">
-        <pre><code><span class="cmt"># render.yaml (included in repo)</span>
-services:
-  - type: web
-    name: sm-nanobot-swarm
-    runtime: python
-    buildCommand: pip install -e .
-    startCommand: uvicorn nanobot.api.gateway:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: AI_API_KEY
-        sync: false</code></pre>
-      </div>
-      <p>Click the Render deploy button in the README, connect your GitHub, and set environment variables in the Render dashboard.</p>
-
-      <h3 id="deploy-railway">Railway</h3>
-      <div class="code-wrap">
-        <pre><code><span class="cmt"># Procfile (included in repo)</span>
-web: uvicorn nanobot.api.gateway:app --host 0.0.0.0 --port $PORT</code></pre>
-      </div>
-      <p>Railway auto-detects the Procfile. Connect your repo, add env vars, and deploy. Railway provides persistent storage and zero-downtime deploys.</p>
-
-      <h3 id="deploy-docker">Docker</h3>
-      <div class="code-wrap">
-        <pre><code><span class="cmt"># Run with Docker Compose (includes Ollama sidecar)</span>
-docker compose up -d
-
-<span class="cmt"># Or build &amp; run manually</span>
-docker build -t sm-nanobot-swarm .
-docker run -d \
-  -p 8200:8200 \
-  -e AI_API_KEY=$AI_API_KEY \
-  -e AI_API_BASE_URL=$AI_API_BASE_URL \
-  --name sm-nanobot-swarm \
-  sm-nanobot-swarm</code></pre>
-      </div>
-      <p>The <code>docker-compose.yml</code> in the repo starts an Ollama container alongside the API server and pre-pulls <code>llama3.3</code>.</p>
-
-      <h3 id="deploy-codespaces">GitHub Codespaces</h3>
-      <p>The repo includes a <code>.devcontainer/devcontainer.json</code> that sets up the full development environment automatically.</p>
-      <div class="code-wrap">
-        <pre><code><span class="cmt"># After Codespace launches:</span>
-./scripts/setup.sh
-cp .env.example .env
-<span class="cmt"># Add your API keys to .env</span>
-./scripts/launch.sh
-<span class="cmt"># Codespaces automatically forwards port 8200</span></code></pre>
+      <div class="card" style="margin-top:16px">
+        <h3>Analytics &amp; Monitoring</h3>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>SENTRY_DSN</code></td><td><span class="badge badge-opt">Optional</span></td><td>—</td><td>Sentry error tracking DSN. Enables exception capture, performance monitoring, and alerting.</td></tr>
+              <tr><td><code>DATADOG_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>—</td><td>Datadog API key for metrics, traces, and structured log shipping.</td></tr>
+              <tr><td><code>POSTHOG_API_KEY</code></td><td><span class="badge badge-opt">Optional</span></td><td>—</td><td>PostHog project API key for product analytics — tracks swarm usage events and team patterns.</td></tr>
+              <tr><td><code>LOG_LEVEL</code></td><td><span class="badge badge-opt">Optional</span></td><td>INFO</td><td>Application log verbosity. Values: DEBUG, INFO, WARNING, ERROR. Use DEBUG for development.</td></tr>
+              <tr><td><code>ENABLE_TELEMETRY</code></td><td><span class="badge badge-opt">Optional</span></td><td>true</td><td>Sends anonymous usage metrics to NeuralQuantum.ai for product improvement. Set false to opt out.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- ═══ ENV VARS ═══ -->
-    <section class="doc-section" id="env-vars">
+    <!-- SECTION 8: PRO VERSION -->
+    <section class="doc-section" id="s8">
       <div class="section-header">
-        <div class="section-icon">🔑</div>
-        <h2>Environment Variables</h2>
+        <div class="section-number">Section 08</div>
+        <h2 class="section-title">Pro Version</h2>
+        <p class="section-desc">Compare Free and Pro tiers. The Pro version is launching soon — join the waitlist for early access and locked-in pricing.</p>
       </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Variable</th><th>Default</th><th>Required</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>AI_API_BASE_URL</code></td><td><code>http://localhost:11434</code></td><td><span class="badge badge-opt">Optional</span></td><td>LLM backend base URL</td></tr>
-            <tr><td><code>AI_API_KEY</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>API key for LLM provider (blank for local Ollama)</td></tr>
-            <tr><td><code>AI_MODEL_NAME</code></td><td><code>llama3.3</code></td><td><span class="badge badge-opt">Optional</span></td><td>Default model for agents</td></tr>
-            <tr><td><code>PORT</code></td><td><code>8200</code></td><td><span class="badge badge-opt">Optional</span></td><td>API server port</td></tr>
-            <tr><td><code>API_SECRET_KEY</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>Bearer token for API authentication</td></tr>
-            <tr><td><code>MAX_CONCURRENT_AGENTS</code></td><td><code>5</code></td><td><span class="badge badge-opt">Optional</span></td><td>Parallel agent concurrency limit</td></tr>
-            <tr><td><code>SWARM_TIMEOUT_SECONDS</code></td><td><code>120</code></td><td><span class="badge badge-opt">Optional</span></td><td>Max wall-clock time per swarm run</td></tr>
-            <tr><td><code>AGENT_TIMEOUT_SECONDS</code></td><td><code>30</code></td><td><span class="badge badge-opt">Optional</span></td><td>Max time per individual agent</td></tr>
-            <tr><td><code>REDIS_URL</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>Redis for session/job persistence</td></tr>
-            <tr><td><code>HUBSPOT_API_KEY</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>HubSpot integration</td></tr>
-            <tr><td><code>SALESFORCE_ACCESS_TOKEN</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>Salesforce integration</td></tr>
-            <tr><td><code>SALESFORCE_INSTANCE_URL</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>Your Salesforce org URL</td></tr>
-            <tr><td><code>GA4_MEASUREMENT_ID</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>Google Analytics 4 Measurement ID</td></tr>
-            <tr><td><code>GA4_API_SECRET</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>GA4 Measurement Protocol API secret</td></tr>
-            <tr><td><code>SLACK_BOT_TOKEN</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td>Slack notifications on swarm completion</td></tr>
-            <tr><td><code>CORS_ORIGINS</code></td><td><code>*</code></td><td><span class="badge badge-opt">Optional</span></td><td>Comma-separated allowed CORS origins</td></tr>
-            <tr><td><code>LOG_LEVEL</code></td><td><code>INFO</code></td><td><span class="badge badge-opt">Optional</span></td><td>Logging level (DEBUG, INFO, WARNING, ERROR)</td></tr>
-            <tr><td><code>SM_PRO_LICENSE_KEY</code></td><td>—</td><td><span class="badge badge-opt">Optional</span></td><td><span class="badge badge-pro">⭐ Pro</span> License key to unlock Pro features</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ═══ PRO VERSION ═══ -->
-    <section class="doc-section" id="pro-version">
-      <div class="section-header">
-        <div class="section-icon">⭐</div>
-        <h2>Pro Version</h2>
+      <div class="card">
+        <div class="compare-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th class="col-free">Free (Open Source)</th>
+                <th class="col-pro">Pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Agent Teams</strong></td><td class="col-free">10 built-in teams</td><td class="col-pro">10 built-in + unlimited custom persistent teams</td></tr>
+              <tr><td><strong>API Access</strong></td><td class="col-free">Public demo endpoint</td><td class="col-pro">Private endpoint with full API key management dashboard</td></tr>
+              <tr><td><strong>Deployment Platforms</strong></td><td class="col-free">Vercel, Docker, Railway, Render</td><td class="col-pro">All platforms + dedicated cloud infrastructure with SLA</td></tr>
+              <tr><td><strong>CRM Integrations</strong></td><td class="col-free"><span class="cross">&#10007;</span> Not included</td><td class="col-pro"><span class="check">&#10003;</span> HubSpot, Salesforce, Pipedrive — direct data push</td></tr>
+              <tr><td><strong>White-Label Branding</strong></td><td class="col-free"><span class="cross">&#10007;</span> Not included</td><td class="col-pro"><span class="check">&#10003;</span> Custom logos, domain, UI color theme</td></tr>
+              <tr><td><strong>Analytics Dashboard</strong></td><td class="col-free">Basic — request logs only</td><td class="col-pro">Advanced — CAC, LTV, attribution, team utilization charts</td></tr>
+              <tr><td><strong>Priority Support</strong></td><td class="col-free">GitHub Issues (best-effort)</td><td class="col-pro"><span class="check">&#10003;</span> Dedicated Slack channel with 4-hour SLA</td></tr>
+              <tr><td><strong>Webhooks</strong></td><td class="col-free"><span class="cross">&#10007;</span> Not included</td><td class="col-pro"><span class="check">&#10003;</span> POST swarm results to any URL on completion</td></tr>
+              <tr><td><strong>Team Scheduling</strong></td><td class="col-free"><span class="cross">&#10007;</span> Not included</td><td class="col-pro"><span class="check">&#10003;</span> Cron-based scheduled swarm runs with delivery</td></tr>
+              <tr><td><strong>Parallel Team Execution</strong></td><td class="col-free"><span class="cross">&#10007;</span> Not included</td><td class="col-pro"><span class="check">&#10003;</span> Run multiple teams concurrently on one goal</td></tr>
+              <tr><td><strong>Custom LLM Backend</strong></td><td class="col-free">Ollama Cloud + NVIDIA NIM</td><td class="col-pro"><span class="check">&#10003;</span> Any OpenAI-compatible endpoint via base URL override</td></tr>
+              <tr><td><strong>Run History</strong></td><td class="col-free">Stateless — no history retained</td><td class="col-pro"><span class="check">&#10003;</span> 30-day searchable run history with result replay</td></tr>
+              <tr><td><strong>Team Members</strong></td><td class="col-free">1 user</td><td class="col-pro">Unlimited seats with role-based access control</td></tr>
+              <tr><td><strong>Uptime SLA</strong></td><td class="col-free">No SLA</td><td class="col-pro"><span class="check">&#10003;</span> 99.9% uptime SLA with public status page</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <p>The open-source core is MIT-licensed and fully functional. Pro adds enterprise-grade capabilities.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th style="text-align:center">Free / OSS</th>
-              <th style="text-align:center">Pro</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>All 10 Agent Teams</td><td class="compare-check" style="text-align:center">✓</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>OpenAI-Compatible API</td><td class="compare-check" style="text-align:center">✓</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Custom Agent &amp; Team Builder</td><td class="compare-check" style="text-align:center">✓</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>All 7 Marketing Tools</td><td class="compare-check" style="text-align:center">✓</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>HubSpot / Salesforce / GA4</td><td class="compare-check" style="text-align:center">✓</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Concurrent Agents</td><td style="text-align:center">Up to 5</td><td style="text-align:center">Unlimited</td></tr>
-            <tr><td>Long-term Vector Memory</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Scheduled / Cron Campaigns</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Multi-User Workspaces</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Workflow Automation Pipelines</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Advanced Analytics Dashboard</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>White-Label Dashboard</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Zapier / Make.com Connectors</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>SSO / SAML</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Dedicated NIM Endpoints</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>SOC 2 Compliance Mode</td><td class="compare-x" style="text-align:center">✗</td><td class="compare-check" style="text-align:center">✓</td></tr>
-            <tr><td>Support</td><td style="text-align:center">GitHub Issues</td><td style="text-align:center">Priority + SLA</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="info-box">
-        <span>📬</span>
-        <span>Pro is coming soon. <a href="mailto:pro@neuralquantum.ai" style="color: var(--cyan-400)">Join the waitlist</a> for early access and 50% off the first 6 months.</span>
+      <div class="cta-block">
+        <div class="cta-title">Get Early Access to Pro</div>
+        <p class="cta-desc">Join the waitlist for exclusive early access pricing. Pro users get CRM integrations, white-label branding, advanced analytics, webhooks, parallel execution, and priority support — all launching soon from NeuralQuantum.ai.</p>
+        <button class="cta-btn" onclick="window.open('https://github.com/ttracx/sales-marketing-nanobot-swarm','_blank')">Get Early Access</button>
+        <p style="margin-top:16px;font-size:12px;color:var(--text-secondary)">Star and watch the repo on GitHub to stay notified of the Pro launch: <a href="https://github.com/ttracx/sales-marketing-nanobot-swarm" target="_blank" rel="noopener noreferrer" style="color:var(--indigo)">github.com/ttracx/sales-marketing-nanobot-swarm</a></p>
       </div>
     </section>
 
   </main>
 </div>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer>
+<footer id="footer">
   <div class="footer-links">
-    <a href="/nanobot/static/index.html">Dashboard</a>
-    <a href="/nanobot/static/docs-page.html">Documentation</a>
-    <a href="/nanobot/static/faq.html">FAQ</a>
-    <a href="https://github.com/ttracx/sales-marketing-nanobot-swarm" target="_blank" rel="noopener">GitHub</a>
-    <a href="mailto:support@neuralquantum.ai">Support</a>
+    <a href="/">Dashboard</a>
+    <a href="docs-page.html">Documentation</a>
+    <a href="faq.html">FAQ &amp; Support</a>
+    <a href="https://github.com/ttracx/sales-marketing-nanobot-swarm" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://vibecaas.com" target="_blank" rel="noopener noreferrer">VibeCaaS.com</a>
+    <a href="https://neuralquantum.ai" target="_blank" rel="noopener noreferrer">NeuralQuantum.ai</a>
   </div>
-  <p>Powered by <a href="https://neuralquantum.ai" target="_blank" rel="noopener">NeuralQuantum.ai LLC</a> &amp; <a href="https://vibecaas.com" target="_blank" rel="noopener">VibeCaaS.com</a> · MIT License</p>
+  <div class="footer-copy">&#169; 2025 NeuralQuantum.ai LLC &middot; Powered by VibeCaaS.com &middot; All rights reserved</div>
+  <div class="footer-badge">Pro Version Coming Soon</div>
 </footer>
 
 <script>
-  // Active sidebar link on scroll
-  const sections = document.querySelectorAll('[id]');
-  const sidebarLinks = document.querySelectorAll('.sidebar a');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(sec => {
-      if (window.scrollY >= sec.offsetTop - 100) current = sec.id;
-    });
-    sidebarLinks.forEach(link => {
-      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-    });
+/* ---- TAB SWITCHER ---- */
+function switchTab(group, name, btn) {
+  var tabContainer = document.getElementById(group + '-tabs');
+  if (tabContainer) {
+    tabContainer.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  }
+  btn.classList.add('active');
+  document.querySelectorAll('[id^="' + group + '-"]').forEach(function(el) {
+    if (el.classList.contains('tab-panel')) el.classList.remove('active');
   });
+  var panel = document.getElementById(group + '-' + name);
+  if (panel) panel.classList.add('active');
+}
+
+/* ---- ENDPOINT TOGGLE ---- */
+function toggleEndpoint(header) {
+  var body = header.nextElementSibling;
+  var toggle = header.querySelector('.endpoint-toggle');
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (toggle) toggle.textContent = isOpen ? '+' : '-';
+}
+
+/* ---- COPY CODE ---- */
+function copyCode(btn) {
+  var pre = btn.closest('pre');
+  var code = pre ? pre.querySelector('code') : null;
+  if (!code) return;
+  var text = code.textContent.trim();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = 'Copied!';
+    setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+  }
+}
+
+/* ---- SCROLL SPY ---- */
+var sectionIds = ['s1','s2','s3','s4','s5','s6','s7','s8'];
+function updateTOC() {
+  var current = sectionIds[0];
+  var offset = 90;
+  sectionIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= offset) current = id;
+  });
+  document.querySelectorAll('.toc-link[id^="tl-"]').forEach(function(l) { l.classList.remove('active'); });
+  var al = document.getElementById('tl-' + current);
+  if (al) al.classList.add('active');
+}
+window.addEventListener('scroll', updateTOC, { passive: true });
+
+function scrollToSection(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  closeMobileToc();
+}
+
+/* ---- MOBILE TOC ---- */
+function openMobileToc() {
+  document.getElementById('mobile-toc-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobileToc() {
+  document.getElementById('mobile-toc-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeMobileTocOverlay(event) {
+  if (event.target === event.currentTarget) closeMobileToc();
+}
 </script>
 </body>
 </html>
