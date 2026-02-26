@@ -254,9 +254,47 @@ function switchTab(tab) {
   }
 }
 
-// On load, check hash
+// On load — read ?plan / ?next params and handle hash
 (function() {
-  if (window.location.hash === '#signup') { switchTab('signup'); }
+  var params = new URLSearchParams(window.location.search);
+  var plan = params.get('plan');
+  var next = params.get('next');
+
+  // Whitelist next URLs to stripe only to prevent open redirect
+  if (next && next.startsWith('https://buy.stripe.com/')) {
+    sessionStorage.setItem('sm_auth_next', next);
+  }
+  if (plan) { sessionStorage.setItem('sm_auth_plan', plan); }
+
+  // Auto-switch to signup when arriving from pricing
+  if (plan || window.location.hash === '#signup') { switchTab('signup'); }
+
+  // Show selected plan banner (all values come from developer-controlled lookup, not user input)
+  var PLAN_LABELS = {
+    campaign: { name: 'Campaign Pack',  price: '$29 one-time', color: '#06b6d4' },
+    weekly:   { name: 'Starter Weekly', price: '$19/week',     color: '#10b981' },
+    growth:   { name: 'Growth Monthly', price: '$69/month',    color: '#8b5cf6' },
+    agency:   { name: 'Agency Annual',  price: '$599/year',    color: '#6366f1' }
+  };
+  if (plan && PLAN_LABELS[plan]) {
+    var p = PLAN_LABELS[plan];
+    var banner = document.createElement('div');
+    banner.style.cssText = 'background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:10px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;';
+    var label = document.createElement('span');
+    label.style.color = '#94a3b8';
+    label.textContent = 'Selected plan:';
+    var name = document.createElement('span');
+    name.style.cssText = 'font-weight:700;color:' + p.color;
+    name.textContent = p.name;
+    var price = document.createElement('span');
+    price.style.cssText = 'color:#e2e8f0;font-weight:600';
+    price.textContent = p.price;
+    banner.appendChild(label);
+    banner.appendChild(name);
+    banner.appendChild(price);
+    var panel = document.getElementById('panel-signup');
+    if (panel) { panel.insertBefore(banner, panel.firstChild); }
+  }
 })();
 
 // ── Show/hide password ─────────────────────────────────────────────────────
@@ -367,7 +405,10 @@ function submitSignIn() {
     if (r.status === 200) {
       localStorage.setItem('sm_auth_token', r.data.token);
       localStorage.setItem('sm_user', JSON.stringify(r.data.user));
-      window.location.href = '/profile';
+      var nextUrl = sessionStorage.getItem('sm_auth_next');
+      sessionStorage.removeItem('sm_auth_next');
+      sessionStorage.removeItem('sm_auth_plan');
+      window.location.href = nextUrl || '/profile';
     } else {
       var msg = (r.data && r.data.detail) ? r.data.detail : 'Sign in failed. Please try again.';
       showError('signin', msg);
@@ -428,7 +469,10 @@ function submitSignUp() {
     if (r.status === 200) {
       localStorage.setItem('sm_auth_token', r.data.token);
       localStorage.setItem('sm_user', JSON.stringify(r.data.user));
-      window.location.href = '/profile';
+      var nextUrl = sessionStorage.getItem('sm_auth_next');
+      sessionStorage.removeItem('sm_auth_next');
+      sessionStorage.removeItem('sm_auth_plan');
+      window.location.href = nextUrl || '/profile';
     } else {
       var msg = (r.data && r.data.detail) ? r.data.detail : 'Registration failed. Please try again.';
       showError('signup', msg);
