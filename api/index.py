@@ -641,12 +641,11 @@ async def swarm_run(
     x_api_key: Optional[str] = Header(None),
 ):
     """
-    Execute a sales & marketing task using the swarm.
+    Execute a sales & marketing task using the swarm. Public demo — no API key required.
 
     Auto-detects the best pre-configured team based on goal keywords,
     or use the 'team' field to override.
     """
-    _check_auth(x_api_key)
     t0 = time.time()
 
     # Resolve team
@@ -702,11 +701,10 @@ async def chat_completions(
     x_api_key: Optional[str] = Header(None),
 ):
     """
-    OpenAI-compatible chat completions endpoint.
+    OpenAI-compatible chat completions endpoint. Public demo.
 
     Injects SM_SYSTEM as the system message if no system message is present.
     """
-    _check_auth(x_api_key)
 
     messages = [m.model_dump() for m in req.messages]
 
@@ -839,9 +837,8 @@ async def agent_build(
     """
     AI-powered agent builder.
 
-    Generates a complete agent configuration for a sales & marketing agent role.
+    Generates a complete agent configuration for a sales & marketing agent role. Public demo.
     """
-    _check_auth(x_api_key)
     t0 = time.time()
 
     tools_str = ", ".join(req.tools) if req.tools else "auto-select from available tools"
@@ -892,9 +889,8 @@ async def team_build(
     """
     AI-powered team builder.
 
-    Generates a complete multi-agent team configuration for a sales & marketing goal.
+    Generates a complete multi-agent team configuration for a sales & marketing goal. Public demo.
     """
-    _check_auth(x_api_key)
     t0 = time.time()
 
     tools_str = ", ".join(req.tools) if req.tools else "auto-select from available tools"
