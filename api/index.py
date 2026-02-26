@@ -1007,3 +1007,6 @@ async def get_swarm_team(team_name: str):
 
 # Vercel expects the FastAPI app exported as 'app' at module level.
 # For local development: uvicorn api.index:app --reload
+
+from mangum import Mangum
+handler = Mangum(app, lifespan='off')
